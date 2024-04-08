@@ -3,11 +3,11 @@
 #include <map>
 #include <set>
 
-#include "binary_tree.hpp"
-#include "bit_array.hpp"
-#include "microtree_array.hpp"
-#include "minimal_cell_array.hpp"
-#include "tree_bp.hpp"
+#include "hyperrmq/binary_tree.hpp"
+#include "hyperrmq/bit_array.hpp"
+#include "hyperrmq/microtree_array.hpp"
+#include "hyperrmq/minimal_cell_array.hpp"
+#include "hyperrmq/tree_bp.hpp"
 
 namespace average_case_optimal_rmq {
 
@@ -33,9 +33,9 @@ std::vector<uint64_t> legacy_enumerate_microtrees(
     const TreeBP &tree);
 
 MicrotreeSplitRankArray enumerate_microtrees(const int64_t B,
-                                          const uint64_t microtree_count,
-                                          const BitArray &microtree_roots,
-                                          const TreeBP &tree);
+                                             const uint64_t microtree_count,
+                                             const BitArray &microtree_roots,
+                                             const TreeBP &tree);
 
 std::pair<TreeBP, MicrotreeSplitRankArray> recover_upsilon_and_microtrees(
     const int64_t B, const BitArray &microtree_roots, const TreeBP &tree);
@@ -44,6 +44,6 @@ std::pair<TreeBP, std::vector<uint64_t>> legacy_tree_covering(
     const int64_t B, const TreeBP &tree);
 
 std::pair<TreeBP, MicrotreeSplitRankArray> tree_covering(const int64_t B,
-                                                      const TreeBP &tree);
+                                                         const TreeBP &tree);
 
 }  // namespace average_case_optimal_rmq

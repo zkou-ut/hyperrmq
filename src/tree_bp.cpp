@@ -1,9 +1,9 @@
-#include "tree_bp.hpp"
+#include "hyperrmq/tree_bp.hpp"
 
 #include <cassert>
 #include <stack>
 
-#include "table.hpp"
+#include "hyperrmq/table.hpp"
 
 namespace average_case_optimal_rmq {
 

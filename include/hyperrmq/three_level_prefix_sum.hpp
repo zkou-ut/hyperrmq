@@ -1,6 +1,6 @@
 #pragma once
 
-#include "two_level_increasing_array.hpp"
+#include "hyperrmq/two_level_increasing_array.hpp"
 
 namespace average_case_optimal_rmq {
 

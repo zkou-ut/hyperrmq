@@ -1,13 +1,13 @@
-#include "hyper_rmq.hpp"
+#include "hyperrmq/hyper_rmq.hpp"
 
 #include <random>
 #include <stack>
 
 #include "gtest/gtest.h"
-#include "rmq_bp.hpp"
-#include "runs.hpp"
-#include "tree_bp.hpp"
-#include "tree_covering.hpp"
+#include "hyperrmq/rmq_bp.hpp"
+#include "hyperrmq/runs.hpp"
+#include "hyperrmq/tree_bp.hpp"
+#include "hyperrmq/tree_covering.hpp"
 
 namespace average_case_optimal_rmq {
 namespace {

@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "bit_array.hpp"
+#include "hyperrmq/bit_array.hpp"
 
 namespace average_case_optimal_rmq {
 

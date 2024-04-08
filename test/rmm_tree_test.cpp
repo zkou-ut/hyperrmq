@@ -1,10 +1,10 @@
-#include "rmm_tree.hpp"
+#include "hyperrmq/rmm_tree.hpp"
 
 #include <random>
 #include <stack>
 
 #include "gtest/gtest.h"
-#include "tree_bp.hpp"
+#include "hyperrmq/tree_bp.hpp"
 
 namespace average_case_optimal_rmq {
 namespace {

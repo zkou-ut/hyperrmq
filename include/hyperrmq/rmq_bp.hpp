@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rmm_tree.hpp"
+#include "hyperrmq/rmm_tree.hpp"
 
 namespace average_case_optimal_rmq {
 

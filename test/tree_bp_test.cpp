@@ -1,11 +1,11 @@
-#include "tree_bp.hpp"
+#include "hyperrmq/tree_bp.hpp"
 
 #include <random>
 #include <set>
 #include <stack>
 
-#include "cartesian_tree.hpp"
 #include "gtest/gtest.h"
+#include "hyperrmq/cartesian_tree.hpp"
 
 namespace average_case_optimal_rmq {
 namespace {

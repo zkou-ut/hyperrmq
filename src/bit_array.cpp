@@ -1,10 +1,10 @@
-#include "bit_array.hpp"
+#include "hyperrmq/bit_array.hpp"
 
 #include <cassert>
 #include <climits>
 
-#include "bitutil.hpp"
-#include "memutil.hpp"
+#include "hyperrmq/bitutil.hpp"
+#include "hyperrmq/memutil.hpp"
 
 namespace average_case_optimal_rmq {
 

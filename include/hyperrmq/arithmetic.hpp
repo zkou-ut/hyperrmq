@@ -9,8 +9,8 @@
 #include <stack>
 #include <vector>
 
-#include "bit_array.hpp"
-#include "tree_bp.hpp"
+#include "hyperrmq/bit_array.hpp"
+#include "hyperrmq/tree_bp.hpp"
 
 namespace average_case_optimal_rmq {
 

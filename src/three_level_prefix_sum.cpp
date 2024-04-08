@@ -1,8 +1,8 @@
-#include "three_level_prefix_sum.hpp"
+#include "hyperrmq/three_level_prefix_sum.hpp"
 
 #include <cassert>
 
-#include "memutil.hpp"
+#include "hyperrmq/memutil.hpp"
 
 namespace average_case_optimal_rmq {
 

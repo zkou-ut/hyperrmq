@@ -1,4 +1,4 @@
-#include "two_level_increasing_array.hpp"
+#include "hyperrmq/two_level_increasing_array.hpp"
 
 #include <random>
 

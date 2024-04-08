@@ -1,13 +1,13 @@
-#include "microtree_array.hpp"
+#include "hyperrmq/microtree_array.hpp"
 
 #include <algorithm>
 #include <cassert>
 #include <map>
 #include <queue>
 
-#include "arithmetic.hpp"
-#include "bitutil.hpp"
-#include "memutil.hpp"
+#include "hyperrmq/arithmetic.hpp"
+#include "hyperrmq/bitutil.hpp"
+#include "hyperrmq/memutil.hpp"
 
 namespace average_case_optimal_rmq {
 

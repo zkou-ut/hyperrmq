@@ -1,4 +1,4 @@
-#include "bit_array.hpp"
+#include "hyperrmq/bit_array.hpp"
 
 #include <random>
 #include <set>

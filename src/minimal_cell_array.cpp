@@ -1,9 +1,9 @@
-#include "minimal_cell_array.hpp"
+#include "hyperrmq/minimal_cell_array.hpp"
 
 #include <algorithm>
 #include <cassert>
 
-#include "bitutil.hpp"
+#include "hyperrmq/bitutil.hpp"
 
 namespace average_case_optimal_rmq {
 

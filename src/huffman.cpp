@@ -1,11 +1,11 @@
-#include "huffman.hpp"
+#include "hyperrmq/huffman.hpp"
 
 #include <algorithm>
 #include <cassert>
 
-#include "memutil.hpp"
-#include "microtree_array.hpp"
-#include "minimal_cell_array.hpp"
+#include "hyperrmq/memutil.hpp"
+#include "hyperrmq/microtree_array.hpp"
+#include "hyperrmq/minimal_cell_array.hpp"
 
 namespace average_case_optimal_rmq {
 

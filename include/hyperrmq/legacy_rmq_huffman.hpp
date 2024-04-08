@@ -1,9 +1,9 @@
 #pragma once
 
-#include "bit_array.hpp"
-#include "huffman.hpp"
-#include "rmm_tree.hpp"
-#include "two_level_increasing_array.hpp"
+#include "hyperrmq/bit_array.hpp"
+#include "hyperrmq/huffman.hpp"
+#include "hyperrmq/rmm_tree.hpp"
+#include "hyperrmq/two_level_increasing_array.hpp"
 
 namespace average_case_optimal_rmq {
 

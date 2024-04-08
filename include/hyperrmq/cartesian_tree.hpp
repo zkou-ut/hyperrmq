@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "binary_tree.hpp"
+#include "hyperrmq/binary_tree.hpp"
 
 namespace average_case_optimal_rmq {
 

@@ -1,10 +1,10 @@
-#include "arithmetic.hpp"
+#include "hyperrmq/arithmetic.hpp"
 
 #include <queue>
 #include <random>
 
-#include "bitutil.hpp"
 #include "gtest/gtest.h"
+#include "hyperrmq/bitutil.hpp"
 
 namespace average_case_optimal_rmq {
 namespace {

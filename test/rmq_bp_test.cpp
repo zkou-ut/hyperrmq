@@ -1,4 +1,4 @@
-#include "rmq_bp.hpp"
+#include "hyperrmq/rmq_bp.hpp"
 
 #include <random>
 

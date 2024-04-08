@@ -1,10 +1,10 @@
 #pragma once
 
-#include "array_base.hpp"
-#include "bit_array.hpp"
-#include "huffman.hpp"
-#include "three_level_prefix_sum.hpp"
-#include "tree_bp.hpp"
+#include "hyperrmq/array_base.hpp"
+#include "hyperrmq/bit_array.hpp"
+#include "hyperrmq/huffman.hpp"
+#include "hyperrmq/three_level_prefix_sum.hpp"
+#include "hyperrmq/tree_bp.hpp"
 
 namespace average_case_optimal_rmq {
 

@@ -1,4 +1,4 @@
-#include "three_level_prefix_sum.hpp"
+#include "hyperrmq/three_level_prefix_sum.hpp"
 
 #include <random>
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "minimal_cell_array.hpp"
+#include "hyperrmq/minimal_cell_array.hpp"
 
 namespace average_case_optimal_rmq {
 

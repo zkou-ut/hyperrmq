@@ -1,4 +1,4 @@
-#include "bitutil.hpp"
+#include "hyperrmq/bitutil.hpp"
 
 namespace average_case_optimal_rmq {
 

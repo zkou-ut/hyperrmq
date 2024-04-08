@@ -3,14 +3,14 @@
 #include <cassert>
 #include <stack>
 
-#include "bit_array.hpp"
-#include "bitutil.hpp"
-#include "huffman.hpp"
-#include "memutil.hpp"
-#include "microtree_array.hpp"
-#include "rmm_tree.hpp"
-#include "three_level_prefix_sum.hpp"
-#include "tree_covering.hpp"
+#include "hyperrmq/bit_array.hpp"
+#include "hyperrmq/bitutil.hpp"
+#include "hyperrmq/huffman.hpp"
+#include "hyperrmq/memutil.hpp"
+#include "hyperrmq/microtree_array.hpp"
+#include "hyperrmq/rmm_tree.hpp"
+#include "hyperrmq/three_level_prefix_sum.hpp"
+#include "hyperrmq/tree_covering.hpp"
 
 namespace average_case_optimal_rmq {
 

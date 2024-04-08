@@ -1,4 +1,4 @@
-#include "minimal_cell_array.hpp"
+#include "hyperrmq/minimal_cell_array.hpp"
 
 #include "gtest/gtest.h"
 

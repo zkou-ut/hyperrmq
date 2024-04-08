@@ -1,4 +1,4 @@
-#include "binary_tree.hpp"
+#include "hyperrmq/binary_tree.hpp"
 
 #include <cstdint>
 

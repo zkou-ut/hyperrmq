@@ -1,8 +1,8 @@
-#include "array_base.hpp"
+#include "hyperrmq/array_base.hpp"
 
 #include <cassert>
 
-#include "tree_bp.hpp"
+#include "hyperrmq/tree_bp.hpp"
 
 namespace average_case_optimal_rmq {
 

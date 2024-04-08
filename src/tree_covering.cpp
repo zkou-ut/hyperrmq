@@ -1,11 +1,11 @@
-#include "tree_covering.hpp"
+#include "hyperrmq/tree_covering.hpp"
 
 #include <cassert>
 #include <iostream>
 #include <stack>
 #include <tuple>
 
-#include "bitutil.hpp"
+#include "hyperrmq/bitutil.hpp"
 
 namespace average_case_optimal_rmq {
 
@@ -336,12 +336,13 @@ std::vector<uint64_t> legacy_enumerate_microtrees(
 }
 
 MicrotreeSplitRankArray enumerate_microtrees(const int64_t B,
-                                          const uint64_t microtree_count,
-                                          const BitArray &microtree_roots,
-                                          const TreeBP &tree) {
+                                             const uint64_t microtree_count,
+                                             const BitArray &microtree_roots,
+                                             const TreeBP &tree) {
     EditableMicrotreeArray microtrees(B, microtree_count);
     BitArray split_rank_count_locked(microtree_count);
-    std::vector<uint32_t> split_ranks(microtree_count), write_pos(microtree_count);
+    std::vector<uint32_t> split_ranks(microtree_count),
+        write_pos(microtree_count);
 
     uint64_t pre = 0, index = 0;
     auto match = [&](uint64_t v) -> void {
@@ -395,7 +396,8 @@ std::pair<TreeBP, MicrotreeSplitRankArray> recover_upsilon_and_microtrees(
     EditableMicrotreeArray microtrees(B, microtree_count);
     BitArray upsilon_bp(2 * microtree_count);
     BitArray split_rank_count_locked(microtree_count);
-    std::vector<uint32_t> split_ranks(microtree_count), write_pos(microtree_count);
+    std::vector<uint32_t> split_ranks(microtree_count),
+        write_pos(microtree_count);
 
     uint64_t pre = 0;
     uint64_t up_pre = 0, up_index = 0;
@@ -464,7 +466,7 @@ std::pair<TreeBP, std::vector<uint64_t>> legacy_tree_covering(
 }
 
 std::pair<TreeBP, MicrotreeSplitRankArray> tree_covering(const int64_t B,
-                                                      const TreeBP &tree) {
+                                                         const TreeBP &tree) {
     return recover_upsilon_and_microtrees(B, microtree_roots_preorder(B, tree),
                                           tree);
 }

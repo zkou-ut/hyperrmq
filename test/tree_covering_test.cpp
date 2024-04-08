@@ -1,12 +1,12 @@
 
-#include "tree_covering.hpp"
+#include "hyperrmq/tree_covering.hpp"
 
 #include <random>
 #include <stack>
 
-#include "bitutil.hpp"
-#include "cartesian_tree.hpp"
 #include "gtest/gtest.h"
+#include "hyperrmq/bitutil.hpp"
+#include "hyperrmq/cartesian_tree.hpp"
 
 namespace average_case_optimal_rmq {
 namespace {
@@ -280,7 +280,8 @@ TEST(TreeCoveringTest, BuildUpsilonLeftPackedCheck) {
                 //     enumerate_microtrees(B, microtree_count, roots, ct);
                 // TreeBP upsilon = build_upsilon(microtree_count,
                 // roots,
-                //                                ct, microtree_split_rank_array);
+                //                                ct,
+                //                                microtree_split_rank_array);
 
                 int index = 0;
                 dfs(dfs, upsilon, index);

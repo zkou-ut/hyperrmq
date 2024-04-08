@@ -1,4 +1,4 @@
-#include "runs.hpp"
+#include "hyperrmq/runs.hpp"
 
 #include <algorithm>
 #include <cassert>

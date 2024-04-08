@@ -1,12 +1,12 @@
-#include "hypersuccinct_binary_tree.hpp"
+#include "hyperrmq/hypersuccinct_binary_tree.hpp"
 
 #include <random>
 
-#include "binary_tree.hpp"
-#include "cartesian_tree.hpp"
 #include "gtest/gtest.h"
-#include "rmq_bp.hpp"
-#include "runs.hpp"
+#include "hyperrmq/binary_tree.hpp"
+#include "hyperrmq/cartesian_tree.hpp"
+#include "hyperrmq/rmq_bp.hpp"
+#include "hyperrmq/runs.hpp"
 
 namespace average_case_optimal_rmq {
 namespace {

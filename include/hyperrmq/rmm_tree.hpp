@@ -6,11 +6,11 @@
 #include <utility>
 #include <vector>
 
-#include "bitutil.hpp"
-#include "memutil.hpp"
-#include "minimal_cell_array.hpp"
-#include "table.hpp"
-#include "tree_bp.hpp"
+#include "hyperrmq/bitutil.hpp"
+#include "hyperrmq/memutil.hpp"
+#include "hyperrmq/minimal_cell_array.hpp"
+#include "hyperrmq/table.hpp"
+#include "hyperrmq/tree_bp.hpp"
 
 namespace average_case_optimal_rmq {
 

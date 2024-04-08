@@ -1,13 +1,13 @@
-#include "legacy_rmq_huffman.hpp"
+#include "hyperrmq/legacy_rmq_huffman.hpp"
 
 #include <cassert>
 #include <chrono>
 #include <iomanip>
 #include <iostream>
 
-#include "bitutil.hpp"
-#include "memutil.hpp"
-#include "tree_covering.hpp"
+#include "hyperrmq/bitutil.hpp"
+#include "hyperrmq/memutil.hpp"
+#include "hyperrmq/tree_covering.hpp"
 
 namespace average_case_optimal_rmq {
 

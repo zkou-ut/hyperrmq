@@ -1,12 +1,12 @@
-#include "huffman.hpp"
+#include "hyperrmq/huffman.hpp"
 
 #include <queue>
 #include <random>
 
 #include "gtest/gtest.h"
-#include "microtree_array.hpp"
-#include "minimal_cell_array.hpp"
-#include "tree_bp.hpp"
+#include "hyperrmq/microtree_array.hpp"
+#include "hyperrmq/minimal_cell_array.hpp"
+#include "hyperrmq/tree_bp.hpp"
 
 namespace average_case_optimal_rmq {
 namespace {
