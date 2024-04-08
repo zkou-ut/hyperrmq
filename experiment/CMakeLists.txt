@@ -1,0 +1,2 @@
+add_executable(benchmark_arithmetic_decoding benchmark_arithmetic_decoding.cpp)
+target_link_libraries(benchmark_arithmetic_decoding hyperrmq)

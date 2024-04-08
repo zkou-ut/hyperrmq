@@ -24,5 +24,4 @@ add_subdirectory(sdsl-lite)
 # Could not include googletest directly while avoiding name conflicts.
 add_subdirectory(test)
 
-add_executable(test_include test_include.cpp)
-target_link_libraries(test_include hyperrmq ferradarmq sdsl)
+add_subdirectory(experiment)
