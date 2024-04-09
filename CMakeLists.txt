@@ -14,9 +14,5 @@ target_include_directories(ferradarmq PUBLIC rmq/includes)
 # sdsl
 add_subdirectory(sdsl-lite)
 
-# Test for hyperrmq
-# It uses the same googletest that sdsl uses.
-# Could not include googletest directly while avoiding name conflicts.
-add_subdirectory(test)
 
 add_subdirectory(experiment)
