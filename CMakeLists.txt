@@ -8,13 +8,8 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O3 -g")
 add_subdirectory(src)
 
 # Ferrada & Navarro RMQ library
-add_library(ferradarmq
-SHARED
-rmq/includes/Basic_rmq.cpp
-)
-target_include_directories(ferradarmq
-PUBLIC rmq/includes
-)
+add_library(ferradarmq SHARED rmq/includes/Basic_rmq.cpp rmq/RMQRMM64.cpp)
+target_include_directories(ferradarmq PUBLIC rmq/includes)
 
 # sdsl
 add_subdirectory(sdsl-lite)
