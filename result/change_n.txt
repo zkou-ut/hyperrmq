@@ -1,36 +1,201 @@
-Tue Apr  9 18:38:07 2024
+Tue Apr  9 18:49:43 2024
 
 Q = 1000000
 N = 10000
 FerradaRMQ
-construction:                   0.295000
-query:                        421.244000
+construction:                   0.273000
+query:                        395.187000
 memory:                         4.531200
 SDSLNEWRMQ
-construction:                   0.307000
-query:                         74.476000
+construction:                   0.301000
+query:                         72.437000
 memory:                         2.475200
 HyperRMQHuffman B = 4
-construction:                   2.376000
-query:                       9228.452000
+construction:                   2.320000
+query:                       9083.550000
 memory:                         3.427200
 HyperRMQHuffman B = 64
-construction:                   1.222000
-query:                       1388.654000
+construction:                   1.192000
+query:                       1286.629000
 memory:                         2.237600
 HyperRMQHuffman B = 128
-construction:                   1.108000
-query:                        849.652000
+construction:                   1.106000
+query:                        789.327000
 memory:                         2.014400
 HyperRMQHuffman B = 256
-construction:                   1.168000
-query:                        765.617000
+construction:                   1.053000
+query:                        735.076000
 memory:                         1.886400
 HyperRMQHuffman B = 512
-construction:                   1.117000
-query:                        726.342000
+construction:                   1.055000
+query:                        682.654000
 memory:                         1.836800
 HyperRMQHuffman B = 1024
-construction:                   1.099000
-query:                        624.740000
+construction:                   1.054000
+query:                        583.687000
 memory:                         1.788000
+N = 100000
+FerradaRMQ
+construction:                   2.447000
+query:                        507.807000
+memory:                         2.316160
+SDSLNEWRMQ
+construction:                   2.821000
+query:                         37.194000
+memory:                         2.204560
+HyperRMQHuffman B = 5
+construction:                  19.736000
+query:                       9918.434000
+memory:                         3.013520
+HyperRMQHuffman B = 64
+construction:                  11.708000
+query:                       2077.887000
+memory:                         2.217120
+HyperRMQHuffman B = 128
+construction:                  10.694000
+query:                       2200.180000
+memory:                         2.008480
+HyperRMQHuffman B = 256
+construction:                  10.270000
+query:                       1874.062000
+memory:                         1.892480
+HyperRMQHuffman B = 512
+construction:                   9.934000
+query:                       1325.572000
+memory:                         1.821680
+HyperRMQHuffman B = 1024
+construction:                   9.957000
+query:                       1000.038000
+memory:                         1.782880
+N = 1000000
+FerradaRMQ
+construction:                  24.769000
+query:                        649.023000
+memory:                         2.106880
+SDSLNEWRMQ
+construction:                  28.350000
+query:                         21.036000
+memory:                         2.189648
+HyperRMQHuffman B = 6
+construction:                 185.766000
+query:                      10014.540000
+memory:                         2.810848
+HyperRMQHuffman B = 64
+construction:                 119.479000
+query:                       2596.783000
+memory:                         2.214560
+HyperRMQHuffman B = 128
+construction:                 108.216000
+query:                       2458.131000
+memory:                         2.011416
+HyperRMQHuffman B = 256
+construction:                 102.763000
+query:                       2595.815000
+memory:                         1.890416
+HyperRMQHuffman B = 512
+construction:                  99.495000
+query:                       2244.001000
+memory:                         1.823512
+HyperRMQHuffman B = 1024
+construction:                  97.629000
+query:                       2051.338000
+memory:                         1.784424
+N = 10000000
+FerradaRMQ
+construction:                 244.573000
+query:                        848.344000
+memory:                         2.092314
+SDSLNEWRMQ
+construction:                 290.121000
+query:                         15.076000
+memory:                         2.204241
+HyperRMQHuffman B = 7
+construction:                1888.500000
+query:                      11713.178000
+memory:                         2.688785
+HyperRMQHuffman B = 64
+construction:                1390.065000
+query:                       3200.050000
+memory:                         2.216738
+HyperRMQHuffman B = 128
+construction:                1167.953000
+query:                       3011.471000
+memory:                         2.010914
+HyperRMQHuffman B = 256
+construction:                1070.267000
+query:                       2898.268000
+memory:                         1.891304
+HyperRMQHuffman B = 512
+construction:                1018.447000
+query:                       2781.126000
+memory:                         1.822224
+HyperRMQHuffman B = 1024
+construction:                 967.466000
+query:                       2545.776000
+memory:                         1.783716
+N = 100000000
+FerradaRMQ
+construction:                2505.667000
+query:                       1130.276000
+memory:                         2.095951
+SDSLNEWRMQ
+construction:                2887.415000
+query:                         26.144000
+memory:                         2.226523
+HyperRMQHuffman B = 8
+construction:               22526.649000
+query:                      12972.511000
+memory:                         2.577280
+HyperRMQHuffman B = 64
+construction:               16579.133000
+query:                       3817.446000
+memory:                         2.217366
+HyperRMQHuffman B = 128
+construction:               12825.171000
+query:                       3695.359000
+memory:                         2.011428
+HyperRMQHuffman B = 256
+construction:               11443.761000
+query:                       3508.494000
+memory:                         1.890980
+HyperRMQHuffman B = 512
+construction:               10571.764000
+query:                       3127.396000
+memory:                         1.822224
+HyperRMQHuffman B = 1024
+construction:               10160.078000
+query:                       2918.151000
+memory:                         1.783610
+N = 1000000000
+FerradaRMQ
+construction:               24890.941000
+query:                       1680.510000
+memory:                         2.101587
+SDSLNEWRMQ
+construction:               28755.101000
+query:                         30.051000
+memory:                         2.256739
+HyperRMQHuffman B = 9
+construction:              283115.074000
+query:                      14098.127000
+memory:                         2.503835
+HyperRMQHuffman B = 64
+construction:              200618.980000
+query:                       5192.849000
+memory:                         2.217803
+HyperRMQHuffman B = 128
+construction:              144628.789000
+query:                       4941.262000
+memory:                         2.011478
+HyperRMQHuffman B = 256
+construction:              123067.259000
+query:                       4654.278000
+memory:                         1.891054
+HyperRMQHuffman B = 512
+construction:              110409.058000
+query:                       4246.405000
+memory:                         1.822273
+HyperRMQHuffman B = 1024
+construction:              103933.142000
+query:                       4083.797000
+memory:                         1.783613
