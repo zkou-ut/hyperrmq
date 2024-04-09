@@ -1,0 +1,36 @@
+Tue Apr  9 18:38:07 2024
+
+Q = 1000000
+N = 10000
+FerradaRMQ
+construction:                   0.295000
+query:                        421.244000
+memory:                         4.531200
+SDSLNEWRMQ
+construction:                   0.307000
+query:                         74.476000
+memory:                         2.475200
+HyperRMQHuffman B = 4
+construction:                   2.376000
+query:                       9228.452000
+memory:                         3.427200
+HyperRMQHuffman B = 64
+construction:                   1.222000
+query:                       1388.654000
+memory:                         2.237600
+HyperRMQHuffman B = 128
+construction:                   1.108000
+query:                        849.652000
+memory:                         2.014400
+HyperRMQHuffman B = 256
+construction:                   1.168000
+query:                        765.617000
+memory:                         1.886400
+HyperRMQHuffman B = 512
+construction:                   1.117000
+query:                        726.342000
+memory:                         1.836800
+HyperRMQHuffman B = 1024
+construction:                   1.099000
+query:                        624.740000
+memory:                         1.788000
