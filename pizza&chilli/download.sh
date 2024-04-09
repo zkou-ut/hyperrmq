@@ -1,3 +1,7 @@
+# This file is retrieved from the following repository:
+# https://github.com/kittobi1992/rmq-experiments/blob/master/pizza%26chilli/download.sh
+# The baseurl is modified in this file.
+
 baseurl='https://pizzachili.dcc.uchile.cl/texts'
 
 files='
