@@ -16,3 +16,6 @@ add_subdirectory(sdsl-lite)
 
 
 add_subdirectory(experiment)
+
+add_executable(simple-test simple_test.cpp)
+target_link_libraries(simple-test hyperrmq ferradarmq sdsl)
