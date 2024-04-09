@@ -72,7 +72,8 @@ int main() {
 
     mt19937 engine(0);
 
-    for (int N = 1; N <= 100; N++) {
+    {
+        const int N = 1000;
         vector<int32_t> perm(N);
         iota(perm.begin(), perm.end(), 0);
         shuffle(perm.begin(), perm.end(), engine);
@@ -80,10 +81,11 @@ int main() {
         test_exhaustive(perm);
     }
 
-    for (int N = 1; N <= 100; N++) {
+    {
+        const int N = 1000;
         vector<int32_t> values(N);
         for (int i = 0; i < N; i++) {
-            values[i] = engine() % 10;
+            values[i] = engine() % 100;
         }
 
         test_exhaustive(values);
