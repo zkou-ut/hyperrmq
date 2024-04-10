@@ -3,3 +3,6 @@ target_link_libraries(benchmark_arithmetic_decoding hyperrmq)
 
 add_executable(change_n change_n.cpp)
 target_link_libraries(change_n hyperrmq ferradarmq sdsl)
+
+add_executable(change_width change_width.cpp)
+target_link_libraries(change_width hyperrmq ferradarmq sdsl)
