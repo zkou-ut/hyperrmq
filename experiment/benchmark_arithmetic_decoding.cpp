@@ -3,7 +3,7 @@
 #include "hyperrmq/arithmetic.hpp"
 
 using namespace std;
-using namespace average_case_optimal_rmq;
+using namespace hyperrmq;
 
 int main() {
     cout << fixed << setprecision(6);

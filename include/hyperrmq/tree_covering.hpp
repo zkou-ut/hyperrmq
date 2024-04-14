@@ -9,7 +9,7 @@
 #include "hyperrmq/minimal_cell_array.hpp"
 #include "hyperrmq/tree_bp.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 uint64_t legacy_encode_microtree(uint64_t bp, uint64_t cut_pos);
 std::pair<uint64_t, uint64_t> legacy_decode_microtree(uint64_t microtree);
@@ -46,4 +46,4 @@ std::pair<TreeBP, std::vector<uint64_t>> legacy_tree_covering(
 std::pair<TreeBP, MicrotreeSplitRankArray> tree_covering(const int64_t B,
                                                          const TreeBP &tree);
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

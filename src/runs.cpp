@@ -6,7 +6,7 @@
 #include <random>
 #include <set>
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <typename T>
 uint32_t count_increasing_runs(const std::vector<T>& perm) {
@@ -77,4 +77,4 @@ template void random_exact_fixed_incresing_runs(std::vector<int32_t>&, uint32_t,
 template void random_exact_fixed_incresing_runs(std::vector<uint32_t>&,
                                                 uint32_t, bool);
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

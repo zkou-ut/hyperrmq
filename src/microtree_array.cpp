@@ -9,7 +9,7 @@
 #include "hyperrmq/bitutil.hpp"
 #include "hyperrmq/memutil.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 EditableMicrotreeArray::EditableMicrotreeArray() {}
 
@@ -668,4 +668,4 @@ uint32_t CompressedMicrotreeSplitRankArrayAllArithmetic::get_node_count(
     return node_count;
 }
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

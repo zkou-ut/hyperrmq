@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 struct BitStack {
     uint64_t num_of_bits;
@@ -65,4 +65,4 @@ struct BitArray {
 
 std::ostream& operator<<(std::ostream& stream, const BitArray& bit_array);
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

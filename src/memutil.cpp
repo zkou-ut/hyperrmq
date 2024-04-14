@@ -3,7 +3,7 @@
 #include <climits>
 #include <string>
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <typename T>
 uint64_t evaluate_vector_memory_consumption(const std::vector<T>& vec) {
@@ -44,4 +44,4 @@ std::vector<std::pair<std::string, uint64_t>> memory_table_combine_children(
     return result;
 }
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

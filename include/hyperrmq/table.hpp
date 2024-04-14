@@ -3,7 +3,7 @@
 #include <array>
 #include <cstdint>
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <uint32_t c>
 static std::pair<std::array<int32_t, (1 << c)>, std::array<int32_t, (1 << c)>>
@@ -35,4 +35,4 @@ const std::array<int32_t, (1 << c)> excess_table = tables<c>.first;
 template <uint32_t c>
 const std::array<int32_t, (1 << c)> min_table = tables<c>.second;
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

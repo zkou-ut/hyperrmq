@@ -2,7 +2,7 @@
 
 #include "hyperrmq/bit_array.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 // T: type of encoded object
 template <typename T>
@@ -35,4 +35,4 @@ struct FixedLengthCodeArrayBase {
     BitArray codes;
 };
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

@@ -5,7 +5,7 @@
 
 #include "hyperrmq/bit_array.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 struct TreeBP {
     uint64_t n;
@@ -37,4 +37,4 @@ struct TreeBP {
 
 TreeBP cartesian_tree_bp(const std::vector<int32_t>& values);
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

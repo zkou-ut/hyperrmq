@@ -6,7 +6,7 @@
 #include "hyperrmq/bitutil.hpp"
 #include "hyperrmq/memutil.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 BitStack::BitStack() : num_of_bits(0), cells() {}
 
@@ -261,4 +261,4 @@ std::ostream& operator<<(std::ostream& stream, const BitArray& bit_array) {
     return stream << bit_array.to_string();
 }
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

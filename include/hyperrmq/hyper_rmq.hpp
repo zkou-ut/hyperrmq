@@ -12,7 +12,7 @@
 #include "hyperrmq/three_level_prefix_sum.hpp"
 #include "hyperrmq/tree_covering.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <uint32_t W = 64, typename CompressedMicrotreeSplitRankArray =
                                CompressedMicrotreeSplitRankArrayHuffman<W>>
@@ -258,4 +258,4 @@ HyperRMQ<W, CompressedMicrotreeSplitRankArray>::memory_table() const {
                     });
 }
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

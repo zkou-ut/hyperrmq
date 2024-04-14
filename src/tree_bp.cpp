@@ -5,7 +5,7 @@
 
 #include "hyperrmq/table.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 TreeBP::TreeBP() : n(0), bp() {}
 
@@ -207,4 +207,4 @@ TreeBP cartesian_tree_bp(const std::vector<int32_t> &values) {
     return TreeBP(n, std::move(bp));
 }
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

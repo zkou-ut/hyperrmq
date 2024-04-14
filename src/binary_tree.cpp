@@ -1,6 +1,6 @@
 #include "hyperrmq/binary_tree.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 BinaryTree::BinaryTree() : n(0), root(None) {}
 
@@ -37,4 +37,4 @@ std::string BinaryTree::to_BP_string(std::string left_delim,
     return root == None ? "" : bp(bp, root);
 }
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

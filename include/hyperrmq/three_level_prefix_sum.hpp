@@ -2,7 +2,7 @@
 
 #include "hyperrmq/two_level_increasing_array.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <typename T = uint32_t, uint32_t K = 32, uint32_t L = 32>
 struct ThreeLevelPrefixSum {
@@ -30,4 +30,4 @@ struct ThreeLevelPrefixSum {
     TwoLevelIncreasingArray<T, L> superblock;
 };
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

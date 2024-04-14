@@ -9,7 +9,7 @@
 #include "hyperrmq/memutil.hpp"
 #include "hyperrmq/tree_covering.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <uint32_t W>
 LegacyRMQHuffman<W>::LegacyRMQHuffman() {}
@@ -250,4 +250,4 @@ template struct LegacyRMQHuffman<512>;
 template struct LegacyRMQHuffman<1024>;
 template struct LegacyRMQHuffman<2048>;
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

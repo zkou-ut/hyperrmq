@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <typename T, uint32_t K>
 TwoLevelIncreasingArray<T, K>::TwoLevelIncreasingArray() : length(0) {}
@@ -71,4 +71,4 @@ template struct TwoLevelIncreasingArray<uint32_t, 16>;
 template struct TwoLevelIncreasingArray<uint32_t, 32>;
 template struct TwoLevelIncreasingArray<uint32_t, 64>;
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

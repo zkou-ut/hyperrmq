@@ -2,7 +2,7 @@
 
 #include "hyperrmq/bit_array.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <typename T>
 struct MinimalCellArray {
@@ -28,4 +28,4 @@ struct MinimalCellArray {
     BitArray bit_array;
 };
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

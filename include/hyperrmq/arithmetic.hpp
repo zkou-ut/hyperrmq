@@ -12,7 +12,7 @@
 #include "hyperrmq/bit_array.hpp"
 #include "hyperrmq/tree_bp.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 // It encodes interval by using a tag in the interval.
 // It saves the last `1` and following zeros.
@@ -406,4 +406,4 @@ std::vector<uint32_t> arithmetic_to_left_seq(const uint32_t node_count,
     return decode_left_seq<depth_first>(node_count, decoder);
 }
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 struct BinaryTree {
     int32_t None = -1;
@@ -29,4 +29,4 @@ struct BinaryTree {
     }
 };
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

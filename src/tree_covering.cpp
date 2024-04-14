@@ -7,7 +7,7 @@
 
 #include "hyperrmq/bitutil.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 uint64_t legacy_encode_microtree(uint64_t bp, uint64_t cut_pos) {
     assert(bp << 6 >> 6 == bp);
@@ -471,4 +471,4 @@ std::pair<TreeBP, MicrotreeSplitRankArray> tree_covering(const int64_t B,
                                           tree);
 }
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

@@ -12,7 +12,7 @@
 #include "hyperrmq/table.hpp"
 #include "hyperrmq/tree_bp.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <uint32_t c = 8, uint32_t b = 1024>
 struct RMMTree {
@@ -529,4 +529,4 @@ RMMTree<c, b>::memory_table() const {
         });
 }
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

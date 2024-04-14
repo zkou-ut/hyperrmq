@@ -7,7 +7,7 @@
 
 #include "hyperrmq/bit_array.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <typename T = uint64_t>
 struct HuffmanTree {
@@ -53,4 +53,4 @@ struct CanonicalHuffmanCode {
     std::vector<uint64_t> first_index, first_code;
 };
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

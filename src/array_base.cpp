@@ -4,7 +4,7 @@
 
 #include "hyperrmq/tree_bp.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <typename T>
 FixedLengthCodeArrayBase<T>::FixedLengthCodeArrayBase()
@@ -72,4 +72,4 @@ uint64_t FixedLengthCodeArrayBase<T>::evaluate_memory_consumption() const {
 template struct FixedLengthCodeArrayBase<TreeBP>;
 template struct FixedLengthCodeArrayBase<std::pair<TreeBP, uint32_t>>;
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

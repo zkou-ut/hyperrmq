@@ -5,7 +5,7 @@
 
 #include "hyperrmq/binary_tree.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 struct CartesianTree {
     int32_t n;
@@ -14,4 +14,4 @@ struct CartesianTree {
     explicit CartesianTree(const std::vector<int32_t> &values);
 };
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

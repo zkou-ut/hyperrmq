@@ -2,7 +2,7 @@
 
 #include "hyperrmq/rmm_tree.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <uint32_t c = 8, uint32_t b = 1024>
 struct RMQBP {
@@ -36,4 +36,4 @@ uint64_t RMQBP<c, b>::evaluate_memory_consumption() const {
     return rmm_tree.evaluate_memory_consumption();
 }
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

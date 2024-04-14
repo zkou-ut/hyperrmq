@@ -5,7 +5,7 @@
 
 #include "hyperrmq/bitutil.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <typename T>
 MinimalCellArray<T>::MinimalCellArray() : width(0), length(0), offset(0) {}
@@ -75,4 +75,4 @@ template struct MinimalCellArray<int16_t>;
 template struct MinimalCellArray<int32_t>;
 template struct MinimalCellArray<int64_t>;
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

@@ -14,7 +14,7 @@
 #include "hyperrmq/three_level_prefix_sum.hpp"
 #include "hyperrmq/tree_covering.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 namespace {
 // I gave up writing Node class with lazy evaluation.
@@ -747,4 +747,4 @@ inline uint64_t HypersuccinctBinaryTree<
            close_sample.evaluate_memory_consumption();
 }
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

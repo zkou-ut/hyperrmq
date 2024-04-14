@@ -1,6 +1,6 @@
 #include "hyperrmq/bitutil.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 uint64_t popcount(uint64_t b) {
     b -= (b >> 1) & 0x5555555555555555;
@@ -16,4 +16,4 @@ uint64_t ceil_log2(uint64_t b) {
     return lg;
 }
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

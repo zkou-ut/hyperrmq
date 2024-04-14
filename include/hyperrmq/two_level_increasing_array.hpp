@@ -2,7 +2,7 @@
 
 #include "hyperrmq/minimal_cell_array.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <typename T = uint32_t, uint32_t K = 32>
 struct TwoLevelIncreasingArray {
@@ -25,4 +25,4 @@ struct TwoLevelIncreasingArray {
     MinimalCellArray<T> block, superblock;
 };
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

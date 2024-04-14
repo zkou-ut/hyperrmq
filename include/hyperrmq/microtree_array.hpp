@@ -6,7 +6,7 @@
 #include "hyperrmq/three_level_prefix_sum.hpp"
 #include "hyperrmq/tree_bp.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 struct EditableMicrotreeArray : FixedLengthCodeArrayBase<TreeBP> {
    public:
@@ -159,4 +159,4 @@ struct CompressedMicrotreeSplitRankArrayAllArithmetic
     ThreeLevelPrefixSum<uint32_t> code_len;
 };
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

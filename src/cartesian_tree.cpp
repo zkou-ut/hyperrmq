@@ -2,7 +2,7 @@
 
 #include <stack>
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 CartesianTree::CartesianTree(const std::vector<int32_t> &values) {
     n = values.size();
@@ -24,4 +24,4 @@ CartesianTree::CartesianTree(const std::vector<int32_t> &values) {
     binary_tree = BinaryTree(parent);
 }
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

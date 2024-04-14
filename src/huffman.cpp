@@ -7,7 +7,7 @@
 #include "hyperrmq/microtree_array.hpp"
 #include "hyperrmq/minimal_cell_array.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <typename T>
 HuffmanTree<T>::HuffmanTree(const std::map<T, uint64_t> &alphabet_count)
@@ -181,4 +181,4 @@ template struct CanonicalHuffmanCode<TreeBP, EditableMicrotreeArray>;
 template struct CanonicalHuffmanCode<std::pair<TreeBP, uint32_t>,
                                      MicrotreeSplitRankArray>;
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

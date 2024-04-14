@@ -4,7 +4,7 @@
 
 #include "hyperrmq/memutil.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <typename T, uint32_t K, uint32_t L>
 ThreeLevelPrefixSum<T, K, L>::ThreeLevelPrefixSum() : length(0) {}
@@ -108,4 +108,4 @@ template struct ThreeLevelPrefixSum<uint32_t, 16, 16>;
 template struct ThreeLevelPrefixSum<uint32_t, 32, 32>;
 template struct ThreeLevelPrefixSum<uint32_t, 64, 64>;
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

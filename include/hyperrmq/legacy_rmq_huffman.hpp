@@ -5,7 +5,7 @@
 #include "hyperrmq/rmm_tree.hpp"
 #include "hyperrmq/two_level_increasing_array.hpp"
 
-namespace average_case_optimal_rmq {
+namespace hyperrmq {
 
 template <uint32_t W = 64>
 struct LegacyRMQHuffman {
@@ -31,4 +31,4 @@ struct LegacyRMQHuffman {
     uint64_t evaluate_memory_consumption() const;
 };
 
-}  // namespace average_case_optimal_rmq
+}  // namespace hyperrmq

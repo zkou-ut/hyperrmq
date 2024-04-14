@@ -6,7 +6,7 @@
 #include "sdsl/rmq_support.hpp"
 
 using namespace std;
-using namespace average_case_optimal_rmq;
+using namespace hyperrmq;
 using namespace sdsl;
 
 using HyperRMQHuffman =
