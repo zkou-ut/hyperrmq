@@ -1,0 +1,184 @@
+Tue Apr 16 14:19:34 2024
+
+N = 1000000000
+Q = 1000000
+N8hyperrmq8HyperRMQILj16ENS_40CompressedMicrotreeSplitRankArrayHuffmanILj16EEEEE
+B = 2
+memory:
+HyperRMQ:                          3624309944
+   RMMTree:                        1299590008
+      rmmmain:                     1218663032
+      excesssample:                   7140672
+      mintree:                       73786304
+   HuffmanArray:                   1909374720
+      Sequence:                    1623191424
+      Sampling:                     286182144
+      Table:                             1152
+   ThreeLevel:                      415345216
+      Block:                        380832256
+      Super:                         34512960
+time:
+        construction:              308628 ms
+               query:               14201 ms
+N8hyperrmq8HyperRMQILj16ENS_40CompressedMicrotreeSplitRankArrayHuffmanILj16EEEEE
+B = 3
+memory:
+HyperRMQ:                          3225834560
+   RMMTree:                         930860288
+      rmmmain:                      874496128
+      excesssample:                   5124032
+      mintree:                       51240128
+   HuffmanArray:                   1940617536
+      Sequence:                    1735254528
+      Sampling:                     205360384
+      Table:                             2624
+   ThreeLevel:                      354356736
+      Block:                        327936064
+      Super:                         26420672
+time:
+        construction:              246599 ms
+               query:               14193 ms
+N8hyperrmq8HyperRMQILj16ENS_40CompressedMicrotreeSplitRankArrayHuffmanILj16EEEEE
+B = 4
+memory:
+HyperRMQ:                          2927106528
+   RMMTree:                         725515296
+      rmmmain:                      681584864
+      excesssample:                   3993728
+      mintree:                       39936704
+   HuffmanArray:                   1925404480
+      Sequence:                    1764689792
+      Sampling:                     160703360
+      Table:                            11328
+   ThreeLevel:                      276186752
+      Block:                        255594368
+      Super:                         20592384
+time:
+        construction:              212982 ms
+               query:               13345 ms
+N8hyperrmq8HyperRMQILj16ENS_40CompressedMicrotreeSplitRankArrayHuffmanILj16EEEEE
+B = 5
+memory:
+HyperRMQ:                          2746079648
+   RMMTree:                         594262304
+      rmmmain:                      558279328
+      excesssample:                   3271232
+      mintree:                       32711744
+   HuffmanArray:                   1925595584
+      Sequence:                    1776415168
+      Sampling:                     149076736
+      Table:                           103680
+   ThreeLevel:                      226221760
+      Block:                        209354752
+      Super:                         16867008
+time:
+        construction:              194718 ms
+               query:               15639 ms
+N8hyperrmq8HyperRMQILj16ENS_40CompressedMicrotreeSplitRankArrayHuffmanILj16EEEEE
+B = 6
+memory:
+HyperRMQ:                          2632013200
+   RMMTree:                         502249488
+      rmmmain:                      472705296
+      excesssample:                   2769792
+      mintree:                       26774400
+   HuffmanArray:                   1907779136
+      Sequence:                    1780465600
+      Sampling:                     126225984
+      Table:                          1087552
+   ThreeLevel:                      221984576
+      Block:                        206808576
+      Super:                         15176000
+time:
+        construction:              186857 ms
+               query:               13697 ms
+N8hyperrmq8HyperRMQILj16ENS_40CompressedMicrotreeSplitRankArrayHuffmanILj16EEEEE
+B = 7
+memory:
+HyperRMQ:                          2526474744
+   RMMTree:                         435492600
+      rmmmain:                      409875256
+      excesssample:                   2401664
+      mintree:                       23215680
+   HuffmanArray:                   1898502848
+      Sequence:                    1780093760
+      Sampling:                     109836416
+      Table:                          8572672
+   ThreeLevel:                      192479296
+      Block:                        179320448
+      Super:                         13158848
+time:
+        construction:              196618 ms
+               query:               15038 ms
+N8hyperrmq8HyperRMQILj16ENS_40CompressedMicrotreeSplitRankArrayHuffmanILj16EEEEE
+B = 8
+memory:
+HyperRMQ:                          2471282208
+   RMMTree:                         384383264
+      rmmmain:                      361772320
+      excesssample:                   2119808
+      mintree:                       20491136
+   HuffmanArray:                   1917008960
+      Sequence:                    1777355520
+      Sampling:                      96945920
+      Table:                         42707520
+   ThreeLevel:                      169889984
+      Block:                        158275392
+      Super:                         11614592
+time:
+        construction:              236515 ms
+               query:               15714 ms
+N8hyperrmq8HyperRMQILj16ENS_40CompressedMicrotreeSplitRankArrayHuffmanILj16EEEEE
+B = 9
+memory:
+HyperRMQ:                          2503834848
+   RMMTree:                         344023840
+      rmmmain:                      323787040
+      excesssample:                   1897216
+      mintree:                       18339584
+   HuffmanArray:                   2007759104
+      Sequence:                    1770802240
+      Sampling:                      96885248
+      Table:                        140071616
+   ThreeLevel:                      152051904
+      Block:                        141656832
+      Super:                         10395072
+time:
+        construction:              286758 ms
+               query:               14493 ms
+N8hyperrmq8HyperRMQILj16ENS_40CompressedMicrotreeSplitRankArrayHuffmanILj16EEEEE
+B = 10
+memory:
+HyperRMQ:                          2610326760
+   RMMTree:                         311305832
+      rmmmain:                      292993576
+      excesssample:                   1716800
+      mintree:                       16595456
+   HuffmanArray:                   2161429760
+      Sequence:                    1756912256
+      Sampling:                      87671040
+      Table:                        316846464
+   ThreeLevel:                      137591168
+      Block:                        128184704
+      Super:                          9406464
+time:
+        construction:              337609 ms
+               query:               16917 ms
+N8hyperrmq8HyperRMQILj16ENS_40CompressedMicrotreeSplitRankArrayHuffmanILj16EEEEE
+B = 11
+memory:
+HyperRMQ:                          2813596240
+   RMMTree:                         283750736
+      rmmmain:                      267551184
+      excesssample:                   1567744
+      mintree:                       14631808
+   HuffmanArray:                   2387480256
+      Sequence:                    1733835200
+      Sampling:                      80057984
+      Table:                        573587072
+   ThreeLevel:                      142365248
+      Block:                        133775616
+      Super:                          8589632
+time:
+        construction:              379769 ms
+               query:               16066 ms
