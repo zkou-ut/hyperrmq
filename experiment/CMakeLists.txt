@@ -1,6 +1,12 @@
 add_executable(benchmark_arithmetic_decoding benchmark_arithmetic_decoding.cpp)
 target_link_libraries(benchmark_arithmetic_decoding hyperrmq)
 
+add_executable(change_B_Huffman change_B_Huffman.cpp)
+target_link_libraries(change_B_Huffman hyperrmq)
+
+add_executable(change_W_Huffman change_W_Huffman.cpp)
+target_link_libraries(change_W_Huffman hyperrmq)
+
 add_executable(change_n change_n.cpp)
 target_link_libraries(change_n hyperrmq ferradarmq sdsl)
 
