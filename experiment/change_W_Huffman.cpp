@@ -72,7 +72,7 @@ struct bm {
 int main() {
     cout << fixed << setprecision(5);
 
-    constexpr int N = 1e6, Q = 1e4;
+    constexpr int N = 1e9, Q = 1e6;
 
     auto timeinfo =
         chrono::system_clock::to_time_t(chrono::system_clock::now());
