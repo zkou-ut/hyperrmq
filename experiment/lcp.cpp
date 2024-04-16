@@ -4,9 +4,11 @@
 #include "RMQRMM64.h"
 #include "hyperrmq/hyper_rmq.hpp"
 #include "hyperrmq/hypersuccinct_binary_tree.hpp"
-#include "sdsl/construct_lcp.hpp"
-#include "sdsl/construct_sa.hpp"
 #include "sdsl/rmq_support.hpp"
+#include "sdsl/suffix_arrays.hpp"
+#include "sdsl/suffix_trees.hpp"
+#include "sdsl/construct_lcp.hpp"
+#include "sdsl/construct_bwt.hpp"
 
 // This file is based on the file from the following repository:
 // https://github.com/kittobi1992/rmq-experiments/blob/master/executer/lcp_experiment.cpp
@@ -24,6 +26,19 @@ struct state {
     ll i, j, l;
     state(ll i, ll j, ll l) : i(i), j(j), l(l) {}
 };
+
+using HighResClockTimepoint = std::chrono::time_point<std::chrono::high_resolution_clock>;
+
+HighResClockTimepoint s, e;
+
+inline HighResClockTimepoint time() {
+    return std::chrono::high_resolution_clock::now();
+}
+
+double seconds() {
+    std::chrono::duration<double> elapsed_seconds = e - s;
+    return elapsed_seconds.count();
+}
 
 using HyperRMQHuffman =
     HyperRMQ<16, CompressedMicrotreeSplitRankArrayHuffman<16>>;
@@ -99,8 +114,8 @@ size_t traverseSuffixTree(RMQ& rmq, int_vector<> lcp) {
     return num_queries;
 }
 
-template <class HyperRMQ>
-size_t traverseSuffixTreeHyper(HyperRMQ& rmq, int_vector<> lcp) {
+template <class RMQ>
+size_t traverseSuffixTreeHyper(RMQ & rmq, int_vector<> lcp) {
     size_t num_queries = 0;
     size_t N = lcp.size();
     stack<state> s;
@@ -141,47 +156,47 @@ size_t traverseSuffixTreeHyper(HyperRMQ& rmq, int_vector<> lcp) {
     return num_queries;
 }
 
-template <class Hypersuccinct>
-size_t traverseSuffixTreeHyper(HyperRMQ& rmq, int_vector<> lcp) {
-    size_t num_queries = 0;
-    size_t N = lcp.size();
-    stack<state> s;
-    s.emplace(0, N - 1, 0);
+// template <class HypersuccinctT>
+// size_t traverseSuffixTreeHyper(RMQ& rmq, int_vector<> lcp) {
+//     size_t num_queries = 0;
+//     size_t N = lcp.size();
+//     stack<state> s;
+//     s.emplace(0, N - 1, 0);
 
-    while (!s.empty()) {
-        state cur = s.top();
-        s.pop();
-        //                    if(cur.i != cur.j) cout << "Internal Node: (" <<
-        //                    cur.i << "," << cur.j << ") - " << cur.l << endl;
-        if (cur.i == cur.j) {
-            //                           cout << "Leaf: " << cur.i << endl;
-            continue;
-        }
+//     while (!s.empty()) {
+//         state cur = s.top();
+//         s.pop();
+//         //                    if(cur.i != cur.j) cout << "Internal Node: (" <<
+//         //                    cur.i << "," << cur.j << ") - " << cur.l << endl;
+//         if (cur.i == cur.j) {
+//             //                           cout << "Leaf: " << cur.i << endl;
+//             continue;
+//         }
 
-        ll cur_i = cur.i;
-        while (cur_i < cur.j) {
-            num_queries++;
-            size_t min_i = rmq.query(cur_i + 1, cur.j);
-            //                           cout << cur_i << " " << cur.j << " " <<
-            //                           min_i << endl;
-            ll ii = cur_i;
-            ll jj = cur.j - 1;
-            if (lcp[min_i] == cur.l && min_i < cur.j)
-                jj = min_i - 1;
-            else if (lcp[min_i] != cur.l)
-                jj = cur.j;
-            if (ii + 1 <= jj) {
-                num_queries++;
-                size_t l_idx = rmq.query(ii + 1, jj);
-                s.emplace(ii, jj, lcp[l_idx]);
-            } else if (ii == jj)
-                s.emplace(ii, ii, lcp[ii]);
-            cur_i = jj + 1;
-        }
-    }
+//         ll cur_i = cur.i;
+//         while (cur_i < cur.j) {
+//             num_queries++;
+//             size_t min_i = rmq.query(cur_i + 1, cur.j);
+//             //                           cout << cur_i << " " << cur.j << " " <<
+//             //                           min_i << endl;
+//             ll ii = cur_i;
+//             ll jj = cur.j - 1;
+//             if (lcp[min_i] == cur.l && min_i < cur.j)
+//                 jj = min_i - 1;
+//             else if (lcp[min_i] != cur.l)
+//                 jj = cur.j;
+//             if (ii + 1 <= jj) {
+//                 num_queries++;
+//                 size_t l_idx = rmq.query(ii + 1, jj);
+//                 s.emplace(ii, jj, lcp[l_idx]);
+//             } else if (ii == jj)
+//                 s.emplace(ii, ii, lcp[ii]);
+//             cur_i = jj + 1;
+//         }
+//     }
 
-    return num_queries;
-}
+//     return num_queries;
+// }
 
 size_t traverseSuffixTreeFerrada(RMQRMM64& rmq, int_vector<> lcp) {
     size_t num_queries = 0;
@@ -316,7 +331,7 @@ int main(int argc, char* argv[]) {
         }
 
         {
-            HyperRMQHuffman rmq(N, round(log2(N)));
+            HyperRMQHuffman rmq(C, int(round(log2(N))));
             cout << "Start Suffix-Tree Traversion for RMQ " << algo4 << "..."
                  << endl;
             s = time();
@@ -341,36 +356,36 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    {
-        size_t N = lcp.size();
-        std::vector<int> C(N);
-        for (size_t i = 0; i < N; ++i) {
-            C[i] = lcp[i];
-        }
+    // {
+    //     size_t N = lcp.size();
+    //     std::vector<int> C(N);
+    //     for (size_t i = 0; i < N; ++i) {
+    //         C[i] = lcp[i];
+    //     }
 
-        {
-            HypersuccinctBinaryTreeHuffman rmq(N, round(log2(N)));
-            cout << "Start Suffix-Tree Traversion for RMQ " << algo6 << "..."
-                 << endl;
-            s = time();
-            size_t num_queries = traverseSuffixTreeHyper(rmq, lcp);
-            e = time();
-            double t = seconds();
-            std::cout << "LCP_RESULT Benchmark=" << test_id << " Algo=" << algo6
-                      << " Time=" << t << " NumQueries=" << num_queries
-                      << std::endl;
-        }
-        for (int B = 64; B <= 1024; B <<= 1) {
-            HypersuccinctBinaryTreeBreadth rmq(C, B);
-            cout << "Start Suffix-Tree Traversion for RMQ " << algo7 << B
-                 << "..." << endl;
-            s = time();
-            size_t num_queries = traverseSuffixTreeHyper(rmq, lcp);
-            e = time();
-            double t = seconds();
-            std::cout << "LCP_RESULT Benchmark=" << test_id << " Algo=" << algo7
-                      << " Time=" << t << " NumQueries=" << num_queries
-                      << std::endl;
-        }
-    }
+    //     {
+    //         HypersuccinctBinaryTreeHuffman rmq(N, round(log2(N)));
+    //         cout << "Start Suffix-Tree Traversion for RMQ " << algo6 << "..."
+    //              << endl;
+    //         s = time();
+    //         size_t num_queries = traverseSuffixTreeHyper(rmq, lcp);
+    //         e = time();
+    //         double t = seconds();
+    //         std::cout << "LCP_RESULT Benchmark=" << test_id << " Algo=" << algo6
+    //                   << " Time=" << t << " NumQueries=" << num_queries
+    //                   << std::endl;
+    //     }
+    //     for (int B = 64; B <= 1024; B <<= 1) {
+    //         HypersuccinctBinaryTreeBreadth rmq(C, B);
+    //         cout << "Start Suffix-Tree Traversion for RMQ " << algo7 << B
+    //              << "..." << endl;
+    //         s = time();
+    //         size_t num_queries = traverseSuffixTreeHyper(rmq, lcp);
+    //         e = time();
+    //         double t = seconds();
+    //         std::cout << "LCP_RESULT Benchmark=" << test_id << " Algo=" << algo7
+    //                   << " Time=" << t << " NumQueries=" << num_queries
+    //                   << std::endl;
+    //     }
+    // }
 }
