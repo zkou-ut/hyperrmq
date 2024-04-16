@@ -15,10 +15,15 @@ target_include_directories(ferradarmq PUBLIC rmq/includes)
 # sdsl
 add_subdirectory(sdsl-lite)
 
+# manually link include directories for sub libraries that
+target_include_directories(gtest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/sdsl-lite/external/googletest/include)
+target_include_directories(gtest_main PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/sdsl-lite/external/googletest/include)
 target_include_directories(divsufsort PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/sdsl-lite/external/libdivsufsort/include)
 target_include_directories(divsufsort64 PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/sdsl-lite/external/libdivsufsort/include)
 
+
 add_subdirectory(experiment)
+add_subdirectory(test)
 
 add_executable(simple-test simple_test.cpp)
 target_link_libraries(simple-test hyperrmq ferradarmq sdsl)
