@@ -60,7 +60,7 @@ void benchmark(const vector<int>& perm, int B,
 
 int main(int argc, char const* argv[]) {
     cout << fixed << setprecision(5);
-    int N = 1e7, Q = 1e4;
+    int N = 1e9, Q = 1e6;
 
     if (argc >= 2) {
         N = stoi(argv[1]);
