@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
-for_paper = False
+for_paper = True
 
 
 py_name = sys.argv[0]
