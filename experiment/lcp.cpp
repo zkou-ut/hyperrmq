@@ -241,7 +241,12 @@ size_t traverseSuffixTreeFerrada(RMQRMM64& rmq, int_vector<> lcp) {
 }
 
 int main(int argc, char* argv[]) {
+    if (argc < 3) {
+        cout << "usage : ./build/experiment/lcp ./pizza/&chilli/dna.200MB ./pizza\\&chilli/build" << endl;
+        return 0;
+    }
     string test_file, temp_dir, test_id;
+
 
     test_file = argv[1];
     temp_dir = argv[2];
