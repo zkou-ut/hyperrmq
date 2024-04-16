@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.13)
 project(hyperrmq CXX)
 
 set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wno-sign-compare -Wextra -Wno-type-limits")

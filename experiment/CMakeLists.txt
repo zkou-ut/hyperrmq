@@ -6,3 +6,6 @@ target_link_libraries(change_n hyperrmq ferradarmq sdsl)
 
 add_executable(change_width change_width.cpp)
 target_link_libraries(change_width hyperrmq ferradarmq sdsl)
+
+add_executable(lcp lcp.cpp)
+target_link_libraries(lcp hyperrmq ferradarmq sdsl)
