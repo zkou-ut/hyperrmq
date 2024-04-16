@@ -15,6 +15,8 @@ target_include_directories(ferradarmq PUBLIC rmq/includes)
 # sdsl
 add_subdirectory(sdsl-lite)
 
+target_include_directories(divsufsort PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/sdsl-lite/external/libdivsufsort/include)
+target_include_directories(divsufsort64 PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/sdsl-lite/external/libdivsufsort/include)
 
 add_subdirectory(experiment)
 

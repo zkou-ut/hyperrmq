@@ -4,11 +4,11 @@
 #include "RMQRMM64.h"
 #include "hyperrmq/hyper_rmq.hpp"
 #include "hyperrmq/hypersuccinct_binary_tree.hpp"
+#include "sdsl/construct_bwt.hpp"
+#include "sdsl/construct_lcp.hpp"
 #include "sdsl/rmq_support.hpp"
 #include "sdsl/suffix_arrays.hpp"
 #include "sdsl/suffix_trees.hpp"
-#include "sdsl/construct_lcp.hpp"
-#include "sdsl/construct_bwt.hpp"
 
 // This file is based on the file from the following repository:
 // https://github.com/kittobi1992/rmq-experiments/blob/master/executer/lcp_experiment.cpp
@@ -27,7 +27,8 @@ struct state {
     state(ll i, ll j, ll l) : i(i), j(j), l(l) {}
 };
 
-using HighResClockTimepoint = std::chrono::time_point<std::chrono::high_resolution_clock>;
+using HighResClockTimepoint =
+    std::chrono::time_point<std::chrono::high_resolution_clock>;
 
 HighResClockTimepoint s, e;
 
@@ -115,7 +116,7 @@ size_t traverseSuffixTree(RMQ& rmq, int_vector<> lcp) {
 }
 
 template <class RMQ>
-size_t traverseSuffixTreeHyper(RMQ & rmq, int_vector<> lcp) {
+size_t traverseSuffixTreeHyper(RMQ& rmq, int_vector<> lcp) {
     size_t num_queries = 0;
     size_t N = lcp.size();
     stack<state> s;
@@ -156,47 +157,33 @@ size_t traverseSuffixTreeHyper(RMQ & rmq, int_vector<> lcp) {
     return num_queries;
 }
 
-// template <class HypersuccinctT>
-// size_t traverseSuffixTreeHyper(RMQ& rmq, int_vector<> lcp) {
-//     size_t num_queries = 0;
-//     size_t N = lcp.size();
-//     stack<state> s;
-//     s.emplace(0, N - 1, 0);
+template <class HBT>
+size_t traverseSuffixTreeHBT(HBT& hbt, int_vector<> lcp) {
+    using Node = typename HBT::Node;
 
-//     while (!s.empty()) {
-//         state cur = s.top();
-//         s.pop();
-//         //                    if(cur.i != cur.j) cout << "Internal Node: (" <<
-//         //                    cur.i << "," << cur.j << ") - " << cur.l << endl;
-//         if (cur.i == cur.j) {
-//             //                           cout << "Leaf: " << cur.i << endl;
-//             continue;
-//         }
+    size_t num_queries = 0;
+    size_t N = lcp.size();
+    stack<Node> s;
+    s.push(hbt.root());
 
-//         ll cur_i = cur.i;
-//         while (cur_i < cur.j) {
-//             num_queries++;
-//             size_t min_i = rmq.query(cur_i + 1, cur.j);
-//             //                           cout << cur_i << " " << cur.j << " " <<
-//             //                           min_i << endl;
-//             ll ii = cur_i;
-//             ll jj = cur.j - 1;
-//             if (lcp[min_i] == cur.l && min_i < cur.j)
-//                 jj = min_i - 1;
-//             else if (lcp[min_i] != cur.l)
-//                 jj = cur.j;
-//             if (ii + 1 <= jj) {
-//                 num_queries++;
-//                 size_t l_idx = rmq.query(ii + 1, jj);
-//                 s.emplace(ii, jj, lcp[l_idx]);
-//             } else if (ii == jj)
-//                 s.emplace(ii, ii, lcp[ii]);
-//             cur_i = jj + 1;
-//         }
-//     }
+    while (!s.empty()) {
+        Node cur = s.top();
+        s.pop();
+        int in = hbt.node_to_inorder(cur);
+        //                    if(cur.i != cur.j) cout << "Internal Node: (" <<
+        //                    cur.i << "," << cur.j << ") - " << cur.l << endl;
+        Node r = hbt.right_child(cur);
+        if (r.is_valid()) {
+            s.push(r);
+        }
+        Node l = hbt.left_child(cur);
+        if (l.is_valid()) {
+            s.push(l);
+        }
+    }
 
-//     return num_queries;
-// }
+    return num_queries;
+}
 
 size_t traverseSuffixTreeFerrada(RMQRMM64& rmq, int_vector<> lcp) {
     size_t num_queries = 0;
@@ -242,11 +229,12 @@ size_t traverseSuffixTreeFerrada(RMQRMM64& rmq, int_vector<> lcp) {
 
 int main(int argc, char* argv[]) {
     if (argc < 3) {
-        cout << "usage : ./build/experiment/lcp ./pizza/&chilli/dna.200MB ./pizza\\&chilli/build" << endl;
+        cout << "usage : ./build/experiment/lcp ./pizza/&chilli/dna.200MB "
+                "./pizza\\&chilli/build"
+             << endl;
         return 0;
     }
     string test_file, temp_dir, test_id;
-
 
     test_file = argv[1];
     temp_dir = argv[2];
@@ -336,7 +324,7 @@ int main(int argc, char* argv[]) {
         }
 
         {
-            HyperRMQHuffman rmq(C, int(round(log2(N))));
+            HyperRMQHuffman rmq(C, int(round(log2(N) / 4)));
             cout << "Start Suffix-Tree Traversion for RMQ " << algo4 << "..."
                  << endl;
             s = time();
@@ -359,38 +347,31 @@ int main(int argc, char* argv[]) {
                       << " Time=" << t << " NumQueries=" << num_queries
                       << std::endl;
         }
+
+        {
+            HypersuccinctBinaryTreeHuffman hbt(cartesian_tree_bp(C),
+                                               int(round(log2(N) / 4)));
+            cout << "Start Suffix-Tree Traversion for RMQ " << algo6 << "..."
+                 << endl;
+            s = time();
+            size_t num_queries = traverseSuffixTreeHBT(hbt, lcp);
+            e = time();
+            double t = seconds();
+            std::cout << "LCP_RESULT Benchmark=" << test_id << " Algo=" << algo6
+                      << " Time=" << t << " NumQueries=" << num_queries
+                      << std::endl;
+        }
+        for (int B = 64; B <= 1024; B <<= 1) {
+            HypersuccinctBinaryTreeBreadth hbt(cartesian_tree_bp(C), B);
+            cout << "Start Suffix-Tree Traversion for RMQ " << algo7 << B
+                 << "..." << endl;
+            s = time();
+            size_t num_queries = traverseSuffixTreeHBT(hbt, lcp);
+            e = time();
+            double t = seconds();
+            std::cout << "LCP_RESULT Benchmark=" << test_id << " Algo=" << algo7
+                      << " Time=" << t << " NumQueries=" << num_queries
+                      << std::endl;
+        }
     }
-
-    // {
-    //     size_t N = lcp.size();
-    //     std::vector<int> C(N);
-    //     for (size_t i = 0; i < N; ++i) {
-    //         C[i] = lcp[i];
-    //     }
-
-    //     {
-    //         HypersuccinctBinaryTreeHuffman rmq(N, round(log2(N)));
-    //         cout << "Start Suffix-Tree Traversion for RMQ " << algo6 << "..."
-    //              << endl;
-    //         s = time();
-    //         size_t num_queries = traverseSuffixTreeHyper(rmq, lcp);
-    //         e = time();
-    //         double t = seconds();
-    //         std::cout << "LCP_RESULT Benchmark=" << test_id << " Algo=" << algo6
-    //                   << " Time=" << t << " NumQueries=" << num_queries
-    //                   << std::endl;
-    //     }
-    //     for (int B = 64; B <= 1024; B <<= 1) {
-    //         HypersuccinctBinaryTreeBreadth rmq(C, B);
-    //         cout << "Start Suffix-Tree Traversion for RMQ " << algo7 << B
-    //              << "..." << endl;
-    //         s = time();
-    //         size_t num_queries = traverseSuffixTreeHyper(rmq, lcp);
-    //         e = time();
-    //         double t = seconds();
-    //         std::cout << "LCP_RESULT Benchmark=" << test_id << " Algo=" << algo7
-    //                   << " Time=" << t << " NumQueries=" << num_queries
-    //                   << std::endl;
-    //     }
-    // }
 }
