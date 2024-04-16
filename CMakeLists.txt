@@ -15,7 +15,7 @@ target_include_directories(ferradarmq PUBLIC rmq/includes)
 # sdsl
 add_subdirectory(sdsl-lite)
 
-# manually link include directories for sub libraries that
+# manually link include directories for libraries that sdsl includes
 target_include_directories(gtest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/sdsl-lite/external/googletest/include)
 target_include_directories(gtest_main PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/sdsl-lite/external/googletest/include)
 target_include_directories(divsufsort PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/sdsl-lite/external/libdivsufsort/include)
