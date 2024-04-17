@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 
 #include "hyperrmq/hyper_rmq.hpp"
-#include "hyperrmq/memutil.hpp"
 
 using namespace std;
 using namespace hyperrmq;
