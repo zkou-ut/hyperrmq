@@ -163,10 +163,19 @@ int main() {
             perm, B, queries, "HyperRMQBreadth " + to_string(B)));
     }
 
-    int B_depth = 512;
+    int B = 512;
+
     output(benchmarkHyperRMQ<
            HyperRMQ<16, CompressedMicrotreeSplitRankArrayArithmetic<true>>>(
-        perm, B_depth, queries, "HyperRMQDepth " + to_string(B_depth)));
+        perm, B, queries, "HyperRMQDepth " + to_string(B)));
+
+    output(benchmarkHyperRMQ<HyperRMQ<
+               16, CompressedMicrotreeSplitRankArrayArithmetic<false, false>>>(
+        perm, B, queries, "HyperRMQBreadthNoPruning " + to_string(B)));
+
+    output(benchmarkHyperRMQ<HyperRMQ<
+               16, CompressedMicrotreeSplitRankArrayArithmetic<true, false>>>(
+        perm, B, queries, "HyperRMQDepthNoPruning " + to_string(B)));
 
     return 0;
 }
