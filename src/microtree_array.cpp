@@ -342,12 +342,12 @@ template struct CompressedMicrotreeSplitRankArrayHuffman<512>;
 template struct CompressedMicrotreeSplitRankArrayHuffman<1024>;
 template struct CompressedMicrotreeSplitRankArrayHuffman<2048>;
 
-template <bool depth_first>
+template <bool depth_first, bool pruning>
 CompressedMicrotreeSplitRankArrayArithmetic<
-    depth_first>::CompressedMicrotreeSplitRankArrayArithmetic() {}
+    depth_first, pruning>::CompressedMicrotreeSplitRankArrayArithmetic() {}
 
-template <bool depth_first>
-CompressedMicrotreeSplitRankArrayArithmetic<depth_first>::
+template <bool depth_first, bool pruning>
+CompressedMicrotreeSplitRankArrayArithmetic<depth_first, pruning>::
     CompressedMicrotreeSplitRankArrayArithmetic(
         const MicrotreeSplitRankArray &microtree_split_rank_array)
     : length(microtree_split_rank_array.size()) {
@@ -383,14 +383,15 @@ CompressedMicrotreeSplitRankArrayArithmetic<depth_first>::
     assert(first == code_seq.size());
 }
 
-template <bool depth_first>
-size_t CompressedMicrotreeSplitRankArrayArithmetic<depth_first>::size() const {
+template <bool depth_first, bool pruning>
+size_t CompressedMicrotreeSplitRankArrayArithmetic<depth_first, pruning>::size()
+    const {
     return length;
 }
 
-template <bool depth_first>
+template <bool depth_first, bool pruning>
 std::pair<TreeBP, uint32_t>
-CompressedMicrotreeSplitRankArrayArithmetic<depth_first>::operator[](
+CompressedMicrotreeSplitRankArrayArithmetic<depth_first, pruning>::operator[](
     uint64_t index) const {
     assert(0 <= index && index < length);
     auto code = code_seq.read_interval(code_len.sum(index), code_len[index]);
@@ -399,18 +400,19 @@ CompressedMicrotreeSplitRankArrayArithmetic<depth_first>::operator[](
     return {tree, split_ranks[index]};
 }
 
-template <bool depth_first>
+template <bool depth_first, bool pruning>
 uint64_t CompressedMicrotreeSplitRankArrayArithmetic<
-    depth_first>::evaluate_memory_consumption() const {
+    depth_first, pruning>::evaluate_memory_consumption() const {
     return code_seq.evaluate_memory_consumption() +
            node_counts.evaluate_memory_consumption() +
            split_ranks.evaluate_memory_consumption() +
            code_len.evaluate_memory_consumption();
 }
 
-template <bool depth_first>
+template <bool depth_first, bool pruning>
 std::vector<std::pair<std::string, uint64_t>>
-CompressedMicrotreeSplitRankArrayArithmetic<depth_first>::memory_table() const {
+CompressedMicrotreeSplitRankArrayArithmetic<depth_first,
+                                            pruning>::memory_table() const {
     return memory_table_combine_children(
         "Arithmetic",
         {
@@ -421,37 +423,52 @@ CompressedMicrotreeSplitRankArrayArithmetic<depth_first>::memory_table() const {
         });
 }
 
-template <bool depth_first>
-uint32_t
-CompressedMicrotreeSplitRankArrayArithmetic<depth_first>::get_node_count(
-    uint64_t index) const {
+template <bool depth_first, bool pruning>
+uint32_t CompressedMicrotreeSplitRankArrayArithmetic<
+    depth_first, pruning>::get_node_count(uint64_t index) const {
     assert(0 <= index && index < length);
     return node_counts[index];
 }
 
-template <bool depth_first>
+template <bool depth_first, bool pruning>
 uint32_t CompressedMicrotreeSplitRankArrayArithmetic<
-    depth_first>::get_left_chunk_popcount(uint64_t index) const {
+    depth_first, pruning>::get_left_chunk_popcount(uint64_t index) const {
     assert(0 <= index && index < length);
     return split_ranks[index];
 }
 
-template <bool depth_first>
+template <bool depth_first, bool pruning>
 uint32_t CompressedMicrotreeSplitRankArrayArithmetic<
-    depth_first>::get_right_chunk_popcount(uint64_t index) const {
+    depth_first, pruning>::get_right_chunk_popcount(uint64_t index) const {
     assert(0 <= index && index < length);
     return node_counts[index] - split_ranks[index];
 }
 
-template <bool depth_first>
+template <bool depth_first, bool pruning>
 std::pair<uint32_t, uint32_t> CompressedMicrotreeSplitRankArrayArithmetic<
-    depth_first>::get_node_count_left_popcount(uint64_t index) const {
+    depth_first, pruning>::get_node_count_left_popcount(uint64_t index) const {
     assert(0 <= index && index < length);
     return {node_counts[index], split_ranks[index]};
 }
 
 template <>
-uint32_t CompressedMicrotreeSplitRankArrayArithmetic<true>::get_lca(
+uint32_t CompressedMicrotreeSplitRankArrayArithmetic<false, false>::get_lca(
+    uint64_t index, uint32_t u_inorder, uint32_t v_inorder) const {
+    assert(0 <= index && index < length);
+    CompressedMicrotreeSplitRankArrayInterface::get_lca(index, u_inorder,
+                                                        v_inorder);
+};
+
+template <>
+uint32_t CompressedMicrotreeSplitRankArrayArithmetic<true, false>::get_lca(
+    uint64_t index, uint32_t u_inorder, uint32_t v_inorder) const {
+    assert(0 <= index && index < length);
+    CompressedMicrotreeSplitRankArrayInterface::get_lca(index, u_inorder,
+                                                        v_inorder);
+};
+
+template <>
+uint32_t CompressedMicrotreeSplitRankArrayArithmetic<true, true>::get_lca(
     uint64_t index, uint32_t u_inorder, uint32_t v_inorder) const {
     assert(0 <= index && index < length);
 
@@ -501,7 +518,7 @@ uint32_t CompressedMicrotreeSplitRankArrayArithmetic<true>::get_lca(
 }
 
 template <>
-uint32_t CompressedMicrotreeSplitRankArrayArithmetic<false>::get_lca(
+uint32_t CompressedMicrotreeSplitRankArrayArithmetic<false, true>::get_lca(
     uint64_t index, uint32_t u_inorder, uint32_t v_inorder) const {
     assert(0 <= index && index < length);
 
@@ -550,8 +567,10 @@ uint32_t CompressedMicrotreeSplitRankArrayArithmetic<false>::get_lca(
     assert(false);
 }
 
-template struct CompressedMicrotreeSplitRankArrayArithmetic<true>;
-template struct CompressedMicrotreeSplitRankArrayArithmetic<false>;
+template struct CompressedMicrotreeSplitRankArrayArithmetic<true, true>;
+template struct CompressedMicrotreeSplitRankArrayArithmetic<false, true>;
+template struct CompressedMicrotreeSplitRankArrayArithmetic<true, false>;
+template struct CompressedMicrotreeSplitRankArrayArithmetic<false, false>;
 
 CompressedMicrotreeSplitRankArrayAllArithmetic::
     CompressedMicrotreeSplitRankArrayAllArithmetic()

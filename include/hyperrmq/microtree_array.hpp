@@ -102,7 +102,7 @@ struct CompressedMicrotreeSplitRankArrayHuffman
     ThreeLevelPrefixSum<> code_idx_sample;
 };
 
-template <bool depth_first>
+template <bool depth_first, bool pruning = true>
 struct CompressedMicrotreeSplitRankArrayArithmetic
     : CompressedMicrotreeSplitRankArrayInterface {
    public:
