@@ -3,7 +3,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
-for_paper = False
+for_paper = True
 
 
 py_name = sys.argv[0]
@@ -92,9 +92,6 @@ ax.set_xticks(xticks)
 ax.set_xticklabels(["$2^{" + str(x) + "}$" for x in xticks])
 ax.set_xlabel("Tree-covering parameter $B$")
 ax.set_ylabel("Average query time [$\\mu$s]")
-
-plt.tight_layout()
-plt.savefig("change_B_arith_plots.pdf")
 
 plt.tight_layout()
 plt.savefig(fig_name)
