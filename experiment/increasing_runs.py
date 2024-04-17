@@ -2,7 +2,7 @@ import subprocess
 import tempfile
 from multiprocessing import Pool
 
-N = 10**9
+N = 10**8
 rs = [N // 1000, N // 100, N // 10]
 parallel_execution = True
 
