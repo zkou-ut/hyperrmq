@@ -455,16 +455,16 @@ template <>
 uint32_t CompressedMicrotreeSplitRankArrayArithmetic<false, false>::get_lca(
     uint64_t index, uint32_t u_inorder, uint32_t v_inorder) const {
     assert(0 <= index && index < length);
-    CompressedMicrotreeSplitRankArrayInterface::get_lca(index, u_inorder,
-                                                        v_inorder);
+    return CompressedMicrotreeSplitRankArrayInterface::get_lca(index, u_inorder,
+                                                               v_inorder);
 };
 
 template <>
 uint32_t CompressedMicrotreeSplitRankArrayArithmetic<true, false>::get_lca(
     uint64_t index, uint32_t u_inorder, uint32_t v_inorder) const {
     assert(0 <= index && index < length);
-    CompressedMicrotreeSplitRankArrayInterface::get_lca(index, u_inorder,
-                                                        v_inorder);
+    return CompressedMicrotreeSplitRankArrayInterface::get_lca(index, u_inorder,
+                                                               v_inorder);
 };
 
 template <>
