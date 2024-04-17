@@ -22,7 +22,7 @@ with open(txt_name) as f:
 for _ in range(3):
     print(lines.pop(0).rstrip())
 
-labels = ["F\&N", "NewRMQ", "H"]
+labels = ["RMM", "REC", "H"]
 s = 64
 while s <= 1024:
     labels.append("B" + str(s))
