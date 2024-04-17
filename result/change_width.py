@@ -7,9 +7,9 @@ import numpy as np
 for_paper = True
 
 
-py_name = sys.argv[0]
-txt_name = py_name.replace(".py", ".txt")
-fig_name = py_name.replace(".py", ".pdf" if for_paper else ".png")
+name_no_ext = sys.argv[0][:-3]
+txt_name = name_no_ext + ".txt"
+fig_ext = ".pdf" if for_paper else ".png"
 
 plt.rcParams["font.size"] = 22
 if for_paper:
@@ -19,17 +19,6 @@ if for_paper:
 with open(txt_name) as f:
     lines = f.readlines()
 
-
-markers = [
-    "o",
-    "D",
-    "p",
-    "x",
-    "v",
-    "^",
-    "<",
-    ">",
-]
 
 for _ in range(2):
     print(lines.pop(0).rstrip())
@@ -46,14 +35,14 @@ while ws[-1] * 2 <= N:
 
 step = len(ws) + 2
 
-
-markers = ["o", "D", "p", "x", "v", "^", "<", ">", "+"]
-labels = ["F\&N", "SDSLNEWRMQ", "H"]
+labels = ["RMM", "REC", "H"]
 s = 64
 while s <= 1024:
     labels.append("B" + str(s))
     s *= 2
 labels.append("D512")
+labels.append("BNP512")
+labels.append("DNP512")
 
 space_list = []
 times_list = []
@@ -64,24 +53,16 @@ for index, label in enumerate(labels):
         list(map(lambda s: float(s.split()[-1]), lines[start + 2 : start + step]))
     )
 
+# comparison
 
-xs = np.arange(len(labels))
-
-# fig, ax = plt.subplots()  # figsize=(6, 5))
-
-# ax.bar(xs, space_list, 0.8)
-# ax.set_xticks(xs)
-# ax.set_xticklabels(labels, rotation=90)
-# ax.grid()
-# ax.set_xlabel("RMQs")
-# ax.set_ylabel("Space consumption (bpe)")
-
-# plt.tight_layout()
-# plt.savefig("hist_space" + ext)
+used_indices = list(range(8))
+markers = ["o", "D", "p", "x", "v", "^", "<", ">"]
 
 fig, ax = plt.subplots(figsize=(8, 5))
 
-for label, times, marker in zip(labels, times_list, markers):
+for index, marker in zip(used_indices, markers):
+    label = labels[index]
+    times = times_list[index]
     ax.plot(
         np.arange(1, len(ws) + 1),
         times,
@@ -95,8 +76,59 @@ ax.grid()
 ax.set_xlabel("Query width")
 ax.set_ylabel("Average query time [$\\mu$s]")
 ax.set_ylim((0, 23))
-# ax.set_yscale("log")
 ax.legend(bbox_to_anchor=(1.1, 1), loc="upper left", borderaxespad=0)
 
 plt.tight_layout()
-plt.savefig(fig_name)
+plt.savefig(name_no_ext + "_comparison" + fig_ext)
+
+
+# depth breadth
+
+fig, ax = plt.subplots(figsize=(8, 5))
+
+depth_time = times_list[8]
+breadth_time = times_list[6]
+depth_no_pruning_time = times_list[10]
+breadth_no_pruning_time = times_list[9]
+
+ax.plot(
+    np.arange(1, len(ws) + 1),
+    depth_time,
+    marker="o",
+    color="C0",
+    label="Depth-first with pruning",
+)
+ax.plot(
+    np.arange(1, len(ws) + 1),
+    breadth_time,
+    marker="o",
+    color="C1",
+    label="Breadth-first with pruning",
+)
+ax.plot(
+    np.arange(1, len(ws) + 1),
+    depth_no_pruning_time,
+    marker="o",
+    color="C0",
+    label="Depth-first without pruning",
+    linestyle=":",
+)
+ax.plot(
+    np.arange(1, len(ws) + 1),
+    breadth_no_pruning_time,
+    marker="o",
+    color="C1",
+    label="Breadth-first without pruning",
+    linestyle=":",
+)
+
+ax.set_xticks(np.arange(0, 31, 5))
+ax.set_xticklabels(["$2^{" + str(x) + "}$" for x in range(0, 31, 5)])
+ax.grid()
+ax.set_xlabel("Query width")
+ax.set_ylabel("Average query time [$\\mu$s]")
+ax.set_ylim(0, 40)
+ax.legend(fontsize=18)
+
+plt.tight_layout()
+plt.savefig(name_no_ext + "_depth_breadth" + fig_ext)
