@@ -24,6 +24,7 @@ print(lines.pop(0).rstrip())  # date
 lines.pop(0)
 n = int(lines.pop(0).split()[-1])  # n
 q = int(lines.pop(0).split()[-1])  # q
+print(f"{n = }, {q = }")
 
 
 huffman_lines = lines[: 10 * 18]
