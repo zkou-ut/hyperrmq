@@ -1,17 +1,18 @@
 import subprocess
-from multiprocessing import Pool
 import tempfile
-
+from multiprocessing import Pool
 
 N = 10**9
 rs = [N // 1000, N // 100, N // 10]
-parallel_execution = False
+parallel_execution = True
 
 
 def execute(r):
     print(r, "start")
     tmp = tempfile.TemporaryFile()
-    p = subprocess.Popen(["./build/rough", str(N), str(r)], stdout=tmp)
+    p = subprocess.Popen(
+        ["./build/experiment/increasing_runs", str(N), str(r)], stdout=tmp
+    )
     print(r, "finished", p.wait())
     out_name = f"result/increasing_runs_{N}_{r}.txt"
     tmp.seek(0)
