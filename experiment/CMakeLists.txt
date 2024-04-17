@@ -1,6 +1,9 @@
 add_executable(benchmark_arithmetic_decoding benchmark_arithmetic_decoding.cpp)
 target_link_libraries(benchmark_arithmetic_decoding hyperrmq)
 
+add_executable(benchmark_hypersuccinct_binary_trees benchmark_hypersuccinct_binary_trees.cpp)
+target_link_libraries(benchmark_hypersuccinct_binary_trees hyperrmq)
+
 add_executable(change_B_breadth change_B_breadth.cpp)
 target_link_libraries(change_B_breadth hyperrmq)
 
