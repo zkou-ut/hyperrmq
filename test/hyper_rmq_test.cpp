@@ -90,6 +90,8 @@ TEST(HyperRMQTest, FewNodes) {
             rmq_depth(perm, B);
         HyperRMQ<32, CompressedMicrotreeSplitRankArrayArithmetic<false>>
             rmq_breadth(perm, B);
+        HyperRMQ<32, CompressedMicrotreeSplitRankArrayArithmeticCached>
+            rmq_breadth_cached(perm, B);
         HyperRMQ<32, CompressedMicrotreeSplitRankArrayAllArithmetic>
             rmq_all_arith(perm, B);
 
@@ -100,6 +102,7 @@ TEST(HyperRMQTest, FewNodes) {
                 ASSERT_EQ(expected, rmq_huffman.query(l, r));
                 ASSERT_EQ(expected, rmq_depth.query(l, r));
                 ASSERT_EQ(expected, rmq_breadth.query(l, r));
+                ASSERT_EQ(expected, rmq_breadth_cached.query(l, r));
                 ASSERT_EQ(expected, rmq_all_arith.query(l, r));
             }
         }
@@ -122,6 +125,8 @@ TEST(HyperRMQTest, QuerySeventyTest) {
         perm, B);
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayArithmetic<false>>
         rmq_breadth(perm, B);
+    HyperRMQ<32, CompressedMicrotreeSplitRankArrayArithmeticCached>
+        rmq_breadth_cached(perm, B);
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayAllArithmetic> rmq_all_arith(
         perm, B);
 
@@ -132,6 +137,7 @@ TEST(HyperRMQTest, QuerySeventyTest) {
             ASSERT_EQ(expected, rmq_huffman.query(l, r));
             ASSERT_EQ(expected, rmq_depth.query(l, r));
             ASSERT_EQ(expected, rmq_breadth.query(l, r));
+            ASSERT_EQ(expected, rmq_breadth_cached.query(l, r));
             ASSERT_EQ(expected, rmq_all_arith.query(l, r));
         }
     }
@@ -152,6 +158,8 @@ TEST(HyperRMQTest, QueryStressTestSmall) {
         perm, B);
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayArithmetic<false>>
         rmq_breadth(perm, B);
+    HyperRMQ<32, CompressedMicrotreeSplitRankArrayArithmeticCached>
+        rmq_breadth_cached(perm, B);
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayAllArithmetic> rmq_all_arith(
         perm, B);
 
@@ -162,6 +170,7 @@ TEST(HyperRMQTest, QueryStressTestSmall) {
             ASSERT_EQ(expected, rmq_huffman.query(l, r));
             ASSERT_EQ(expected, rmq_depth.query(l, r));
             ASSERT_EQ(expected, rmq_breadth.query(l, r));
+            ASSERT_EQ(expected, rmq_breadth_cached.query(l, r));
             ASSERT_EQ(expected, rmq_all_arith.query(l, r));
         }
     }
@@ -182,6 +191,8 @@ TEST(HyperRMQTest, QueryStressTestMedium) {
         perm, B);
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayArithmetic<false>>
         rmq_breadth(perm, B);
+    HyperRMQ<32, CompressedMicrotreeSplitRankArrayArithmeticCached>
+        rmq_breadth_cached(perm, B);
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayAllArithmetic> rmq_all_arith(
         perm, B);
 
@@ -197,6 +208,7 @@ TEST(HyperRMQTest, QueryStressTestMedium) {
         ASSERT_EQ(expected, rmq_huffman.query(l, r));
         ASSERT_EQ(expected, rmq_depth.query(l, r));
         ASSERT_EQ(expected, rmq_breadth.query(l, r));
+        ASSERT_EQ(expected, rmq_breadth_cached.query(l, r));
         ASSERT_EQ(expected, rmq_all_arith.query(l, r));
     }
 }
@@ -216,6 +228,8 @@ TEST(HyperRMQTest, QueryStressTestVariousWidth) {
         perm, B_arith);
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayArithmetic<false>>
         rmq_breadth(perm, B_arith);
+    HyperRMQ<32, CompressedMicrotreeSplitRankArrayArithmeticCached>
+        rmq_breadth_cached(perm, B_arith);
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayAllArithmetic> rmq_all_arith(
         perm, B_arith);
 
@@ -232,6 +246,7 @@ TEST(HyperRMQTest, QueryStressTestVariousWidth) {
             ASSERT_EQ(expected, rmq_huffman.query(l, r));
             ASSERT_EQ(expected, rmq_depth.query(l, r));
             ASSERT_EQ(expected, rmq_breadth.query(l, r));
+            ASSERT_EQ(expected, rmq_breadth_cached.query(l, r));
             ASSERT_EQ(expected, rmq_all_arith.query(l, r));
         }
     }
@@ -252,6 +267,8 @@ TEST(HyperRMQTest, QueryStressTestLargeB) {
         perm, B);
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayArithmetic<false>>
         rmq_breadth(perm, B);
+    HyperRMQ<32, CompressedMicrotreeSplitRankArrayArithmeticCached>
+        rmq_breadth_cached(perm, B);
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayAllArithmetic> rmq_all_arith(
         perm, B);
 
@@ -267,6 +284,7 @@ TEST(HyperRMQTest, QueryStressTestLargeB) {
         ASSERT_EQ(expected, rmq_huffman.query(l, r));
         ASSERT_EQ(expected, rmq_depth.query(l, r));
         ASSERT_EQ(expected, rmq_breadth.query(l, r));
+        ASSERT_EQ(expected, rmq_breadth_cached.query(l, r));
         ASSERT_EQ(expected, rmq_all_arith.query(l, r));
     }
 }
@@ -286,6 +304,8 @@ TEST(HyperRMQTest, QueryStressTestMediumIncreasingRuns) {
         perm, B);
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayArithmetic<false>>
         rmq_breadth(perm, B);
+    HyperRMQ<32, CompressedMicrotreeSplitRankArrayArithmeticCached>
+        rmq_breadth_cached(perm, B);
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayAllArithmetic> rmq_all_arith(
         perm, B);
 
@@ -301,6 +321,7 @@ TEST(HyperRMQTest, QueryStressTestMediumIncreasingRuns) {
         ASSERT_EQ(expected, rmq_huffman.query(l, r));
         ASSERT_EQ(expected, rmq_depth.query(l, r));
         ASSERT_EQ(expected, rmq_breadth.query(l, r));
+        ASSERT_EQ(expected, rmq_breadth_cached.query(l, r));
         ASSERT_EQ(expected, rmq_all_arith.query(l, r));
     }
 }

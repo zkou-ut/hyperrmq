@@ -44,7 +44,7 @@ double seconds() {
 using HyperRMQHuffman =
     HyperRMQ<16, CompressedMicrotreeSplitRankArrayHuffman<16>>;
 using HyperRMQBreadth =
-    HyperRMQ<16, CompressedMicrotreeSplitRankArrayArithmetic<false>>;
+    HyperRMQ<16, CompressedMicrotreeSplitRankArrayArithmeticCached>;
 
 using HypersuccinctBinaryTreeHuffman =
     HypersuccinctBinaryTree<16, CompressedMicrotreeSplitRankArrayHuffman<16>>;

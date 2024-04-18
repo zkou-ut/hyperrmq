@@ -572,48 +572,69 @@ template struct CompressedMicrotreeSplitRankArrayArithmetic<false, true>;
 template struct CompressedMicrotreeSplitRankArrayArithmetic<true, false>;
 template struct CompressedMicrotreeSplitRankArrayArithmetic<false, false>;
 
-template <bool depth_first>
-CompressedMicrotreeSplitRankArrayArithmeticCached<
-    depth_first>::CompressedMicrotreeSplitRankArrayArithmeticCached() {}
+CompressedMicrotreeSplitRankArrayArithmeticCached::
+    CompressedMicrotreeSplitRankArrayArithmeticCached() {}
 
-template <bool depth_first>
-CompressedMicrotreeSplitRankArrayArithmeticCached<depth_first>::
+CompressedMicrotreeSplitRankArrayArithmeticCached::
     CompressedMicrotreeSplitRankArrayArithmeticCached(
         const MicrotreeSplitRankArray &microtree_split_rank_array)
-    : CompressedMicrotreeSplitRankArrayArithmetic<depth_first, false>(
+    : CompressedMicrotreeSplitRankArrayArithmetic<false, false>(
           microtree_split_rank_array),
       cache_index(-1) {}
 
-template <bool depth_first>
-std::pair<TreeBP, uint32_t>
-CompressedMicrotreeSplitRankArrayArithmeticCached<depth_first>::operator[](
-    uint64_t index) {
-    if (index == cache_index) {
-        // std::cout << "hit: " << index << std::endl;
-        return cache_result;
-    }
-    // std::cout << "miss: " << index << std::endl;
-
-    cache_index = index;
-    cache_result =
-        CompressedMicrotreeSplitRankArrayArithmetic<depth_first,
-                                                    false>::operator[](index);
-    return cache_result;
-}
-
-template <bool depth_first>
-uint32_t
-CompressedMicrotreeSplitRankArrayArithmeticCached<depth_first>::get_lca(
+uint32_t CompressedMicrotreeSplitRankArrayArithmeticCached::get_lca(
     uint64_t index, uint32_t u_inorder, uint32_t v_inorder) {
     if (u_inorder == v_inorder) {
         return u_inorder;
     }
-    const auto &[tree, split_rank] = (*this)[index];
-    return tree.naive_lca(u_inorder, v_inorder);
-}
 
-template struct CompressedMicrotreeSplitRankArrayArithmeticCached<true>;
-template struct CompressedMicrotreeSplitRankArrayArithmeticCached<false>;
+    std::vector<uint32_t> left_seq;
+    if (index == cache_index) {
+        left_seq = cache_result;
+    } else {
+        auto code =
+            CompressedMicrotreeSplitRankArrayArithmetic<false, false>::code_seq
+                .read_interval(CompressedMicrotreeSplitRankArrayArithmetic<
+                                   false, false>::code_len.sum(index),
+                               CompressedMicrotreeSplitRankArrayArithmetic<
+                                   false, false>::code_len[index]);
+        left_seq = arithmetic_to_left_seq<false>(
+            CompressedMicrotreeSplitRankArrayArithmetic<
+                false, false>::node_counts[index],
+            code);
+        cache_index = index;
+        cache_result = left_seq;
+    }
+
+    std::queue<uint32_t> sz_q, offset_q;
+    sz_q.push(CompressedMicrotreeSplitRankArrayArithmetic<
+              false, false>::get_node_count(index));
+    offset_q.push(0);
+    for (auto &&lsz : left_seq) {
+        uint32_t sz = sz_q.front();
+        sz_q.pop();
+        uint32_t offset = offset_q.front();
+        offset_q.pop();
+
+        uint32_t rsz = sz - lsz - 1;
+
+        auto min_inorder = offset + lsz;
+        if (u_inorder <= min_inorder && min_inorder <= v_inorder) {
+            return min_inorder;
+        }
+
+        if (lsz) {
+            sz_q.push(lsz);
+            offset_q.push(offset);
+        }
+        if (rsz) {
+            sz_q.push(rsz);
+            offset_q.push(offset + lsz + 1);
+        }
+    }
+
+    assert(false);
+}
 
 CompressedMicrotreeSplitRankArrayAllArithmetic::
     CompressedMicrotreeSplitRankArrayAllArithmetic()
