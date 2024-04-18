@@ -132,6 +132,22 @@ struct CompressedMicrotreeSplitRankArrayArithmetic
     ThreeLevelPrefixSum<uint32_t> code_len;
 };
 
+template <bool depth_first>
+struct CompressedMicrotreeSplitRankArrayArithmeticCached
+    : CompressedMicrotreeSplitRankArrayArithmetic<depth_first, false> {
+   public:
+    CompressedMicrotreeSplitRankArrayArithmeticCached();
+    CompressedMicrotreeSplitRankArrayArithmeticCached(
+        const MicrotreeSplitRankArray& microtree_split_rank_array);
+
+    std::pair<TreeBP, uint32_t> operator[](uint64_t index);
+
+    uint32_t get_lca(uint64_t index, uint32_t u_inorder, uint32_t v_inorder);
+
+    uint64_t cache_index;
+    std::pair<TreeBP, uint32_t> cache_result;
+};
+
 // node_count, split_rank, left_seq
 struct CompressedMicrotreeSplitRankArrayAllArithmetic
     : CompressedMicrotreeSplitRankArrayInterface {

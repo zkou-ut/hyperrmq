@@ -38,7 +38,7 @@ struct HyperRMQ {
     // A pair of indices {chunk index, close index} to inorder index.
     uint32_t inorder(std::pair<uint32_t, uint32_t> tau) const;
 
-    uint32_t query(uint32_t i, uint32_t j) const;
+    uint32_t query(uint32_t i, uint32_t j);
 
     uint64_t evaluate_memory_consumption() const;
     std::vector<std::pair<std::string, uint64_t>> memory_table() const;
@@ -163,7 +163,7 @@ inline uint32_t HyperRMQ<W, CompressedMicrotreeSplitRankArray>::inorder(
 
 template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
 inline uint32_t HyperRMQ<W, CompressedMicrotreeSplitRankArray>::query(
-    uint32_t i, uint32_t j) const {
+    uint32_t i, uint32_t j) {
     assert(0 <= i && i <= j && j < num_of_nodes);
 
     auto [i_chunk, i_close] = inorderselect(i);

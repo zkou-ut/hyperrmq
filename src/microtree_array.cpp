@@ -572,6 +572,49 @@ template struct CompressedMicrotreeSplitRankArrayArithmetic<false, true>;
 template struct CompressedMicrotreeSplitRankArrayArithmetic<true, false>;
 template struct CompressedMicrotreeSplitRankArrayArithmetic<false, false>;
 
+template <bool depth_first>
+CompressedMicrotreeSplitRankArrayArithmeticCached<
+    depth_first>::CompressedMicrotreeSplitRankArrayArithmeticCached() {}
+
+template <bool depth_first>
+CompressedMicrotreeSplitRankArrayArithmeticCached<depth_first>::
+    CompressedMicrotreeSplitRankArrayArithmeticCached(
+        const MicrotreeSplitRankArray &microtree_split_rank_array)
+    : CompressedMicrotreeSplitRankArrayArithmetic<depth_first, false>(
+          microtree_split_rank_array),
+      cache_index(-1) {}
+
+template <bool depth_first>
+std::pair<TreeBP, uint32_t>
+CompressedMicrotreeSplitRankArrayArithmeticCached<depth_first>::operator[](
+    uint64_t index) {
+    if (index == cache_index) {
+        // std::cout << "hit: " << index << std::endl;
+        return cache_result;
+    }
+    // std::cout << "miss: " << index << std::endl;
+
+    cache_index = index;
+    cache_result =
+        CompressedMicrotreeSplitRankArrayArithmetic<depth_first,
+                                                    false>::operator[](index);
+    return cache_result;
+}
+
+template <bool depth_first>
+uint32_t
+CompressedMicrotreeSplitRankArrayArithmeticCached<depth_first>::get_lca(
+    uint64_t index, uint32_t u_inorder, uint32_t v_inorder) {
+    if (u_inorder == v_inorder) {
+        return u_inorder;
+    }
+    const auto &[tree, split_rank] = (*this)[index];
+    return tree.naive_lca(u_inorder, v_inorder);
+}
+
+template struct CompressedMicrotreeSplitRankArrayArithmeticCached<true>;
+template struct CompressedMicrotreeSplitRankArrayArithmeticCached<false>;
+
 CompressedMicrotreeSplitRankArrayAllArithmetic::
     CompressedMicrotreeSplitRankArrayAllArithmetic()
     : length(0) {}

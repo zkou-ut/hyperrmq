@@ -290,24 +290,24 @@ int main(int argc, char* argv[]) {
         cout << "# of queries=" << num_queries << std::endl;
     }
 
-    {
-        size_t N = lcp.size();
-        long int* B = new long int[N];
-        for (size_t i = 0; i < N; ++i) {
-            B[N - i - 1] = lcp[i];
-        }
-        RMQRMM64 rmq(B, N);
-        delete[] B;
+    // {
+    //     size_t N = lcp.size();
+    //     long int* B = new long int[N];
+    //     for (size_t i = 0; i < N; ++i) {
+    //         B[N - i - 1] = lcp[i];
+    //     }
+    //     RMQRMM64 rmq(B, N);
+    //     delete[] B;
 
-        cout << "RMQ_FERRADA" << endl;
-        s = time();
-        size_t num_queries = traverseSuffixTreeFerrada(rmq, lcp);
-        e = time();
-        double t = seconds();
-        cout << "Time = " << t << endl;
-        cout << "Memory = " << rmq.getSize() * 8 << endl;
-        cout << "# of queries=" << num_queries << std::endl;
-    }
+    //     cout << "RMQ_FERRADA" << endl;
+    //     s = time();
+    //     size_t num_queries = traverseSuffixTreeFerrada(rmq, lcp);
+    //     e = time();
+    //     double t = seconds();
+    //     cout << "Time = " << t << endl;
+    //     cout << "Memory = " << rmq.getSize() * 8 << endl;
+    //     cout << "# of queries=" << num_queries << std::endl;
+    // }
 
     {
         size_t N = lcp.size();
@@ -316,17 +316,17 @@ int main(int argc, char* argv[]) {
             C[i] = lcp[i];
         }
 
-        {
-            HyperRMQHuffman rmq(C, int(round(log2(N) / 4)));
-            cout << "RMQ_Huffman" << endl;
-            s = time();
-            size_t num_queries = traverseSuffixTreeHyper(rmq, lcp);
-            e = time();
-            double t = seconds();
-            cout << "Time = " << t << endl;
-            cout << "Memory = " << rmq.evaluate_memory_consumption() << endl;
-            cout << "# of queries=" << num_queries << std::endl;
-        }
+        // {
+        //     HyperRMQHuffman rmq(C, int(round(log2(N) / 4)));
+        //     cout << "RMQ_Huffman" << endl;
+        //     s = time();
+        //     size_t num_queries = traverseSuffixTreeHyper(rmq, lcp);
+        //     e = time();
+        //     double t = seconds();
+        //     cout << "Time = " << t << endl;
+        //     cout << "Memory = " << rmq.evaluate_memory_consumption() << endl;
+        //     cout << "# of queries=" << num_queries << std::endl;
+        // }
         for (int B = 64; B <= 1024; B <<= 1) {
             HyperRMQBreadth rmq(C, B);
             cout << "RMQ_Breadth_" << B << endl;
