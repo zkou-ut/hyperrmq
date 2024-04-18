@@ -1,0 +1,38 @@
+Load text...
+Construct Suffix Array...
+Construct LCP Array...
+Thu Apr 18 00:37:22 2024
+
+dblp.xml.200MB
+RMQ_SDSL_REC_ST
+Time = 20.6122
+Memory = 467365704
+# of queries=336759118
+RMQ_FERRADA
+Time = 67.9812
+Memory = 440754368
+# of queries=336759118
+RMQ_Huffman
+Time = 3384.89
+Memory = 503645944
+# of queries=336759118
+RMQ_Breadth_64
+Time = 782.474
+Memory = 527787312
+# of queries=336759118
+RMQ_Breadth_128
+Time = 894.885
+Memory = 489800984
+# of queries=336759118
+RMQ_Breadth_256
+Time = 1111.75
+Memory = 468022192
+# of queries=336759118
+RMQ_Breadth_512
+Time = 1568.32
+Memory = 455935640
+# of queries=336759118
+RMQ_Breadth_1024
+Time = 2483.63
+Memory = 449348032
+# of queries=336759118

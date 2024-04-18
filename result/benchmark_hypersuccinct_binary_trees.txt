@@ -1,0 +1,162 @@
+Wed Apr 17 22:34:51 2024
+
+N = 1000000000
+Q = 1000000
+B = 8
+W = 16
+N8hyperrmq40CompressedMicrotreeSplitRankArrayHuffmanILj16EEE
+memory:
+               total:          2471282208
+            rmm tree:           384383264
+            code seq:          1917008960
+        close_sample:           169889984
+time:
+               cnst.:              233104 ms
+             to node:                5525 ms
+              to in.:                3442 ms
+                root:                 852 ms
+              parent:                 334 ms
+                left:                 174 ms
+               right:                 372 ms
+             is leaf:                 525 ms
+         child_label:                 314 ms
+             subtree:                7028 ms
+             is anc.:                 579 ms
+              ldesc.:                 277 ms
+              rdesc.:                 614 ms
+                 lca:                3686 ms
+Wed Apr 17 22:39:42 2024
+
+N = 1000000000
+Q = 1000000
+B = 64
+W = 16
+N8hyperrmq43CompressedMicrotreeSplitRankArrayArithmeticILb1ELb1EEE
+memory:
+               total:          2217807808
+            rmm tree:            50464832
+            code seq:          2135688768
+        close_sample:            31654208
+time:
+               cnst.:              188896 ms
+             to node:                4780 ms
+              to in.:                 676 ms
+                root:                 594 ms
+              parent:                  96 ms
+                left:                  86 ms
+               right:                  84 ms
+             is leaf:                 117 ms
+         child_label:                  72 ms
+             subtree:                1547 ms
+             is anc.:                 275 ms
+              ldesc.:                 104 ms
+              rdesc.:                 324 ms
+                 lca:                2214 ms
+Wed Apr 17 22:43:37 2024
+
+N = 1000000000
+Q = 1000000
+B = 128
+W = 16
+N8hyperrmq43CompressedMicrotreeSplitRankArrayArithmeticILb1ELb1EEE
+memory:
+               total:          2011486752
+            rmm tree:            25284128
+            code seq:          1968770048
+        close_sample:            17432576
+time:
+               cnst.:              134277 ms
+             to node:                8014 ms
+              to in.:                 625 ms
+                root:                 612 ms
+              parent:                  96 ms
+                left:                  90 ms
+               right:                  78 ms
+             is leaf:                 107 ms
+         child_label:                  69 ms
+             subtree:                1518 ms
+             is anc.:                 284 ms
+              ldesc.:                 103 ms
+              rdesc.:                 344 ms
+                 lca:                2318 ms
+Wed Apr 17 22:46:40 2024
+
+N = 1000000000
+Q = 1000000
+B = 256
+W = 16
+N8hyperrmq43CompressedMicrotreeSplitRankArrayArithmeticILb1ELb1EEE
+memory:
+               total:          1891055736
+            rmm tree:            12642616
+            code seq:          1868907008
+        close_sample:             9506112
+time:
+               cnst.:              112189 ms
+             to node:               14336 ms
+              to in.:                 617 ms
+                root:                 576 ms
+              parent:                 110 ms
+                left:                 105 ms
+               right:                  90 ms
+             is leaf:                 112 ms
+         child_label:                  80 ms
+             subtree:                1554 ms
+             is anc.:                 308 ms
+              ldesc.:                 115 ms
+              rdesc.:                 372 ms
+                 lca:                2016 ms
+Wed Apr 17 22:49:27 2024
+
+N = 1000000000
+Q = 1000000
+B = 512
+W = 16
+N8hyperrmq43CompressedMicrotreeSplitRankArrayArithmeticILb1ELb1EEE
+memory:
+               total:          1822274288
+            rmm tree:             6311280
+            code seq:          1810817152
+        close_sample:             5145856
+time:
+               cnst.:              100103 ms
+             to node:               26354 ms
+              to in.:                 583 ms
+                root:                 481 ms
+              parent:                 131 ms
+                left:                 128 ms
+               right:                 102 ms
+             is leaf:                 124 ms
+         child_label:                  97 ms
+             subtree:                1798 ms
+             is anc.:                 341 ms
+              ldesc.:                 134 ms
+              rdesc.:                 411 ms
+                 lca:                1968 ms
+Wed Apr 17 22:52:14 2024
+
+N = 1000000000
+Q = 1000000
+B = 1024
+W = 16
+N8hyperrmq43CompressedMicrotreeSplitRankArrayArithmeticILb1ELb1EEE
+memory:
+               total:          1783614704
+            rmm tree:             3155824
+            code seq:          1777689664
+        close_sample:             2769216
+time:
+               cnst.:               94342 ms
+             to node:               50607 ms
+              to in.:                 560 ms
+                root:                 529 ms
+              parent:                 154 ms
+                left:                 157 ms
+               right:                 114 ms
+             is leaf:                 124 ms
+         child_label:                 114 ms
+             subtree:                1627 ms
+             is anc.:                 378 ms
+              ldesc.:                 153 ms
+              rdesc.:                 445 ms
+                 lca:                1995 ms
