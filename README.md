@@ -19,4 +19,4 @@ bash download.sh
 
 ## License
 
-The source code is distributed under the GNU General Public License version 3.
+The source code is distributed under the GNU General Public License Version 3 or later.
