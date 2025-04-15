@@ -46,7 +46,7 @@ struct HyperRMQ {
     std::vector<std::pair<std::string, uint64_t>> memory_table() const;
 };
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline HyperRMQ<W, CompressedMicrotreeSplitRankArray>::HyperRMQ() {}
 
 template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
