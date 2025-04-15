@@ -4,12 +4,12 @@ namespace hyperrmq {
 
 BinaryTree::BinaryTree() : n(0), root(None) {}
 
-BinaryTree::BinaryTree(const std::vector<int32_t> parent_inorder)
+BinaryTree::BinaryTree(const std::vector<int64_t > parent_inorder)
     : parent(parent_inorder), root(None) {
     n = parent.size();
     left.resize(n, None);
     right.resize(n, None);
-    for (int i = 0; i < n; i++) {
+    for (int64_t i = 0; i < n; i++) {
         if (parent[i] == None) {
             root = i;
         } else {
@@ -25,7 +25,7 @@ BinaryTree::BinaryTree(const std::vector<int32_t> parent_inorder)
 std::string BinaryTree::to_BP_string(std::string left_delim,
                                      std::string middle_delim,
                                      std::string right_delim) {
-    auto bp = [&](auto self, int32_t v) -> std::string {
+    auto bp = [&](auto self, int64_t  v) -> std::string {
         std::string result = "";
         result += left_delim;
         if (left[v] != None) result += self(self, left[v]);

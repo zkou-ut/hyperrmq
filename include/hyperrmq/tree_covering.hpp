@@ -13,10 +13,10 @@ namespace hyperrmq {
 
 uint64_t legacy_encode_microtree(uint64_t bp, uint64_t cut_pos);
 std::pair<uint64_t, uint64_t> legacy_decode_microtree(uint64_t microtree);
-uint32_t legacy_lca_on_microtree(uint64_t microtree, uint32_t u, uint32_t v);
+uint64_t  legacy_lca_on_microtree(uint64_t microtree, uint64_t  u, uint64_t  v);
 
 // Farzan--Munro algorithm
-std::set<int32_t> legacy_microtree_roots_inorder(int32_t B,
+std::set<int64_t > legacy_microtree_roots_inorder(int64_t  B,
                                                  const BinaryTree &binary_tree);
 BitArray microtree_roots_preorder(int64_t B, const TreeBP &tree);
 

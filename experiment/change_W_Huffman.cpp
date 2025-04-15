@@ -6,7 +6,8 @@ using namespace std;
 using namespace hyperrmq;
 
 void output_benchmark(
-    pair<vector<pair<string, uint64_t>>, vector<pair<string, int>>> bm_result) {
+    pair<vector<pair<string, uint64_t>>, vector<pair<string, int64_t>>>
+        bm_result) {
     auto [memory_result, time_result] = bm_result;
     cout << "memory:" << endl;
     for (auto&& [label, val] : memory_result) {
@@ -21,14 +22,14 @@ void output_benchmark(
 }
 
 template <typename RMQ>
-void benchmark(const vector<int>& perm, int B,
-               const vector<pair<int, int>>& queries) {
+void benchmark(const vector<int64_t>& perm, int64_t B,
+               const vector<pair<int64_t, int64_t>>& queries) {
     cout << typeid(RMQ).name() << endl;
     cout << "B = " << B << endl;
 
-    vector<pair<string, int>> time_result;
+    vector<pair<string, int64_t>> time_result;
     auto start = chrono::system_clock::now();
-    auto timer = [&]() -> int {
+    auto timer = [&]() -> int64_t {
         auto now = chrono::system_clock::now();
         return static_cast<double>(
             chrono::duration_cast<chrono::microseconds>(now - start).count() /
@@ -57,11 +58,12 @@ void benchmark(const vector<int>& perm, int B,
     output_benchmark({memory_result, time_result});
 };
 
-template <int i, int j>
+template <int64_t i, int64_t j>
 struct bm {
-    bm(const vector<int>& perm, int B, const vector<pair<int, int>>& queries) {
-        constexpr int si = 1 << i;
-        constexpr int sj = 1 << j;
+    bm(const vector<int64_t>& perm, int64_t B,
+       const vector<pair<int64_t, int64_t>>& queries) {
+        constexpr int64_t si = 1 << i;
+        constexpr int64_t sj = 1 << j;
         cout << si << " " << sj << endl;
         benchmark<HyperRMQ<si, CompressedMicrotreeSplitRankArrayHuffman<sj>>>(
             perm, B, queries);
@@ -71,7 +73,7 @@ struct bm {
 int main() {
     cout << fixed << setprecision(5);
 
-    constexpr int N = 1e9, Q = 1e6;
+    constexpr int64_t N = 1e9, Q = 1e6;
 
     auto timeinfo =
         chrono::system_clock::to_time_t(chrono::system_clock::now());
@@ -80,19 +82,19 @@ int main() {
     cout << "Q = " << Q << endl;
 
     mt19937 engine(0);
-    vector<int32_t> perm(N);
+    vector<int64_t> perm(N);
     iota(perm.begin(), perm.end(), 0);
     shuffle(perm.begin(), perm.end(), engine);
 
-    vector<pair<int, int>> queries(Q);
-    for (int i = 0; i < Q; i++) {
+    vector<pair<int64_t, int64_t>> queries(Q);
+    for (int64_t i = 0; i < Q; i++) {
         queries[i] = {engine() % N, engine() % N};
         if (queries[i].first > queries[i].second) {
             swap(queries[i].first, queries[i].second);
         }
     }
 
-    const int B = 8;
+    const int64_t B = 8;
 
     bm<0, 0>(perm, B, queries);
     bm<1, 1>(perm, B, queries);

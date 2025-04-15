@@ -13,8 +13,8 @@ namespace hyperrmq {
 
 EditableMicrotreeArray::EditableMicrotreeArray() {}
 
-EditableMicrotreeArray::EditableMicrotreeArray(uint32_t B,
-                                               uint32_t microtree_count)
+EditableMicrotreeArray::EditableMicrotreeArray(uint64_t B,
+                                               uint64_t microtree_count)
     : FixedLengthCodeArrayBase(2 * (2 * B - 1), microtree_count) {}
 
 EditableMicrotreeArray::EditableMicrotreeArray(
@@ -27,7 +27,7 @@ EditableMicrotreeArray::EditableMicrotreeArray(
         }
     }
     codes = BitArray(width * length);
-    for (int tree_index = 0; tree_index < length; tree_index++) {
+    for (int64_t tree_index = 0; tree_index < length; tree_index++) {
         codes.write_interval(tree_index * width, tree_vec[tree_index].bp);
     }
 }
@@ -61,10 +61,10 @@ bool EditableMicrotreeArray::get(uint64_t tree_index,
 MicrotreeSplitRankArray::MicrotreeSplitRankArray() {}
 
 MicrotreeSplitRankArray::MicrotreeSplitRankArray(
-    const std::vector<std::pair<TreeBP, uint32_t>> &vec) {
+    const std::vector<std::pair<TreeBP, uint64_t>> &vec) {
     length = vec.size();
     tree_width = 0;
-    uint32_t split_rank_max = 0;
+    uint64_t split_rank_max = 0;
     for (auto &&[tree, split_rank] : vec) {
         if (tree_width < tree.bp.size()) {
             tree_width = tree.bp.size();
@@ -76,14 +76,14 @@ MicrotreeSplitRankArray::MicrotreeSplitRankArray(
     split_rank_width = ceil_log2(split_rank_max + 1);
     width = tree_width + split_rank_width;
     codes = BitArray(width * length);
-    for (int index = 0; index < length; index++) {
+    for (int64_t index = 0; index < length; index++) {
         set(index, vec[index]);
     }
 }
 
 MicrotreeSplitRankArray::MicrotreeSplitRankArray(
     const EditableMicrotreeArray &microtrees,
-    const std::vector<uint32_t> &split_ranks) {
+    const std::vector<uint64_t> &split_ranks) {
     assert(microtrees.size() == split_ranks.size());
     length = microtrees.size();
     tree_width = microtrees.width;
@@ -91,13 +91,13 @@ MicrotreeSplitRankArray::MicrotreeSplitRankArray(
         (*std::max_element(split_ranks.begin(), split_ranks.end())) + 1);
     width = tree_width + split_rank_width;
     codes = BitArray(width * length);
-    for (int index = 0; index < length; index++) {
+    for (int64_t index = 0; index < length; index++) {
         set(index, {microtrees[index], split_ranks[index]});
     }
 }
 
 BitArray MicrotreeSplitRankArray::encode(
-    const std::pair<TreeBP, uint32_t> &object) const {
+    const std::pair<TreeBP, uint64_t> &object) const {
     auto &[tree, split_rank] = object;
     BitArray ret(width);
     ret.write_interval(0, tree.bp);
@@ -105,15 +105,15 @@ BitArray MicrotreeSplitRankArray::encode(
     return ret;
 }
 
-std::pair<TreeBP, uint32_t> MicrotreeSplitRankArray::decode(
+std::pair<TreeBP, uint64_t> MicrotreeSplitRankArray::decode(
     const BitArray &code) const {
     uint64_t node_count = code.linear_popcount(0, tree_width);
     BitArray bp = code.read_interval(0, 2 * node_count);
-    uint32_t split_rank = code.read_bits(tree_width, split_rank_width);
+    uint64_t split_rank = code.read_bits(tree_width, split_rank_width);
     return {TreeBP(node_count, std::move(bp)), split_rank};
 }
 
-uint32_t CompressedMicrotreeSplitRankArrayInterface::get_node_count(
+uint64_t CompressedMicrotreeSplitRankArrayInterface::get_node_count(
     uint64_t index) const {
     return (*this)[index].first.n;
 }
@@ -132,27 +132,27 @@ BitArray CompressedMicrotreeSplitRankArrayInterface::get_right_chunk(
     return tree.bp.read_interval(cut, tree.bp.size() - cut);
 }
 
-uint32_t CompressedMicrotreeSplitRankArrayInterface::get_left_chunk_popcount(
+uint64_t CompressedMicrotreeSplitRankArrayInterface::get_left_chunk_popcount(
     uint64_t index) const {
     const auto &[tree, split_rank] = (*this)[index];
     return split_rank;
 }
 
-uint32_t CompressedMicrotreeSplitRankArrayInterface::get_right_chunk_popcount(
+uint64_t CompressedMicrotreeSplitRankArrayInterface::get_right_chunk_popcount(
     uint64_t index) const {
     const auto &[tree, split_rank] = (*this)[index];
     return tree.n - split_rank;
 }
 
-std::pair<uint32_t, uint32_t>
+std::pair<uint64_t, uint64_t>
 CompressedMicrotreeSplitRankArrayInterface::get_node_count_left_popcount(
     uint64_t index) const {
     const auto &[tree, split_rank] = (*this)[index];
     return {tree.n, split_rank};
 }
 
-uint32_t CompressedMicrotreeSplitRankArrayInterface::get_lca(
-    uint64_t index, uint32_t u_inorder, uint32_t v_inorder) const {
+uint64_t CompressedMicrotreeSplitRankArrayInterface::get_lca(
+    uint64_t index, uint64_t u_inorder, uint64_t v_inorder) const {
     if (u_inorder == v_inorder) {
         return u_inorder;
     }
@@ -160,18 +160,18 @@ uint32_t CompressedMicrotreeSplitRankArrayInterface::get_lca(
     return tree.naive_lca(u_inorder, v_inorder);
 }
 
-template <uint32_t W>
+template <uint64_t W>
 inline CompressedMicrotreeSplitRankArrayHuffmanNaive<
     W>::CompressedMicrotreeSplitRankArrayHuffmanNaive() {}
 
-template <uint32_t W>
+template <uint64_t W>
 CompressedMicrotreeSplitRankArrayHuffmanNaive<W>::
     CompressedMicrotreeSplitRankArrayHuffmanNaive(
         const MicrotreeSplitRankArray &microtree_split_rank_array)
     : length(microtree_split_rank_array.size()) {
     std::map<TreeBP, uint64_t> counter;
-    std::vector<uint32_t> split_ranks_vec(length);
-    for (int i = 0; i < length; i++) {
+    std::vector<uint64_t> split_ranks_vec(length);
+    for (int64_t i = 0; i < length; i++) {
         auto [tree, split_rank] = microtree_split_rank_array[i];
         counter[tree]++;
         split_ranks_vec[i] = split_rank;
@@ -180,16 +180,16 @@ CompressedMicrotreeSplitRankArrayHuffmanNaive<W>::
     split_ranks = split_ranks_vec;
 
     auto encode = chc.enumerate_alphabet_code_pair();
-    uint32_t code_length_sum = 0;
+    uint64_t code_length_sum = 0;
     for (auto &&[tree, cnt] : counter) {
         code_length_sum += encode[tree].first * cnt;
     }
 
-    std::vector<uint32_t> seq_idx_sample_vec;
+    std::vector<uint64_t> seq_idx_sample_vec;
     seq_idx_sample_vec.reserve(length / W);
     code_seq = BitArray(code_length_sum);
-    uint32_t code_idx = 0, last_code_idx = 0;
-    for (int i = 0; i < length; i++) {
+    uint64_t code_idx = 0, last_code_idx = 0;
+    for (int64_t i = 0; i < length; i++) {
         auto [len, code] = encode[microtree_split_rank_array[i].first];
         code_seq.write_bits(code_idx, len, code);
         code_idx += len;
@@ -202,25 +202,25 @@ CompressedMicrotreeSplitRankArrayHuffmanNaive<W>::
     code_idx_sample = seq_idx_sample_vec;
 }
 
-template <uint32_t W>
+template <uint64_t W>
 size_t CompressedMicrotreeSplitRankArrayHuffmanNaive<W>::size() const {
     return length;
 }
 
-template <uint32_t W>
-std::pair<TreeBP, uint32_t>
+template <uint64_t W>
+std::pair<TreeBP, uint64_t>
 CompressedMicrotreeSplitRankArrayHuffmanNaive<W>::operator[](
     uint64_t index) const {
-    uint32_t code_idx = code_idx_sample.sum(index / W);
-    for (int j = 0; j < index % W; j++) {
+    uint64_t code_idx = code_idx_sample.sum(index / W);
+    for (int64_t j = 0; j < index % W; j++) {
         code_idx += chc.get_next_length(code_seq, code_idx);
     }
-    uint32_t len = chc.get_next_length(code_seq, code_idx);
+    uint64_t len = chc.get_next_length(code_seq, code_idx);
     return {chc.decode(len, code_seq.read_bits(code_idx, len)),
             split_ranks[index]};
 }
 
-template <uint32_t W>
+template <uint64_t W>
 uint64_t CompressedMicrotreeSplitRankArrayHuffmanNaive<
     W>::evaluate_memory_consumption() const {
     return chc.evaluate_memory_consumption() +
@@ -229,7 +229,7 @@ uint64_t CompressedMicrotreeSplitRankArrayHuffmanNaive<
            split_ranks.evaluate_memory_consumption();
 }
 
-template <uint32_t W>
+template <uint64_t W>
 std::vector<std::pair<std::string, uint64_t>>
 CompressedMicrotreeSplitRankArrayHuffmanNaive<W>::memory_table() const {
     return memory_table_combine_children(
@@ -255,32 +255,32 @@ template struct CompressedMicrotreeSplitRankArrayHuffmanNaive<512>;
 template struct CompressedMicrotreeSplitRankArrayHuffmanNaive<1024>;
 template struct CompressedMicrotreeSplitRankArrayHuffmanNaive<2048>;
 
-template <uint32_t W>
+template <uint64_t W>
 CompressedMicrotreeSplitRankArrayHuffman<
     W>::CompressedMicrotreeSplitRankArrayHuffman() {}
 
-template <uint32_t W>
+template <uint64_t W>
 CompressedMicrotreeSplitRankArrayHuffman<
     W>::CompressedMicrotreeSplitRankArrayHuffman(const MicrotreeSplitRankArray &
                                                      microtree_split_rank_array)
     : length(microtree_split_rank_array.size()) {
-    std::map<std::pair<TreeBP, uint32_t>, uint64_t> counter;
-    for (int i = 0; i < length; i++) {
+    std::map<std::pair<TreeBP, uint64_t>, uint64_t> counter;
+    for (int64_t i = 0; i < length; i++) {
         counter[microtree_split_rank_array[i]]++;
     }
     chc = decltype(chc)(counter);
 
     auto encode = chc.enumerate_alphabet_code_pair();
-    uint32_t code_length_sum = 0;
+    uint64_t code_length_sum = 0;
     for (auto &&[tree_and_split_rank, cnt] : counter) {
         code_length_sum += encode[tree_and_split_rank].first * cnt;
     }
 
-    std::vector<uint32_t> seq_idx_sample_vec;
+    std::vector<uint64_t> seq_idx_sample_vec;
     seq_idx_sample_vec.reserve(length / W);
     code_seq = BitArray(code_length_sum);
-    uint32_t code_idx = 0, last_code_idx = 0;
-    for (int i = 0; i < length; i++) {
+    uint64_t code_idx = 0, last_code_idx = 0;
+    for (int64_t i = 0; i < length; i++) {
         auto [len, code] = encode[microtree_split_rank_array[i]];
         code_seq.write_bits(code_idx, len, code);
         code_idx += len;
@@ -293,18 +293,18 @@ CompressedMicrotreeSplitRankArrayHuffman<
     code_idx_sample = seq_idx_sample_vec;
 }
 
-template <uint32_t W>
-std::pair<TreeBP, uint32_t>
+template <uint64_t W>
+std::pair<TreeBP, uint64_t>
 CompressedMicrotreeSplitRankArrayHuffman<W>::operator[](uint64_t index) const {
-    uint32_t code_idx = code_idx_sample.sum(index / W);
-    for (int j = 0; j < index % W; j++) {
+    uint64_t code_idx = code_idx_sample.sum(index / W);
+    for (int64_t j = 0; j < index % W; j++) {
         code_idx += chc.get_next_length(code_seq, code_idx);
     }
-    uint32_t len = chc.get_next_length(code_seq, code_idx);
+    uint64_t len = chc.get_next_length(code_seq, code_idx);
     return chc.decode(len, code_seq.read_bits(code_idx, len));
 }
 
-template <uint32_t W>
+template <uint64_t W>
 uint64_t CompressedMicrotreeSplitRankArrayHuffman<
     W>::evaluate_memory_consumption() const {
     return chc.evaluate_memory_consumption() +
@@ -312,7 +312,7 @@ uint64_t CompressedMicrotreeSplitRankArrayHuffman<
            code_idx_sample.evaluate_memory_consumption();
 }
 
-template <uint32_t W>
+template <uint64_t W>
 std::vector<std::pair<std::string, uint64_t>>
 CompressedMicrotreeSplitRankArrayHuffman<W>::memory_table() const {
     return memory_table_combine_children(
@@ -324,7 +324,7 @@ CompressedMicrotreeSplitRankArrayHuffman<W>::memory_table() const {
         });
 }
 
-template <uint32_t W>
+template <uint64_t W>
 size_t CompressedMicrotreeSplitRankArrayHuffman<W>::size() const {
     return length;
 }
@@ -351,11 +351,11 @@ CompressedMicrotreeSplitRankArrayArithmetic<depth_first, pruning>::
     CompressedMicrotreeSplitRankArrayArithmetic(
         const MicrotreeSplitRankArray &microtree_split_rank_array)
     : length(microtree_split_rank_array.size()) {
-    std::vector<uint32_t> node_counts_vec(length), split_ranks_vec(length);
-    std::vector<uint32_t> code_len_vec(length);
+    std::vector<uint64_t> node_counts_vec(length), split_ranks_vec(length);
+    std::vector<uint64_t> code_len_vec(length);
 
     std::map<TreeBP, BitArray> arith_encode;
-    for (int i = 0; i < length; i++) {
+    for (int64_t i = 0; i < length; i++) {
         const auto &[tree, split_rank] = microtree_split_rank_array[i];
         if (!arith_encode.count(tree)) {
             auto code = left_seq_to_arithmetic<depth_first>(
@@ -373,8 +373,8 @@ CompressedMicrotreeSplitRankArrayArithmetic<depth_first, pruning>::
     code_len = code_len_vec;
 
     code_seq = BitArray(code_len.sum(length));
-    uint32_t first = 0;
-    for (int i = 0; i < length; i++) {
+    uint64_t first = 0;
+    for (int64_t i = 0; i < length; i++) {
         auto [tree, split_rank] = microtree_split_rank_array[i];
         const auto &code = arith_encode[tree];
         code_seq.write_interval(first, code);
@@ -390,7 +390,7 @@ size_t CompressedMicrotreeSplitRankArrayArithmetic<depth_first, pruning>::size()
 }
 
 template <bool depth_first, bool pruning>
-std::pair<TreeBP, uint32_t>
+std::pair<TreeBP, uint64_t>
 CompressedMicrotreeSplitRankArrayArithmetic<depth_first, pruning>::operator[](
     uint64_t index) const {
     assert(0 <= index && index < length);
@@ -424,55 +424,55 @@ CompressedMicrotreeSplitRankArrayArithmetic<depth_first,
 }
 
 template <bool depth_first, bool pruning>
-uint32_t CompressedMicrotreeSplitRankArrayArithmetic<
+uint64_t CompressedMicrotreeSplitRankArrayArithmetic<
     depth_first, pruning>::get_node_count(uint64_t index) const {
     assert(0 <= index && index < length);
     return node_counts[index];
 }
 
 template <bool depth_first, bool pruning>
-uint32_t CompressedMicrotreeSplitRankArrayArithmetic<
+uint64_t CompressedMicrotreeSplitRankArrayArithmetic<
     depth_first, pruning>::get_left_chunk_popcount(uint64_t index) const {
     assert(0 <= index && index < length);
     return split_ranks[index];
 }
 
 template <bool depth_first, bool pruning>
-uint32_t CompressedMicrotreeSplitRankArrayArithmetic<
+uint64_t CompressedMicrotreeSplitRankArrayArithmetic<
     depth_first, pruning>::get_right_chunk_popcount(uint64_t index) const {
     assert(0 <= index && index < length);
     return node_counts[index] - split_ranks[index];
 }
 
 template <bool depth_first, bool pruning>
-std::pair<uint32_t, uint32_t> CompressedMicrotreeSplitRankArrayArithmetic<
+std::pair<uint64_t, uint64_t> CompressedMicrotreeSplitRankArrayArithmetic<
     depth_first, pruning>::get_node_count_left_popcount(uint64_t index) const {
     assert(0 <= index && index < length);
     return {node_counts[index], split_ranks[index]};
 }
 
 template <>
-uint32_t CompressedMicrotreeSplitRankArrayArithmetic<false, false>::get_lca(
-    uint64_t index, uint32_t u_inorder, uint32_t v_inorder) const {
+uint64_t CompressedMicrotreeSplitRankArrayArithmetic<false, false>::get_lca(
+    uint64_t index, uint64_t u_inorder, uint64_t v_inorder) const {
     assert(0 <= index && index < length);
     return CompressedMicrotreeSplitRankArrayInterface::get_lca(index, u_inorder,
                                                                v_inorder);
 };
 
 template <>
-uint32_t CompressedMicrotreeSplitRankArrayArithmetic<true, false>::get_lca(
-    uint64_t index, uint32_t u_inorder, uint32_t v_inorder) const {
+uint64_t CompressedMicrotreeSplitRankArrayArithmetic<true, false>::get_lca(
+    uint64_t index, uint64_t u_inorder, uint64_t v_inorder) const {
     assert(0 <= index && index < length);
     return CompressedMicrotreeSplitRankArrayInterface::get_lca(index, u_inorder,
                                                                v_inorder);
 };
 
 template <>
-uint32_t CompressedMicrotreeSplitRankArrayArithmetic<true, true>::get_lca(
-    uint64_t index, uint32_t u_inorder, uint32_t v_inorder) const {
+uint64_t CompressedMicrotreeSplitRankArrayArithmetic<true, true>::get_lca(
+    uint64_t index, uint64_t u_inorder, uint64_t v_inorder) const {
     assert(0 <= index && index < length);
 
-    uint32_t node_count = get_node_count(index);
+    uint64_t node_count = get_node_count(index);
     assert(0 <= u_inorder && u_inorder < node_count);
     assert(0 <= v_inorder && v_inorder < node_count);
 
@@ -487,17 +487,17 @@ uint32_t CompressedMicrotreeSplitRankArrayArithmetic<true, true>::get_lca(
     auto code = code_seq.read_interval(code_len.sum(index), code_len[index]);
     ArithmeticDecoder decoder(code);
 
-    std::stack<uint32_t> sz_q, offset_q;
+    std::stack<uint64_t> sz_q, offset_q;
     sz_q.push(node_count);
     offset_q.push(0);
     while (!sz_q.empty()) {
-        uint32_t sz = sz_q.top();
+        uint64_t sz = sz_q.top();
         sz_q.pop();
-        uint32_t offset = offset_q.top();
+        uint64_t offset = offset_q.top();
         offset_q.pop();
 
-        uint32_t lsz = decoder.decode_symbol(sz);
-        uint32_t rsz = sz - lsz - 1;
+        uint64_t lsz = decoder.decode_symbol(sz);
+        uint64_t rsz = sz - lsz - 1;
 
         auto min_inorder = offset + lsz;
         if (u_inorder <= min_inorder && min_inorder <= v_inorder) {
@@ -518,11 +518,11 @@ uint32_t CompressedMicrotreeSplitRankArrayArithmetic<true, true>::get_lca(
 }
 
 template <>
-uint32_t CompressedMicrotreeSplitRankArrayArithmetic<false, true>::get_lca(
-    uint64_t index, uint32_t u_inorder, uint32_t v_inorder) const {
+uint64_t CompressedMicrotreeSplitRankArrayArithmetic<false, true>::get_lca(
+    uint64_t index, uint64_t u_inorder, uint64_t v_inorder) const {
     assert(0 <= index && index < length);
 
-    uint32_t node_count = get_node_count(index);
+    uint64_t node_count = get_node_count(index);
     assert(0 <= u_inorder && u_inorder < node_count);
     assert(0 <= v_inorder && v_inorder < node_count);
 
@@ -537,17 +537,17 @@ uint32_t CompressedMicrotreeSplitRankArrayArithmetic<false, true>::get_lca(
     auto code = code_seq.read_interval(code_len.sum(index), code_len[index]);
     ArithmeticDecoder decoder(code);
 
-    std::queue<uint32_t> sz_q, offset_q;
+    std::queue<uint64_t> sz_q, offset_q;
     sz_q.push(node_count);
     offset_q.push(0);
     while (!sz_q.empty()) {
-        uint32_t sz = sz_q.front();
+        uint64_t sz = sz_q.front();
         sz_q.pop();
-        uint32_t offset = offset_q.front();
+        uint64_t offset = offset_q.front();
         offset_q.pop();
 
-        uint32_t lsz = decoder.decode_symbol(sz);
-        uint32_t rsz = sz - lsz - 1;
+        uint64_t lsz = decoder.decode_symbol(sz);
+        uint64_t rsz = sz - lsz - 1;
 
         auto min_inorder = offset + lsz;
         if (u_inorder <= min_inorder && min_inorder <= v_inorder) {
@@ -581,13 +581,13 @@ CompressedMicrotreeSplitRankArrayAllArithmetic::
         const MicrotreeSplitRankArray &microtree_split_rank_array)
     : length(microtree_split_rank_array.size()) {
     max_tree_n = 1;
-    for (int i = 0; i < length; i++) {
+    for (int64_t i = 0; i < length; i++) {
         if (max_tree_n < microtree_split_rank_array[i].first.n) {
             max_tree_n = microtree_split_rank_array[i].first.n;
         }
     }
 
-    auto encode = [&](const std::pair<TreeBP, uint32_t> &tree_and_split_rank)
+    auto encode = [&](const std::pair<TreeBP, uint64_t> &tree_and_split_rank)
         -> BitArray {
         const auto &[tree, split_rank] = tree_and_split_rank;
         ArithmeticEncoder encoder;
@@ -599,10 +599,10 @@ CompressedMicrotreeSplitRankArrayAllArithmetic::
         return encoder.terminate();
     };
 
-    std::vector<uint32_t> code_len_vec(length);
+    std::vector<uint64_t> code_len_vec(length);
 
-    std::map<std::pair<TreeBP, uint32_t>, BitArray> arith_encode;
-    for (int i = 0; i < length; i++) {
+    std::map<std::pair<TreeBP, uint64_t>, BitArray> arith_encode;
+    for (int64_t i = 0; i < length; i++) {
         auto tree_and_split_rank = microtree_split_rank_array[i];
         if (!arith_encode.count(tree_and_split_rank)) {
             arith_encode[tree_and_split_rank] = encode(tree_and_split_rank);
@@ -613,8 +613,8 @@ CompressedMicrotreeSplitRankArrayAllArithmetic::
     code_len = code_len_vec;
 
     code_seq = BitArray(code_len.sum(length));
-    uint32_t first = 0;
-    for (int i = 0; i < length; i++) {
+    uint64_t first = 0;
+    for (int64_t i = 0; i < length; i++) {
         const auto tree_and_split_rank = microtree_split_rank_array[i];
         const auto &code = arith_encode[tree_and_split_rank];
         code_seq.write_interval(first, code);
@@ -623,13 +623,13 @@ CompressedMicrotreeSplitRankArrayAllArithmetic::
     assert(first == code_seq.size());
 }
 
-std::pair<uint32_t, uint32_t>
+std::pair<uint64_t, uint64_t>
 CompressedMicrotreeSplitRankArrayAllArithmetic::get_node_count_left_popcount(
     uint64_t index) const {
     assert(0 <= index && index < length);
     ArithmeticDecoder decoder(code_seq, code_len.sum(index), code_len[index]);
-    uint32_t node_count = decoder.decode_symbol(max_tree_n) + 1;
-    uint32_t left_popcount = decoder.decode_symbol(node_count + 1);
+    uint64_t node_count = decoder.decode_symbol(max_tree_n) + 1;
+    uint64_t left_popcount = decoder.decode_symbol(node_count + 1);
     return {node_count, left_popcount};
 }
 
@@ -637,26 +637,26 @@ size_t CompressedMicrotreeSplitRankArrayAllArithmetic::size() const {
     return length;
 }
 
-std::pair<TreeBP, uint32_t>
+std::pair<TreeBP, uint64_t>
 CompressedMicrotreeSplitRankArrayAllArithmetic::operator[](
     uint64_t index) const {
     assert(0 <= index && index < length);
     ArithmeticDecoder decoder(code_seq, code_len.sum(index), code_len[index]);
-    uint32_t node_count = decoder.decode_symbol(max_tree_n) + 1;
-    uint32_t split_rank = decoder.decode_symbol(node_count + 1);
+    uint64_t node_count = decoder.decode_symbol(max_tree_n) + 1;
+    uint64_t split_rank = decoder.decode_symbol(node_count + 1);
     TreeBP tree =
         left_seq_to_bp<false>(decode_left_seq<false>(node_count, decoder));
     return {tree, split_rank};
 }
 
-uint32_t
+uint64_t
 CompressedMicrotreeSplitRankArrayAllArithmetic::get_left_chunk_popcount(
     uint64_t index) const {
     assert(0 <= index && index < length);
     return get_node_count_left_popcount(index).second;
 }
 
-uint32_t
+uint64_t
 CompressedMicrotreeSplitRankArrayAllArithmetic::get_right_chunk_popcount(
     uint64_t index) const {
     assert(0 <= index && index < length);
@@ -680,10 +680,10 @@ CompressedMicrotreeSplitRankArrayAllArithmetic::memory_table() const {
                     });
 }
 
-uint32_t CompressedMicrotreeSplitRankArrayAllArithmetic::get_node_count(
+uint64_t CompressedMicrotreeSplitRankArrayAllArithmetic::get_node_count(
     uint64_t index) const {
     ArithmeticDecoder decoder(code_seq, code_len.sum(index), code_len[index]);
-    uint32_t node_count = decoder.decode_symbol(max_tree_n) + 1;
+    uint64_t node_count = decoder.decode_symbol(max_tree_n) + 1;
     return node_count;
 }
 

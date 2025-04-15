@@ -24,7 +24,7 @@ namespace {
 
 //     Node(const HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>
 //              &tree_ref,
-//          int32_t chunk_index, int32_t local_inorder_or_index,
+//          int64_t  chunk_index, int64_t  local_inorder_or_index,
 //          bool is_local_inorder = true)
 //         : tree_ref(tree_ref), chunk_index(chunk_index) {
 //         if (!is_valid()) return;
@@ -44,9 +44,9 @@ namespace {
 //     // inexpensive operations
 //     bool is_valid() { return chunk_index != -1; }
 
-//     int32_t get_chunk_index() { return chunk_index; }
+//     int64_t  get_chunk_index() { return chunk_index; }
 
-//     int32_t get_left_chunk_index() {
+//     int64_t  get_left_chunk_index() {
 //         if (!is_valid()) return -1;
 
 //         if (left_chunk_index == -1) {
@@ -55,7 +55,7 @@ namespace {
 //         return left_chunk_index;
 //     }
 
-//     int32_t get_right_chunk_index() {
+//     int64_t  get_right_chunk_index() {
 //         if (!is_valid()) return -1;
 
 //         if (right_chunk_index == -1) {
@@ -64,7 +64,7 @@ namespace {
 //         return right_chunk_index;
 //     }
 
-//     int32_t get_microtree_preorder() {
+//     int64_t  get_microtree_preorder() {
 //         if (!is_valid()) return -1;
 
 //         if (microtree_preorder == -1) {
@@ -74,7 +74,7 @@ namespace {
 //         return microtree_preorder;
 //     }
 
-//     int32_t get_microtree_node_count() {
+//     int64_t  get_microtree_node_count() {
 //         if (!is_valid()) return -1;
 
 //         if (node_count == -1) {
@@ -85,7 +85,7 @@ namespace {
 //         return node_count;
 //     }
 
-//     int32_t get_microtree_split_rank() {
+//     int64_t  get_microtree_split_rank() {
 //         if (!is_valid()) return -1;
 
 //         if (split_rank == -1) {
@@ -109,7 +109,7 @@ namespace {
 //         return microtree_ptr;
 //     }
 
-//     int32_t get_cut() {
+//     int64_t  get_cut() {
 //         if (!is_valid()) return -1;
 
 //         if (cut == -1) {
@@ -119,7 +119,7 @@ namespace {
 //         return cut;
 //     }
 
-//     int32_t get_local_inorder() {
+//     int64_t  get_local_inorder() {
 //         if (!is_valid()) return -1;
 
 //         if (local_inorder == -1) {
@@ -129,7 +129,7 @@ namespace {
 //         return local_inorder;
 //     }
 
-//     int32_t get_local_index() {
+//     int64_t  get_local_index() {
 //         if (!is_valid()) return -1;
 
 //         if (local_index == -1) {
@@ -203,15 +203,15 @@ namespace {
 //     const HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>
 //     &tree_ref;
 
-//     int32_t chunk_index = -1, left_chunk_index = -1, right_chunk_index = -1,
+//     int64_t  chunk_index = -1, left_chunk_index = -1, right_chunk_index = -1,
 //             microtree_preorder = -1;
-//     int32_t local_inorder = -1, local_index = -1;
-//     int32_t node_count = -1, split_rank = -1, cut = -1;
+//     int64_t  local_inorder = -1, local_index = -1;
+//     int64_t  node_count = -1, split_rank = -1, cut = -1;
 //     std::shared_ptr<TreeBP> microtree_ptr = nullptr;
 // };
 }  // namespace
 
-template <uint32_t W = 64, typename CompressedMicrotreeSplitRankArray =
+template <uint64_t W = 64, typename CompressedMicrotreeSplitRankArray =
                                CompressedMicrotreeSplitRankArrayHuffman<W>>
 struct HypersuccinctBinaryTree {
     static_assert(std::is_base_of_v<CompressedMicrotreeSplitRankArrayInterface,
@@ -230,7 +230,7 @@ struct HypersuccinctBinaryTree {
                  *tree_ptr)
             : tree_ptr(tree_ptr) {}
 
-        void set_chunk_index(int32_t chunk_index_) {
+        void set_chunk_index(int64_t chunk_index_) {
             chunk_index = chunk_index_;
             if (!is_valid()) return;
 
@@ -259,7 +259,7 @@ struct HypersuccinctBinaryTree {
             cut = microtree.bp.linear_select1(split_rank);
         }
 
-        void set_local(int32_t local_inorder_or_index,
+        void set_local(int64_t local_inorder_or_index,
                        bool is_local_inorder = true, bool reset_chunk = false) {
             if (!is_valid()) return;
 
@@ -282,8 +282,8 @@ struct HypersuccinctBinaryTree {
         }
 
         // Returns node with set_chunk already called.
-        Node search_nonzero_chunk(int32_t chunk_index_start,
-                                  int32_t step) const {
+        Node search_nonzero_chunk(int64_t chunk_index_start,
+                                  int64_t step) const {
             auto next_index = chunk_index_start;
             while (0 <= next_index && next_index < tree_ptr->num_of_chunks) {
                 auto tmp = Node(tree_ptr);
@@ -299,18 +299,18 @@ struct HypersuccinctBinaryTree {
 
        public:
         // The following variables are assigned by set_chunk_index.
-        int32_t chunk_index = -1, left_chunk_index = -1, right_chunk_index = -1,
+        int64_t chunk_index = -1, left_chunk_index = -1, right_chunk_index = -1,
                 microtree_preorder = -1;
-        int32_t node_count = -1, split_rank = -1;
+        int64_t node_count = -1, split_rank = -1;
         // The following variables are assigned by set_tree.
         std::shared_ptr<TreeBP> microtree_ptr = nullptr;
-        int32_t cut = -1;
+        int64_t cut = -1;
         // The following variables are assigned by set_local.
-        int32_t local_inorder = -1, local_index = -1;
+        int64_t local_inorder = -1, local_index = -1;
 
         Node(const HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>
                  *tree_ptr,
-             int32_t chunk_index_, int32_t local_inorder_or_index,
+             int64_t chunk_index_, int64_t local_inorder_or_index,
              bool is_local_inorder = true)
             : tree_ptr(tree_ptr) {
             if (chunk_index_ != -1) {
@@ -324,7 +324,7 @@ struct HypersuccinctBinaryTree {
 
         bool is_valid() const { return chunk_index != -1; }
 
-        int access() const {
+        int64_t access() const {
             if (!is_valid()) return -1;
             return microtree_ptr->bp.get(local_index);
         }
@@ -420,24 +420,24 @@ struct HypersuccinctBinaryTree {
         }
     };
 
-    uint32_t num_of_nodes, num_of_microtrees, num_of_chunks;
+    uint64_t num_of_nodes, num_of_microtrees, num_of_chunks;
     RMMTree<8, 1024> rmm_tree;
     CompressedMicrotreeSplitRankArray compressed_microtree_split_rank_array;
     ThreeLevelPrefixSum<> close_sample;
 
     HypersuccinctBinaryTree();
-    explicit HypersuccinctBinaryTree(const TreeBP &tree, const int B);
+    explicit HypersuccinctBinaryTree(const TreeBP &tree, const int64_t B);
     explicit HypersuccinctBinaryTree(
-        uint32_t n, const std::pair<TreeBP, MicrotreeSplitRankArray>
+        uint64_t n, const std::pair<TreeBP, MicrotreeSplitRankArray>
                         &upsilon_and_microtree_split_rank_array);
 
-    uint32_t chunk_index_to_microtree_preorder(uint32_t i) const;
-    BitArray get_chunk(uint32_t i) const;
-    uint64_t get_chunk_popcount(uint32_t i) const;
+    uint64_t chunk_index_to_microtree_preorder(uint64_t i) const;
+    BitArray get_chunk(uint64_t i) const;
+    uint64_t get_chunk_popcount(uint64_t i) const;
 
-    Node inorder_to_node(uint32_t inorder) const;
+    Node inorder_to_node(uint64_t inorder) const;
 
-    int32_t node_to_inorder(Node node) const;
+    int64_t node_to_inorder(Node node) const;
 
     Node root() const;
     Node parent(Node v) const;
@@ -445,9 +445,9 @@ struct HypersuccinctBinaryTree {
     Node right_child(Node v) const;
 
     bool is_leaf(Node v) const;
-    int32_t child_label(Node v) const;
+    int64_t child_label(Node v) const;
 
-    int32_t subtree_size(Node v) const;
+    int64_t subtree_size(Node v) const;
     bool is_ancestor(Node u, Node v) const;
 
     Node leftmost_desc(Node v) const;
@@ -458,18 +458,18 @@ struct HypersuccinctBinaryTree {
     uint64_t evaluate_memory_consumption() const;
 };
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline HypersuccinctBinaryTree<
     W, CompressedMicrotreeSplitRankArray>::HypersuccinctBinaryTree() {}
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::
-    HypersuccinctBinaryTree(const TreeBP &tree, const int B)
+    HypersuccinctBinaryTree(const TreeBP &tree, const int64_t B)
     : HypersuccinctBinaryTree(tree.n, tree_covering(B, tree)) {}
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::
-    HypersuccinctBinaryTree(uint32_t n,
+    HypersuccinctBinaryTree(uint64_t n,
                             const std::pair<TreeBP, MicrotreeSplitRankArray>
                                 &upsilon_and_microtree_split_rank_array)
     : num_of_nodes(n) {
@@ -484,12 +484,12 @@ inline HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::
     num_of_microtrees = compressed_microtree_split_rank_array.size();
     num_of_chunks = num_of_microtrees * 2;
 
-    std::vector<uint32_t> close_sample_vec;
+    std::vector<uint64_t> close_sample_vec;
     close_sample_vec.reserve(num_of_chunks / W);
-    uint32_t close = 0;
-    int rank0 = 0;
-    std::stack<int> opens;
-    for (int i = 0; i < num_of_chunks; i++) {
+    uint64_t close = 0;
+    int64_t rank0 = 0;
+    std::stack<int64_t> opens;
+    for (int64_t i = 0; i < num_of_chunks; i++) {
         if (rmm_tree.get_bit(i) == 0) {
             const auto &[tree, split_rank] = microtree_split_rank_array[rank0];
             opens.push(rank0);
@@ -509,18 +509,18 @@ inline HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::
     close_sample = decltype(close_sample)(close_sample_vec);
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
-inline uint32_t HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::
-    chunk_index_to_microtree_preorder(uint32_t i) const {
-    uint32_t open_index = (rmm_tree.get_bit(i) == 1) ? rmm_tree.open(i) : i;
-    uint32_t open_rank = rmm_tree.rank0(open_index);
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
+inline uint64_t HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::
+    chunk_index_to_microtree_preorder(uint64_t i) const {
+    uint64_t open_index = (rmm_tree.get_bit(i) == 1) ? rmm_tree.open(i) : i;
+    uint64_t open_rank = rmm_tree.rank0(open_index);
     return open_rank;
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 BitArray
 HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::get_chunk(
-    uint32_t i) const {
+    uint64_t i) const {
     assert(0 <= i && i < num_of_chunks);
     bool isopen = (rmm_tree.get_bit(i) == 0);
     i = chunk_index_to_microtree_preorder(i);
@@ -531,9 +531,9 @@ HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::get_chunk(
     }
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline uint64_t HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::
-    get_chunk_popcount(uint32_t i) const {
+    get_chunk_popcount(uint64_t i) const {
     assert(0 <= i && i < num_of_chunks);
     bool isopen = (rmm_tree.get_bit(i) == 0);
     i = chunk_index_to_microtree_preorder(i);
@@ -545,19 +545,19 @@ inline uint64_t HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::
     }
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline typename HypersuccinctBinaryTree<W,
                                         CompressedMicrotreeSplitRankArray>::Node
 HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::inorder_to_node(
-    uint32_t inorder) const {
+    uint64_t inorder) const {
     assert(0 <= inorder && inorder < num_of_nodes);
 
     auto sample_index = close_sample.select_chunk(inorder);
-    int32_t remain = inorder - close_sample.sum(sample_index);
-    uint32_t chunk_index = sample_index * W;
+    int64_t remain = inorder - close_sample.sum(sample_index);
+    uint64_t chunk_index = sample_index * W;
 
     while (true) {
-        int32_t p = get_chunk_popcount(chunk_index);
+        int64_t p = get_chunk_popcount(chunk_index);
         if (remain - p < 0) {
             break;
         }
@@ -575,16 +575,16 @@ HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::inorder_to_node(
     return node;
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
-inline int32_t
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
+inline int64_t
 HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::node_to_inorder(
     Node node) const {
     if (!node.is_valid()) return -1;
     auto chunk_index = node.chunk_index;
     assert(0 <= chunk_index && chunk_index < num_of_chunks);
 
-    uint32_t res = close_sample.sum(chunk_index / W);
-    for (int i = chunk_index / W * W; i < chunk_index; i++) {
+    uint64_t res = close_sample.sum(chunk_index / W);
+    for (int64_t i = chunk_index / W * W; i < chunk_index; i++) {
         res += get_chunk_popcount(i);
     }
     res += node.local_inorder;
@@ -595,7 +595,7 @@ HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::node_to_inorder(
     return res;
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline
     typename HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::Node
     HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::root()
@@ -605,7 +605,7 @@ inline
     return ret;
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline
     typename HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::Node
     HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::parent(
@@ -618,7 +618,7 @@ inline
     return v;
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline
     typename HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::Node
     HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::left_child(
@@ -632,7 +632,7 @@ inline
     return v;
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline
     typename HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::Node
     HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::right_child(
@@ -645,7 +645,7 @@ inline
     return v;
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline bool
 HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::is_leaf(
     Node v) const {
@@ -655,8 +655,8 @@ HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::is_leaf(
     return u.access() != 1 && v.access() != 0;
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
-inline int32_t
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
+inline int64_t
 HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::child_label(
     Node v) const {
     v.open();
@@ -664,8 +664,8 @@ HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::child_label(
     return v.access();
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
-inline int32_t
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
+inline int64_t
 HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::subtree_size(
     Node v) const {
     if (!v.is_valid()) return -1;
@@ -676,14 +676,14 @@ HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::subtree_size(
     return (node_to_inorder(v) - node_to_inorder(u) + 1);
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline bool
 HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::is_ancestor(
     Node u, Node v) const {
     return leftmost_desc(u) <= v && v <= rightmost_desc(u);
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline
     typename HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::Node
     HypersuccinctBinaryTree<
@@ -696,7 +696,7 @@ inline
     return v;
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline
     typename HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::Node
     HypersuccinctBinaryTree<
@@ -705,13 +705,13 @@ inline
     return v;
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline
     typename HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::Node
     HypersuccinctBinaryTree<W, CompressedMicrotreeSplitRankArray>::lca(
         Node u, Node v) const {
     if (u.right_chunk_index == v.right_chunk_index) {
-        int32_t lca_local_inorder =
+        int64_t lca_local_inorder =
             u.microtree_ptr->naive_lca(u.local_inorder, v.local_inorder);
         u.set_local(lca_local_inorder, true, true);
         return u;
@@ -721,16 +721,16 @@ inline
         std::minmax(u.right_chunk_index, v.right_chunk_index);
     auto lca_right_chunk_index = rmm_tree.rmq(rmq_first, rmq_last + 1);
     if (lca_right_chunk_index == u.right_chunk_index) {
-        int32_t v_anc_inorder =
+        int64_t v_anc_inorder =
             u.split_rank - u.microtree_ptr->bp.get(u.cut - 1);
-        int32_t lca_local_inorder =
+        int64_t lca_local_inorder =
             u.microtree_ptr->naive_lca(u.local_inorder, v_anc_inorder);
         u.set_local(lca_local_inorder, true, true);
         return u;
     } else if (lca_right_chunk_index == v.right_chunk_index) {
-        int32_t u_anc_inorder =
+        int64_t u_anc_inorder =
             v.split_rank - v.microtree_ptr->bp.get(v.cut - 1);
-        int32_t lca_local_inorder =
+        int64_t lca_local_inorder =
             v.microtree_ptr->naive_lca(u_anc_inorder, v.local_inorder);
         v.set_local(lca_local_inorder, true, true);
         return v;
@@ -739,7 +739,7 @@ inline
     }
 }
 
-template <uint32_t W, typename CompressedMicrotreeSplitRankArray>
+template <uint64_t W, typename CompressedMicrotreeSplitRankArray>
 inline uint64_t HypersuccinctBinaryTree<
     W, CompressedMicrotreeSplitRankArray>::evaluate_memory_consumption() const {
     return rmm_tree.evaluate_memory_consumption() +

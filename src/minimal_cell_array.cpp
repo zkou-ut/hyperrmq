@@ -12,7 +12,7 @@ MinimalCellArray<T>::MinimalCellArray() : width(0), length(0), offset(0) {}
 
 template <typename T>
 MinimalCellArray<T>::MinimalCellArray(const std::vector<T>& arr,
-                                      uint32_t cell_width, T cell_offset)
+                                      uint64_t cell_width, T cell_offset)
     : width(cell_width), length(arr.size()), offset(cell_offset) {
     if (length == 0) {
         return;
@@ -24,7 +24,7 @@ MinimalCellArray<T>::MinimalCellArray(const std::vector<T>& arr,
     }
     bit_array = BitArray(width * length);
     if (width) {
-        for (int i = 0; i < length; i++) {
+        for (int64_t i = 0; i < length; i++) {
             bit_array.write_bits(i * width, width, arr[i] - offset);
         }
     }
@@ -49,7 +49,7 @@ T MinimalCellArray<T>::operator[](uint64_t index) const {
 template <typename T>
 bool MinimalCellArray<T>::operator==(const MinimalCellArray& rhs) const {
     if (this->size() != rhs.size()) return false;
-    for (int i = 0; i < this->size(); i++) {
+    for (int64_t i = 0; i < this->size(); i++) {
         if (this->get(i) != rhs.get(i)) return false;
     }
     return true;

@@ -23,18 +23,19 @@ struct TreeBP {
 
     std::string to_string() const;
 
-    uint32_t naive_fwdsearch(uint32_t j, int32_t d) const;
-    int32_t naive_bwdsearch(uint32_t j, int32_t d) const;
-    int32_t naive_minexcess(uint32_t j, int32_t k) const;
+    uint64_t naive_fwdsearch(uint64_t j, int64_t d) const;
+    int64_t naive_bwdsearch(uint64_t j, int64_t d) const;
+    int64_t naive_minexcess(uint64_t j, int64_t k) const;
 
-    uint32_t naive_open(uint32_t index) const;
-    uint32_t naive_close(uint32_t index) const;
+    uint64_t naive_open(uint64_t index) const;
+    uint64_t naive_close(uint64_t index) const;
 
-    uint32_t naive_lca(uint32_t u_inorder, uint32_t v_inorder) const;
+    uint64_t naive_lca(uint64_t u_inorder, uint64_t v_inorder) const;
 
     uint64_t evaluate_memory_consumption() const;
 };
 
-TreeBP cartesian_tree_bp(const std::vector<int32_t>& values);
+template <typename T>
+TreeBP cartesian_tree_bp(const std::vector<T>& values);
 
 }  // namespace hyperrmq

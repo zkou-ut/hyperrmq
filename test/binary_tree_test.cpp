@@ -9,36 +9,36 @@ namespace {
 
 TEST(BinaryTreeTest, ZeroNodes) {
     BinaryTree binary_tree;
-    ASSERT_EQ(binary_tree.left, std::vector<int32_t>({}));
-    ASSERT_EQ(binary_tree.right, std::vector<int32_t>({}));
+    ASSERT_EQ(binary_tree.left, std::vector<int64_t>({}));
+    ASSERT_EQ(binary_tree.right, std::vector<int64_t>({}));
     ASSERT_EQ(binary_tree.to_BP_string("(", ")", ""), "");
 }
 
 TEST(BinaryTreeTest, OneNode) {
     BinaryTree binary_tree({-1});
-    ASSERT_EQ(binary_tree.left, std::vector<int32_t>({-1}));
-    ASSERT_EQ(binary_tree.right, std::vector<int32_t>({-1}));
+    ASSERT_EQ(binary_tree.left, std::vector<int64_t>({-1}));
+    ASSERT_EQ(binary_tree.right, std::vector<int64_t>({-1}));
     ASSERT_EQ(binary_tree.to_BP_string("(", ")", ""), "()");
 }
 
 TEST(BinaryTreeTest, TwoNodesLeft) {
     BinaryTree binary_tree({1, -1});
-    ASSERT_EQ(binary_tree.left, std::vector<int32_t>({-1, 0}));
-    ASSERT_EQ(binary_tree.right, std::vector<int32_t>({-1, -1}));
+    ASSERT_EQ(binary_tree.left, std::vector<int64_t>({-1, 0}));
+    ASSERT_EQ(binary_tree.right, std::vector<int64_t>({-1, -1}));
     ASSERT_EQ(binary_tree.to_BP_string("(", ")", ""), "(())");
 }
 
 TEST(BinaryTreeTest, TwoNodesRight) {
     BinaryTree binary_tree({-1, 0});
-    ASSERT_EQ(binary_tree.left, std::vector<int32_t>({-1, -1}));
-    ASSERT_EQ(binary_tree.right, std::vector<int32_t>({1, -1}));
+    ASSERT_EQ(binary_tree.left, std::vector<int64_t>({-1, -1}));
+    ASSERT_EQ(binary_tree.right, std::vector<int64_t>({1, -1}));
     ASSERT_EQ(binary_tree.to_BP_string("(", ")", ""), "()()");
 }
 
 TEST(BinaryTreeTest, FiveNodes) {
     BinaryTree binary_tree({1, 3, 1, -1, 3});
-    ASSERT_EQ(binary_tree.left, std::vector<int32_t>({-1, 0, -1, 1, -1}));
-    ASSERT_EQ(binary_tree.right, std::vector<int32_t>({-1, 2, -1, 4, -1}));
+    ASSERT_EQ(binary_tree.left, std::vector<int64_t>({-1, 0, -1, 1, -1}));
+    ASSERT_EQ(binary_tree.right, std::vector<int64_t>({-1, 2, -1, 4, -1}));
     ASSERT_EQ(binary_tree.to_BP_string("(", ")", ""), "((())())()");
 }
 

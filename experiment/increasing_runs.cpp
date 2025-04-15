@@ -7,7 +7,8 @@ using namespace std;
 using namespace hyperrmq;
 
 void output_benchmark(
-    pair<vector<pair<string, uint64_t>>, vector<pair<string, int>>> bm_result) {
+    pair<vector<pair<string, uint64_t>>, vector<pair<string, int64_t>>>
+        bm_result) {
     auto [memory_result, time_result] = bm_result;
     cout << "memory:" << endl;
     for (auto&& [label, val] : memory_result) {
@@ -22,14 +23,14 @@ void output_benchmark(
 }
 
 template <typename RMQ>
-void benchmark(const vector<int>& perm, int B,
-               const vector<pair<int, int>>& queries) {
+void benchmark(const vector<int64_t>& perm, int64_t B,
+               const vector<pair<int64_t, int64_t>>& queries) {
     cout << typeid(RMQ).name() << endl;
     cout << "B = " << B << endl;
 
-    vector<pair<string, int>> time_result;
+    vector<pair<string, int64_t>> time_result;
     auto start = chrono::system_clock::now();
-    auto timer = [&]() -> int {
+    auto timer = [&]() -> int64_t {
         auto now = chrono::system_clock::now();
         return static_cast<double>(
             chrono::duration_cast<chrono::microseconds>(now - start).count() /
@@ -59,7 +60,7 @@ void benchmark(const vector<int>& perm, int B,
 };
 
 int main(int argc, char const* argv[]) {
-    constexpr int Q = 1e6;
+    constexpr int64_t Q = 1e6;
 
     if (argc < 3) {
         cout << "Specify the number of elements N and the expected number of "
@@ -69,8 +70,8 @@ int main(int argc, char const* argv[]) {
         return 0;
     }
 
-    int N = atoi(argv[1]);
-    int r = atoi(argv[2]);
+    int64_t N = atoi(argv[1]);
+    int64_t r = atoi(argv[2]);
 
     auto timeinfo =
         chrono::system_clock::to_time_t(chrono::system_clock::now());
@@ -80,21 +81,21 @@ int main(int argc, char const* argv[]) {
     cout << "r(expected) = " << r << endl;
 
     mt19937 engine(0);
-    vector<int32_t> perm(N);
+    vector<int64_t> perm(N);
     iota(perm.begin(), perm.end(), 0);
 
     random_roughly_fixed_incresing_runs(perm, r, 0);
     cout << "r = " << count_increasing_runs(perm) << endl;
 
-    vector<pair<int, int>> queries(Q);
-    for (int i = 0; i < Q; i++) {
+    vector<pair<int64_t, int64_t>> queries(Q);
+    for (int64_t i = 0; i < Q; i++) {
         queries[i] = {engine() % N, engine() % N};
         if (queries[i].first > queries[i].second) {
             swap(queries[i].first, queries[i].second);
         }
     }
 
-    for (int B = 5; B <= 100; B += 5) {
+    for (int64_t B = 5; B <= 100; B += 5) {
         benchmark<HyperRMQ<16>>(perm, B, queries);
     }
 

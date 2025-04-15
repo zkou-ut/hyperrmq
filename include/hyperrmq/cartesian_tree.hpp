@@ -8,10 +8,10 @@
 namespace hyperrmq {
 
 struct CartesianTree {
-    int32_t n;
+    int64_t n;
     BinaryTree binary_tree;
 
-    explicit CartesianTree(const std::vector<int32_t> &values);
+    explicit CartesianTree(const std::vector<int64_t> &values);
 };
 
 }  // namespace hyperrmq

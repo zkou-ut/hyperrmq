@@ -12,21 +12,21 @@ namespace hyperrmq {
 namespace {
 
 TEST(TreeCoveringTest, LCAOnMicrotreeTest) {
-    std::vector<int> perm = {3, 1, 4, 1, 5};
-    int n = perm.size();
+    std::vector<int64_t> perm = {3, 1, 4, 1, 5};
+    int64_t n = perm.size();
     auto [upsilon, microtrees] =
         legacy_tree_covering(n, cartesian_tree_bp(perm));
     ASSERT_EQ(microtrees.size(), 1);
     auto microtree = microtrees[0];
     auto [bp, cutpos] = legacy_decode_microtree(microtree);
 
-    auto rmq = [&](int first, int last) -> int {
+    auto rmq = [&](int64_t first, int64_t last) -> int64_t {
         if (first > last) {
             std::swap(first, last);
         }
         auto min_val = perm[first];
         auto min_idx = first;
-        for (int i = first + 1; i < last + 1; i++) {
+        for (int64_t i = first + 1; i < last + 1; i++) {
             if (min_val > perm[i]) {
                 min_val = perm[i];
                 min_idx = i;
@@ -35,38 +35,39 @@ TEST(TreeCoveringTest, LCAOnMicrotreeTest) {
         return min_idx;
     };
 
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
+    for (int64_t i = 0; i < n; i++) {
+        for (int64_t j = 0; j < n; j++) {
             ASSERT_EQ(legacy_lca_on_microtree(bp, i, j), rmq(i, j));
         }
     }
 }
 
 TEST(TreeCoveringTest, MicrotreeRootsSeventyNodes) {
-    const int32_t B = 6;
-    std::vector<int32_t> in_to_pre = {
+    const int64_t B = 6;
+    std::vector<int64_t> in_to_pre = {
         6,  7,  5,  9,  8,  4,  12, 11, 13, 14, 15, 10, 3,  18, 17, 16, 21, 22,
         20, 24, 25, 23, 19, 27, 26, 30, 29, 28, 33, 32, 31, 2,  35, 34, 36, 1,
         39, 42, 41, 40, 43, 38, 46, 45, 44, 49, 48, 51, 50, 52, 47, 55, 54, 56,
         53, 37, 58, 59, 57, 63, 62, 65, 64, 61, 67, 66, 60, 70, 69, 68};
-    std::set<int32_t> roots_in = {5,  11, 12, 15, 18, 22, 24, 27,
+    std::set<int64_t> roots_in = {5,  11, 12, 15, 18, 22, 24, 27,
                                   31, 35, 41, 50, 55, 58, 63};
 
     TreeBP ct = cartesian_tree_bp(in_to_pre);
     BitArray roots_pre = microtree_roots_preorder(B, ct);
-    for (int i = 0; i < ct.n; i++) {
+    for (int64_t i = 0; i < ct.n; i++) {
         ASSERT_EQ(roots_in.count(i), roots_pre.get(in_to_pre[i] - 1));
     }
 }
 
-void tree_covering_test_helper(const int32_t B, const std::vector<int> &values,
-                               std::set<int32_t> &expected_roots_val) {
+void tree_covering_test_helper(const int64_t B,
+                               const std::vector<int64_t> &values,
+                               std::set<int64_t> &expected_roots_val) {
     TreeBP ct = cartesian_tree_bp(values);
 
-    std::vector<int> values_inorder = values;
-    std::vector<int> values_preorder;
-    std::stack<int> st;
-    for (int i = ct.bp.size() - 1; i >= 0; i--) {
+    std::vector<int64_t> values_inorder = values;
+    std::vector<int64_t> values_preorder;
+    std::stack<int64_t> st;
+    for (int64_t i = ct.bp.size() - 1; i >= 0; i--) {
         if (ct.bp.get(i)) {
             st.push(values_inorder.back());
             values_inorder.pop_back();
@@ -78,8 +79,8 @@ void tree_covering_test_helper(const int32_t B, const std::vector<int> &values,
     std::reverse(values_preorder.begin(), values_preorder.end());
 
     BitArray actual_roots_pre_bitarray = microtree_roots_preorder(B, ct);
-    std::set<int32_t> actual_roots_val;
-    for (int i = 0; i < actual_roots_pre_bitarray.size(); i++) {
+    std::set<int64_t> actual_roots_val;
+    for (int64_t i = 0; i < actual_roots_pre_bitarray.size(); i++) {
         if (actual_roots_pre_bitarray.get(i)) {
             actual_roots_val.insert(values_preorder[i]);
         }
@@ -88,131 +89,131 @@ void tree_covering_test_helper(const int32_t B, const std::vector<int> &values,
 }
 
 TEST(TreeCoveringTest, MicrotreeRootsTwoHeavyChildren) {
-    const int32_t B = 4;
-    std::vector<int32_t> values = {0, 4, 9, 3, 2, 1, 6, 5, 7, 8};
-    std::set<int32_t> roots_val = {0, 1, 2, 5};
+    const int64_t B = 4;
+    std::vector<int64_t> values = {0, 4, 9, 3, 2, 1, 6, 5, 7, 8};
+    std::set<int64_t> roots_val = {0, 1, 2, 5};
     tree_covering_test_helper(B, values, roots_val);
 }
 
 TEST(
     TreeCoveringTest,
     MicrotreeRootsPermanentHeavyChildAndTemporaryLightChildAndComponentSizeEqualsBMinusOne) {
-    const int32_t B = 4;
-    std::vector<int32_t> values = {0, 3, 2, 1, 6, 5, 7, 8};
-    std::set<int32_t> roots_val = {0, 5};
+    const int64_t B = 4;
+    std::vector<int64_t> values = {0, 3, 2, 1, 6, 5, 7, 8};
+    std::set<int64_t> roots_val = {0, 5};
     tree_covering_test_helper(B, values, roots_val);
 }
 
 TEST(
     TreeCoveringTest,
     MicrotreeRootsPermanentHeavyChildAndTemporaryLightChildAndComponentSizeEqualsB) {
-    const int32_t B = 4;
-    std::vector<int32_t> values = {0, 4, 3, 2, 1, 6, 5, 7, 8};
-    std::set<int32_t> roots_val = {0, 1, 5};
+    const int64_t B = 4;
+    std::vector<int64_t> values = {0, 4, 3, 2, 1, 6, 5, 7, 8};
+    std::set<int64_t> roots_val = {0, 1, 5};
     tree_covering_test_helper(B, values, roots_val);
 }
 
 TEST(
     TreeCoveringTest,
     MicrotreeRootsTemporaryHeavyChildAndTemporaryLightChildAndComponentSizeEqualsBMinusOne) {
-    const int32_t B = 4;
-    std::vector<int32_t> values = {0, 2, 1, 5, 9, 7, 8, 10};
-    std::set<int32_t> roots_val = {0, 7};
+    const int64_t B = 4;
+    std::vector<int64_t> values = {0, 2, 1, 5, 9, 7, 8, 10};
+    std::set<int64_t> roots_val = {0, 7};
     tree_covering_test_helper(B, values, roots_val);
 }
 
 TEST(
     TreeCoveringTest,
     MicrotreeRootsTemporaryHeavyChildAndTemporaryLightChildAndComponentSizeEqualsB) {
-    const int32_t B = 4;
-    std::vector<int32_t> values = {0, 3, 2, 1, 5, 9, 7, 8, 10};
-    std::set<int32_t> roots_val = {0, 1, 7};
+    const int64_t B = 4;
+    std::vector<int64_t> values = {0, 3, 2, 1, 5, 9, 7, 8, 10};
+    std::set<int64_t> roots_val = {0, 1, 7};
     tree_covering_test_helper(B, values, roots_val);
 }
 
 TEST(TreeCoveringTest, MicrotreeRootsTwoLightChildrenAndComponentSizeEqualsB) {
-    const int32_t B = 4;
-    std::vector<int32_t> values = {0, 3, 2, 1, 4};
-    std::set<int32_t> roots_val = {0, 1};
+    const int64_t B = 4;
+    std::vector<int64_t> values = {0, 3, 2, 1, 4};
+    std::set<int64_t> roots_val = {0, 1};
     tree_covering_test_helper(B, values, roots_val);
 }
 
 TEST(TreeCoveringTest,
      MicrotreeRootsTwoLightChildrenAndComponentSizeEqualsBMinusOne) {
-    const int32_t B = 4;
-    std::vector<int32_t> values = {0, 2, 1, 4};
-    std::set<int32_t> roots_val = {0};
+    const int64_t B = 4;
+    std::vector<int64_t> values = {0, 2, 1, 4};
+    std::set<int64_t> roots_val = {0};
     tree_covering_test_helper(B, values, roots_val);
 }
 
 TEST(TreeCoveringTest, MicrotreeRootsOnePermanentHeavyChild) {
-    const int32_t B = 4;
-    std::vector<int32_t> values = {0, 3, 2, 4, 5, 1};
-    std::set<int32_t> roots_val = {0, 2};
+    const int64_t B = 4;
+    std::vector<int64_t> values = {0, 3, 2, 4, 5, 1};
+    std::set<int64_t> roots_val = {0, 2};
     tree_covering_test_helper(B, values, roots_val);
 }
 
 TEST(TreeCoveringTest,
      MicrotreeRootsOneTemporaryHeavyChildAndComponentSizeEqualsBMinusOne) {
-    const int32_t B = 4;
-    std::vector<int32_t> values = {0, 7, 6, 5, 4, 3, 2, 1};
-    std::set<int32_t> roots_val = {0, 4};
+    const int64_t B = 4;
+    std::vector<int64_t> values = {0, 7, 6, 5, 4, 3, 2, 1};
+    std::set<int64_t> roots_val = {0, 4};
     tree_covering_test_helper(B, values, roots_val);
 }
 
 TEST(TreeCoveringTest,
      MicrotreeRootsOneTemporaryHeavyChildAndComponentSizeEqualsB) {
-    const int32_t B = 4;
-    std::vector<int32_t> values = {0, 8, 7, 6, 5, 4, 3, 2, 1};
-    std::set<int32_t> roots_val = {0, 1, 5};
+    const int64_t B = 4;
+    std::vector<int64_t> values = {0, 8, 7, 6, 5, 4, 3, 2, 1};
+    std::set<int64_t> roots_val = {0, 1, 5};
     tree_covering_test_helper(B, values, roots_val);
 }
 
 TEST(TreeCoveringTest,
      MicrotreeRootsOneLightChildAndComponentSizeEqualsBMinusOne) {
-    const int32_t B = 4;
-    std::vector<int32_t> values = {0, 3, 2, 1};
-    std::set<int32_t> roots_val = {0};
+    const int64_t B = 4;
+    std::vector<int64_t> values = {0, 3, 2, 1};
+    std::set<int64_t> roots_val = {0};
     tree_covering_test_helper(B, values, roots_val);
 }
 
 TEST(TreeCoveringTest, MicrotreeRootsOneLightChildAndComponentSizeEqualsB) {
-    const int32_t B = 4;
-    std::vector<int32_t> values = {0, 4, 3, 2, 1};
-    std::set<int32_t> roots_val = {0, 1};
+    const int64_t B = 4;
+    std::vector<int64_t> values = {0, 4, 3, 2, 1};
+    std::set<int64_t> roots_val = {0, 1};
     tree_covering_test_helper(B, values, roots_val);
 }
 
 TEST(TreeCoveringTest, MicrotreeRootsStressTest) {
-    const int n = 1000;
+    const int64_t n = 1000;
     std::mt19937 engine(0);
-    for (int test_case = 0; test_case < 10; test_case++) {
-        for (int B = 2; B <= 10; B++) {
-            std::vector<int> values(n);
-            for (int i = 0; i < n; i++) {
+    for (int64_t test_case = 0; test_case < 10; test_case++) {
+        for (int64_t B = 2; B <= 10; B++) {
+            std::vector<int64_t> values(n);
+            for (int64_t i = 0; i < n; i++) {
                 values[i] = engine() % n;
             }
             CartesianTree ct(values);
             TreeBP ctbp = cartesian_tree_bp(values);
-            std::set<int> roots_in =
+            std::set<int64_t> roots_in =
                 legacy_microtree_roots_inorder(B, ct.binary_tree);
             BitArray roots_pre = microtree_roots_preorder(B, ctbp);
 
-            std::vector<int> in_to_pre(n);
+            std::vector<int64_t> in_to_pre(n);
             auto pre = 0;
-            auto dfs = [&](auto self, int v) -> void {
+            auto dfs = [&](auto self, int64_t v) -> void {
                 in_to_pre[v] = pre++;
-                int l = ct.binary_tree.left[v];
+                int64_t l = ct.binary_tree.left[v];
                 if (l != -1) {
                     self(self, l);
                 }
-                int r = ct.binary_tree.right[v];
+                int64_t r = ct.binary_tree.right[v];
                 if (r != -1) {
                     self(self, r);
                 }
             };
             dfs(dfs, ct.binary_tree.root);
-            for (int in = 0; in < n; in++) {
+            for (int64_t in = 0; in < n; in++) {
                 bool ct_is_root = roots_in.count(in);
                 bool bp_is_root = roots_pre.get(in_to_pre[in]);
                 ASSERT_EQ(ct_is_root, bp_is_root);
@@ -222,8 +223,8 @@ TEST(TreeCoveringTest, MicrotreeRootsStressTest) {
 }
 
 TEST(TreeCoveringTest, BuildUpsilonSeventyNodes) {
-    const int32_t B = 6;
-    std::vector<int32_t> in_to_pre = {
+    const int64_t B = 6;
+    std::vector<int64_t> in_to_pre = {
         6,  7,  5,  9,  8,  4,  12, 11, 13, 14, 15, 10, 3,  18, 17, 16, 21, 22,
         20, 24, 25, 23, 19, 27, 26, 30, 29, 28, 33, 32, 31, 2,  35, 34, 36, 1,
         39, 42, 41, 40, 43, 38, 46, 45, 44, 49, 48, 51, 50, 52, 47, 55, 54, 56,
@@ -235,8 +236,8 @@ TEST(TreeCoveringTest, BuildUpsilonSeventyNodes) {
 }
 
 TEST(TreeCoveringTest, BuildUpsilonLeftPackedCheck) {
-    auto dfs = [&](auto self, const TreeBP &tree, int &index) -> void {
-        auto match = [&](int v) -> void {
+    auto dfs = [&](auto self, const TreeBP &tree, int64_t &index) -> void {
+        auto match = [&](int64_t v) -> void {
             assert(tree.bp.get(index) == v);
             index++;
         };
@@ -260,12 +261,12 @@ TEST(TreeCoveringTest, BuildUpsilonLeftPackedCheck) {
     };
 
     std::mt19937 engine(0);
-    for (int shift = 5; shift <= 15; shift++) {
-        int n = 1 << shift;
-        for (int test_case = 0; test_case < 10; test_case++) {
-            for (int B = 2; B <= 10; B += 4) {
-                std::vector<int> values(n);
-                for (int i = 0; i < n; i++) {
+    for (int64_t shift = 5; shift <= 15; shift++) {
+        int64_t n = 1 << shift;
+        for (int64_t test_case = 0; test_case < 10; test_case++) {
+            for (int64_t B = 2; B <= 10; B += 4) {
+                std::vector<int64_t> values(n);
+                for (int64_t i = 0; i < n; i++) {
                     values[i] = engine() % n;
                 }
                 TreeBP ct = cartesian_tree_bp(values);
@@ -283,7 +284,7 @@ TEST(TreeCoveringTest, BuildUpsilonLeftPackedCheck) {
                 //                                ct,
                 //                                microtree_split_rank_array);
 
-                int index = 0;
+                int64_t index = 0;
                 dfs(dfs, upsilon, index);
                 ASSERT_EQ(index, upsilon.bp.size());
             }
@@ -292,8 +293,8 @@ TEST(TreeCoveringTest, BuildUpsilonLeftPackedCheck) {
 }
 
 TEST(TreeCoveringTest, EnumerateMicrotreesSeventyNodes) {
-    const int32_t B = 6;
-    std::vector<int32_t> in_to_pre = {
+    const int64_t B = 6;
+    std::vector<int64_t> in_to_pre = {
         6,  7,  5,  9,  8,  4,  12, 11, 13, 14, 15, 10, 3,  18, 17, 16, 21, 22,
         20, 24, 25, 23, 19, 27, 26, 30, 29, 28, 33, 32, 31, 2,  35, 34, 36, 1,
         39, 42, 41, 40, 43, 38, 46, 45, 44, 49, 48, 51, 50, 52, 47, 55, 54, 56,
@@ -302,18 +303,18 @@ TEST(TreeCoveringTest, EnumerateMicrotreesSeventyNodes) {
     BitArray roots = microtree_roots_preorder(B, ct);
     std::vector<uint64_t> microtrees =
         legacy_enumerate_microtrees(roots.linear_popcount(), roots, ct);
-    std::vector<std::pair<std::string, int>> actual;
+    std::vector<std::pair<std::string, int64_t>> actual;
     for (auto &&m : microtrees) {
         auto [bp_int, cut_pos] = legacy_decode_microtree(m);
         std::string bp_str;
-        int length = popcount(bp_int) * 2;
-        for (int i = 0; i < length; i++) {
+        int64_t length = popcount(bp_int) * 2;
+        for (int64_t i = 0; i < length; i++) {
             bp_str += ((((bp_int >> i) & 1) == 0) ? "(" : ")");
         }
         actual.push_back({bp_str, cut_pos});
     }
 
-    std::vector<std::pair<std::string, int>> expected = {
+    std::vector<std::pair<std::string, int64_t>> expected = {
         {"((())()()())", 12},          // 12
         {"((()())(()))", 12},          // 6
         {"()", 1},                     // 13
@@ -335,8 +336,8 @@ TEST(TreeCoveringTest, EnumerateMicrotreesSeventyNodes) {
 }
 
 TEST(TreeCoveringTest, EnumerateLargeMicrotreesBPSeventyNodes) {
-    const int32_t B = 6;
-    std::vector<int32_t> in_to_pre = {
+    const int64_t B = 6;
+    std::vector<int64_t> in_to_pre = {
         6,  7,  5,  9,  8,  4,  12, 11, 13, 14, 15, 10, 3,  18, 17, 16, 21, 22,
         20, 24, 25, 23, 19, 27, 26, 30, 29, 28, 33, 32, 31, 2,  35, 34, 36, 1,
         39, 42, 41, 40, 43, 38, 46, 45, 44, 49, 48, 51, 50, 52, 47, 55, 54, 56,
@@ -347,7 +348,7 @@ TEST(TreeCoveringTest, EnumerateLargeMicrotreesBPSeventyNodes) {
     auto [upsilon, microtree_cut_array] =
         recover_upsilon_and_microtrees(B, roots, ct);
     std::vector<std::pair<std::string, uint64_t>> actual;
-    for (int index = 0; index < upsilon.n; index++) {
+    for (int64_t index = 0; index < upsilon.n; index++) {
         const auto &[microtree, cutpos] = microtree_cut_array[index];
         actual.push_back({microtree.to_string(), cutpos});
     }
@@ -373,13 +374,13 @@ TEST(TreeCoveringTest, EnumerateLargeMicrotreesBPSeventyNodes) {
     ASSERT_EQ(actual, expected);
 }
 
-void tree_covering_restore_bp_test_helper(int B, const TreeBP &ct) {
+void tree_covering_restore_bp_test_helper(int64_t B, const TreeBP &ct) {
     const auto [upsilon, microtrees] = legacy_tree_covering(B, ct);
 
-    std::stack<int> st;
-    std::vector<int> refs(upsilon.bp.size());
-    int rank = 0;
-    for (int i = 0; i < upsilon.bp.size(); i++) {
+    std::stack<int64_t> st;
+    std::vector<int64_t> refs(upsilon.bp.size());
+    int64_t rank = 0;
+    for (int64_t i = 0; i < upsilon.bp.size(); i++) {
         if (upsilon.bp.get(i) == 0) {
             st.push(i);
         } else {
@@ -389,16 +390,16 @@ void tree_covering_restore_bp_test_helper(int B, const TreeBP &ct) {
     }
 
     BitArray restored_bp(2 * ct.n);
-    int pos = 0;
-    for (int i = 0; i < upsilon.bp.size(); i++) {
+    int64_t pos = 0;
+    for (int64_t i = 0; i < upsilon.bp.size(); i++) {
         auto [mbp, cut_pos] = legacy_decode_microtree(microtrees[refs[i]]);
         if (upsilon.bp.get(i) == 0) {
-            for (int j = 0; j < cut_pos; j++) {
+            for (int64_t j = 0; j < cut_pos; j++) {
                 restored_bp.set(pos++, (mbp >> j) & 1);
             }
         } else {
             auto length = popcount(mbp) * 2;
-            for (int j = cut_pos; j < length; j++) {
+            for (int64_t j = cut_pos; j < length; j++) {
                 restored_bp.set(pos++, (mbp >> j) & 1);
             }
         }
@@ -407,14 +408,14 @@ void tree_covering_restore_bp_test_helper(int B, const TreeBP &ct) {
     ASSERT_EQ(ct.bp, restored_bp);
 }
 
-void tree_covering_large_microtree_restore_bp_test_helper(int B,
+void tree_covering_large_microtree_restore_bp_test_helper(int64_t B,
                                                           const TreeBP &ct) {
     const auto [upsilon, tree_and_split_rank] = tree_covering(B, ct);
 
-    std::stack<int> st;
-    std::vector<int> refs(upsilon.bp.size());
-    int rank0 = upsilon.n;
-    for (int i = upsilon.bp.size() - 1; i >= 0; i--) {
+    std::stack<int64_t> st;
+    std::vector<int64_t> refs(upsilon.bp.size());
+    int64_t rank0 = upsilon.n;
+    for (int64_t i = upsilon.bp.size() - 1; i >= 0; i--) {
         if (upsilon.bp.get(i) == 1) {
             st.push(i);
         } else {
@@ -424,8 +425,8 @@ void tree_covering_large_microtree_restore_bp_test_helper(int B,
     }
 
     BitArray restored_bp(2 * ct.n);
-    int pos = 0;
-    for (int i = 0; i < upsilon.bp.size(); i++) {
+    int64_t pos = 0;
+    for (int64_t i = 0; i < upsilon.bp.size(); i++) {
         const auto &[microtree, split_rank] = tree_and_split_rank[refs[i]];
         auto cut = microtree.bp.linear_select1(split_rank);
         if (upsilon.bp.get(i) == 0) {
@@ -442,8 +443,8 @@ void tree_covering_large_microtree_restore_bp_test_helper(int B,
 }
 
 TEST(TreeCoveringTest, TreeCoveringRestoreBPSeventyNodes) {
-    const int32_t B = 6;
-    std::vector<int32_t> in_to_pre = {
+    const int64_t B = 6;
+    std::vector<int64_t> in_to_pre = {
         6,  7,  5,  9,  8,  4,  12, 11, 13, 14, 15, 10, 3,  18, 17, 16, 21, 22,
         20, 24, 25, 23, 19, 27, 26, 30, 29, 28, 33, 32, 31, 2,  35, 34, 36, 1,
         39, 42, 41, 40, 43, 38, 46, 45, 44, 49, 48, 51, 50, 52, 47, 55, 54, 56,
@@ -455,11 +456,11 @@ TEST(TreeCoveringTest, TreeCoveringRestoreBPSeventyNodes) {
 
 TEST(TreeCoveringTest, TreeCoveringRestoreBPStressTest) {
     std::mt19937 engine(0);
-    for (int shift = 5; shift <= 15; shift++) {
-        int n = 1 << shift;
-        for (int B = 2; B <= 15; B++) {
-            std::vector<int> values(n);
-            for (int i = 0; i < n; i++) {
+    for (int64_t shift = 5; shift <= 15; shift++) {
+        int64_t n = 1 << shift;
+        for (int64_t B = 2; B <= 15; B++) {
+            std::vector<int64_t> values(n);
+            for (int64_t i = 0; i < n; i++) {
                 values[i] = engine() % n;
             }
             TreeBP ct = cartesian_tree_bp(values);
@@ -470,8 +471,8 @@ TEST(TreeCoveringTest, TreeCoveringRestoreBPStressTest) {
 }
 
 TEST(TreeCoveringTest, TreeCoveringLargeMicrotreeRestoreBPSeventyNodes) {
-    const int32_t B = 6;
-    std::vector<int32_t> in_to_pre = {
+    const int64_t B = 6;
+    std::vector<int64_t> in_to_pre = {
         6,  7,  5,  9,  8,  4,  12, 11, 13, 14, 15, 10, 3,  18, 17, 16, 21, 22,
         20, 24, 25, 23, 19, 27, 26, 30, 29, 28, 33, 32, 31, 2,  35, 34, 36, 1,
         39, 42, 41, 40, 43, 38, 46, 45, 44, 49, 48, 51, 50, 52, 47, 55, 54, 56,
@@ -483,12 +484,12 @@ TEST(TreeCoveringTest, TreeCoveringLargeMicrotreeRestoreBPSeventyNodes) {
 
 TEST(TreeCoveringTest, TreeCoveringLargeMicrotreesRestoreBPStressTest) {
     std::mt19937 engine(0);
-    for (int shift = 5; shift <= 15; shift++) {
-        int n = 1 << shift;
-        for (int i = 1; i <= 10; i++) {
-            int B = 1 << i;
-            std::vector<int> values(n);
-            for (int i = 0; i < n; i++) {
+    for (int64_t shift = 5; shift <= 15; shift++) {
+        int64_t n = 1 << shift;
+        for (int64_t i = 1; i <= 10; i++) {
+            int64_t B = 1 << i;
+            std::vector<int64_t> values(n);
+            for (int64_t i = 0; i < n; i++) {
                 values[i] = engine() % n;
             }
             TreeBP ct = cartesian_tree_bp(values);
@@ -500,11 +501,11 @@ TEST(TreeCoveringTest, TreeCoveringLargeMicrotreesRestoreBPStressTest) {
 
 TEST(TreeCoveringTest, TreeCoveringRestoreBPLargeBStressTest) {
     std::mt19937 engine(0);
-    const int n = 1000000;
-    const int B = 100000;
+    const int64_t n = 1000000;
+    const int64_t B = 100000;
 
-    std::vector<int> values(n);
-    for (int i = 0; i < n; i++) {
+    std::vector<int64_t> values(n);
+    for (int64_t i = 0; i < n; i++) {
         values[i] = engine() % n;
     }
     TreeBP ct = cartesian_tree_bp(values);

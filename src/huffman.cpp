@@ -21,7 +21,7 @@ HuffmanTree<T>::HuffmanTree(const std::map<T, uint64_t> &alphabet_count)
               [](const NodePtr &a, const NodePtr &b) -> bool {
                   return a->freq < b->freq;
               });
-    for (int i = 0; i < number_of_alphabet - 1; i++) {
+    for (int64_t i = 0; i < number_of_alphabet - 1; i++) {
         leaves[i]->next = leaves[i + 1];
     }
     NodePtr insert_pos = leaves[0];
@@ -98,7 +98,7 @@ CanonicalHuffmanCode<T, AlphabetArray>::CanonicalHuffmanCode(
     std::vector<uint64_t> codes;
     codes.reserve(number_of_alphabet);
     codes.push_back(0);
-    for (int i = 1; i < number_of_alphabet; i++) {
+    for (int64_t i = 1; i < number_of_alphabet; i++) {
         codes.push_back((codes.back() + 1)
                         << (alphabet_and_code_lengths[i].second -
                             alphabet_and_code_lengths[i - 1].second));
@@ -106,11 +106,11 @@ CanonicalHuffmanCode<T, AlphabetArray>::CanonicalHuffmanCode(
 
     first_index.resize(maximum_code_length + 1, number_of_alphabet);
     first_code.resize(maximum_code_length + 1);
-    for (int i = number_of_alphabet - 1; i >= 0; i--) {
+    for (int64_t i = number_of_alphabet - 1; i >= 0; i--) {
         first_index[alphabet_and_code_lengths[i].second] = i;
         first_code[alphabet_and_code_lengths[i].second] = codes[i];
     }
-    for (int l = maximum_code_length - 1; l >= 1; l--) {
+    for (int64_t l = maximum_code_length - 1; l >= 1; l--) {
         if (first_index[l] == number_of_alphabet) {
             first_index[l] = first_index[l + 1];
             first_code[l] = first_code[l + 1] >> 1;
@@ -123,7 +123,7 @@ std::map<T, std::pair<uint64_t, uint64_t>>
 CanonicalHuffmanCode<T, AlphabetArray>::enumerate_alphabet_code_pair() const {
     std::map<T, std::pair<uint64_t, uint64_t>> result;
     uint64_t code_length = 0, code = 0;
-    for (int i = 0; i < number_of_alphabet; i++) {
+    for (int64_t i = 0; i < number_of_alphabet; i++) {
         while (code_length < maximum_code_length &&
                first_code[code_length + 1] <= (code << 1)) {
             code_length++;
@@ -139,8 +139,8 @@ template <typename T, typename AlphabetArray>
 uint64_t CanonicalHuffmanCode<T, AlphabetArray>::get_next_length(
     const BitArray &code_seq, uint64_t index) const {
     uint64_t next = code_seq.read_bits_zero_follow(index, maximum_code_length);
-    int l = 0, r = maximum_code_length + 1;
-    int m;
+    int64_t l = 0, r = maximum_code_length + 1;
+    int64_t m;
     while (r - l > 1) {
         m = (l + r) / 2;
         if ((first_code[m] << (maximum_code_length - m)) <= next) {
@@ -173,12 +173,12 @@ uint64_t CanonicalHuffmanCode<T, AlphabetArray>::evaluate_memory_consumption()
 
 template struct HuffmanTree<uint64_t>;
 template struct HuffmanTree<TreeBP>;
-template struct HuffmanTree<std::pair<TreeBP, uint32_t>>;
+template struct HuffmanTree<std::pair<TreeBP, uint64_t>>;
 
 template struct CanonicalHuffmanCode<uint64_t, std::vector<uint64_t>>;
 template struct CanonicalHuffmanCode<uint64_t, MinimalCellArray<uint64_t>>;
 template struct CanonicalHuffmanCode<TreeBP, EditableMicrotreeArray>;
-template struct CanonicalHuffmanCode<std::pair<TreeBP, uint32_t>,
+template struct CanonicalHuffmanCode<std::pair<TreeBP, uint64_t>,
                                      MicrotreeSplitRankArray>;
 
 }  // namespace hyperrmq

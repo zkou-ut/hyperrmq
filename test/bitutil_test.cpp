@@ -48,7 +48,7 @@ TEST(CeilLog2Test, Small) {
 }
 
 TEST(CeilLog2Test, PowerOfTwoAndPlusOne) {
-    for (int shift = 0; shift < 64; shift++) {
+    for (int64_t shift = 0; shift < 64; shift++) {
         ASSERT_EQ(ceil_log2(1ull << shift), shift);
         ASSERT_EQ(ceil_log2((1ull << shift) + 1), shift + 1);
     }

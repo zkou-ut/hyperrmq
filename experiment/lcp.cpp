@@ -311,7 +311,7 @@ int main(int argc, char* argv[]) {
 
     {
         size_t N = lcp.size();
-        std::vector<int> C(N);
+        std::vector<int64_t> C(N);
         for (size_t i = 0; i < N; ++i) {
             C[i] = lcp[i];
         }
@@ -327,7 +327,7 @@ int main(int argc, char* argv[]) {
             cout << "Memory = " << rmq.evaluate_memory_consumption() << endl;
             cout << "# of queries=" << num_queries << std::endl;
         }
-        for (int B = 64; B <= 1024; B <<= 1) {
+        for (int64_t B = 64; B <= 1024; B <<= 1) {
             HyperRMQBreadth rmq(C, B);
             cout << "RMQ_Breadth_" << B << endl;
             s = time();
@@ -351,7 +351,7 @@ int main(int argc, char* argv[]) {
         //     cout << "Memory = " << hbt.evaluate_memory_consumption() << endl;
         //     cout << "# of queries=" << num_queries << std::endl;
         // }
-        // for (int B = 64; B <= 1024; B <<= 1) {
+        // for (int64_t B = 64; B <= 1024; B <<= 1) {
         //     HypersuccinctBinaryTreeBreadth hbt(cartesian_tree_bp(C), B);
         //     cout << "HBT_Breadth_" << B << endl;
         //     s = time();

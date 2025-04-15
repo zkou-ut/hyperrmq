@@ -11,16 +11,16 @@ namespace hyperrmq {
 namespace {
 
 TEST(TreeBPTest, TenNodes) {
-    std::vector<int> perm = {1, 7, 3, 2, 4, 5, 0, 9, 8, 6};
+    std::vector<int64_t> perm = {1, 7, 3, 2, 4, 5, 0, 9, 8, 6};
     CartesianTree ct(perm);
     TreeBP ctbp = cartesian_tree_bp(perm);
     ASSERT_EQ(ct.binary_tree.to_BP_string(), ctbp.to_string());
 }
 
 TEST(TreeBPTest, EqualityAndInequality) {
-    TreeBP ctbp1 = cartesian_tree_bp({1, 0, 2});
-    TreeBP ctbp2 = cartesian_tree_bp({2, 0, 1});
-    TreeBP ctbp3 = cartesian_tree_bp({0, 1, 2});
+    TreeBP ctbp1 = cartesian_tree_bp(std::vector<int>{1, 0, 2});
+    TreeBP ctbp2 = cartesian_tree_bp(std::vector<int>{2, 0, 1});
+    TreeBP ctbp3 = cartesian_tree_bp(std::vector<int>{0, 1, 2});
 
     ASSERT_TRUE(ctbp1 == ctbp2);
     ASSERT_FALSE(ctbp1 != ctbp2);
@@ -33,12 +33,12 @@ TEST(TreeBPTest, EqualityAndInequality) {
 }
 
 TEST(TreeBPTest, SetFromPermutations) {
-    const std::vector<int> catalan = {
+    const std::vector<int64_t> catalan = {
         1,    1,    2,     5,     14,     42,     132,     429,
         1430, 4862, 16796, 58786, 208012, 742900, 2674440, 9694845};
 
-    for (int n = 1; n <= 7; n++) {
-        std::vector<int> perm(n);
+    for (int64_t n = 1; n <= 7; n++) {
+        std::vector<int64_t> perm(n);
         std::iota(perm.begin(), perm.end(), 0);
         std::set<TreeBP> trees;
         do {
@@ -49,18 +49,18 @@ TEST(TreeBPTest, SetFromPermutations) {
 }
 
 TEST(TreeBPTest, BuildFromBP) {
-    std::vector<int> perm = {1, 7, 3, 2, 4, 5, 0, 9, 8, 6};
+    std::vector<int64_t> perm = {1, 7, 3, 2, 4, 5, 0, 9, 8, 6};
     TreeBP ctbp = cartesian_tree_bp(perm);
     TreeBP another_ctbp(ctbp.to_string());
     ASSERT_EQ(ctbp, another_ctbp);
 }
 
 TEST(TreeBPTest, StressTestPermutation) {
-    const int n = 10000;
+    const int64_t n = 10000;
     std::mt19937 engine(0);
-    std::vector<int> perm(n);
+    std::vector<int64_t> perm(n);
     iota(perm.begin(), perm.end(), 0);
-    for (int test_case = 0; test_case < 10; test_case++) {
+    for (int64_t test_case = 0; test_case < 10; test_case++) {
         shuffle(perm.begin(), perm.end(), engine);
         CartesianTree ct(perm);
         TreeBP ctbp = cartesian_tree_bp(perm);
@@ -69,11 +69,11 @@ TEST(TreeBPTest, StressTestPermutation) {
 }
 
 TEST(TreeBPTest, StressTestSimilarValues) {
-    const int n = 10000;
+    const int64_t n = 10000;
     std::mt19937 engine(0);
-    for (int test_case = 0; test_case < 10; test_case++) {
-        std::vector<int> values(n);
-        for (int i = 0; i < n; i++) {
+    for (int64_t test_case = 0; test_case < 10; test_case++) {
+        std::vector<int64_t> values(n);
+        for (int64_t i = 0; i < n; i++) {
             values[i] = engine() % 100;
         }
         CartesianTree ct(values);
@@ -136,14 +136,14 @@ TEST(TreeBPTest, NaiveBwdSearch) {
     ASSERT_EQ(tree.naive_bwdsearch(13, -4), -1);
 }
 
-void exhaustive_lca_rmq_test(const std::vector<int> &values) {
-    auto naive_rmq = [&](int first, int last) -> int {
+void exhaustive_lca_rmq_test(const std::vector<int64_t> &values) {
+    auto naive_rmq = [&](int64_t first, int64_t last) -> int64_t {
         if (first > last) {
             std::swap(first, last);
         }
         auto min_val = values[first];
         auto min_idx = first;
-        for (int i = first + 1; i < last + 1; i++) {
+        for (int64_t i = first + 1; i < last + 1; i++) {
             if (min_val > values[i]) {
                 min_val = values[i];
                 min_idx = i;
@@ -154,25 +154,25 @@ void exhaustive_lca_rmq_test(const std::vector<int> &values) {
 
     auto tree = cartesian_tree_bp(values);
 
-    for (int i = 0; i < values.size(); i++) {
-        for (int j = 0; j < values.size(); j++) {
+    for (int64_t i = 0; i < values.size(); i++) {
+        for (int64_t j = 0; j < values.size(); j++) {
             ASSERT_EQ(tree.naive_lca(i, j), naive_rmq(i, j));
         }
     }
 }
 
 TEST(TreeBPTest, OpenCloseStressTest) {
-    const int n = 100000;
+    const int64_t n = 100000;
     std::mt19937 engine(0);
-    std::vector<int> perm(n);
+    std::vector<int64_t> perm(n);
     iota(perm.begin(), perm.end(), 0);
     shuffle(perm.begin(), perm.end(), engine);
 
     TreeBP tree = cartesian_tree_bp(perm);
 
-    std::stack<int> st;
-    std::vector<std::pair<int, int>> paren_pairs;
-    for (int i = 0; i < tree.bp.size(); i++) {
+    std::stack<int64_t> st;
+    std::vector<std::pair<int64_t, int64_t>> paren_pairs;
+    for (int64_t i = 0; i < tree.bp.size(); i++) {
         if (tree.bp.get(i) == 0) {
             st.push(i);
         } else {
@@ -188,16 +188,16 @@ TEST(TreeBPTest, OpenCloseStressTest) {
 }
 
 TEST(TreeCoveringTest, NaiveLCASmallTest) {
-    std::vector<int> perm = {3, 1, 4, 1, 5};
+    std::vector<int64_t> perm = {3, 1, 4, 1, 5};
     exhaustive_lca_rmq_test(perm);
 }
 
 TEST(TreeCoveringTest, NaiveLCAStressTest) {
     std::mt19937 engine(0);
-    for (int test_case = 0; test_case < 10; test_case++) {
-        int n = 1 << test_case;
-        std::vector<int> values(n);
-        for (int i = 0; i < n; i++) {
+    for (int64_t test_case = 0; test_case < 10; test_case++) {
+        int64_t n = 1 << test_case;
+        std::vector<int64_t> values(n);
+        for (int64_t i = 0; i < n; i++) {
             values[i] = engine() % 10;
         }
         exhaustive_lca_rmq_test(values);

@@ -11,15 +11,15 @@ FixedLengthCodeArrayBase<T>::FixedLengthCodeArrayBase()
     : width(0), length(0), codes() {}
 
 template <typename T>
-FixedLengthCodeArrayBase<T>::FixedLengthCodeArrayBase(uint32_t width,
+FixedLengthCodeArrayBase<T>::FixedLengthCodeArrayBase(uint64_t width,
                                                       uint64_t length)
     : width(width), length(length), codes(width * length) {}
 
 template <typename T>
-FixedLengthCodeArrayBase<T>::FixedLengthCodeArrayBase(uint32_t width,
+FixedLengthCodeArrayBase<T>::FixedLengthCodeArrayBase(uint64_t width,
                                                       std::vector<T> vec)
     : width(width), length(vec.size()), codes(width * length) {
-    for (int index = 0; index < length; index++) {
+    for (int64_t index = 0; index < length; index++) {
         set(index, vec[index]);
     }
 }
@@ -52,7 +52,7 @@ template <typename T>
 bool FixedLengthCodeArrayBase<T>::operator==(
     const FixedLengthCodeArrayBase &rhs) const {
     if (this->size() != rhs.size()) return false;
-    for (int i = 0; i < this->size(); i++) {
+    for (int64_t i = 0; i < this->size(); i++) {
         if (this->get(i) != rhs.get(i)) return false;
     }
     return true;
@@ -70,6 +70,6 @@ uint64_t FixedLengthCodeArrayBase<T>::evaluate_memory_consumption() const {
 }
 
 template struct FixedLengthCodeArrayBase<TreeBP>;
-template struct FixedLengthCodeArrayBase<std::pair<TreeBP, uint32_t>>;
+template struct FixedLengthCodeArrayBase<std::pair<TreeBP, uint64_t>>;
 
 }  // namespace hyperrmq

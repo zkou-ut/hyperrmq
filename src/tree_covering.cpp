@@ -21,7 +21,7 @@ std::pair<uint64_t, uint64_t> legacy_decode_microtree(uint64_t microtree) {
     return {bp, cut_pos};
 }
 
-uint32_t legacy_lca_on_microtree(uint64_t bp, uint32_t l, uint32_t m) {
+uint64_t legacy_lca_on_microtree(uint64_t bp, uint64_t l, uint64_t m) {
     if (l == m) {
         return l;
     }
@@ -29,16 +29,16 @@ uint32_t legacy_lca_on_microtree(uint64_t bp, uint32_t l, uint32_t m) {
         std::swap(l, m);
     }
     uint64_t len = popcount(bp) * 2;
-    int32_t minval = 1e9, minclose = 0;
-    int32_t close = 0;
+    int64_t minval = 1e9, minclose = 0;
+    int64_t close = 0;
     l++;
     m++;
-    for (int i = 0; i < len; i++) {
+    for (int64_t i = 0; i < len; i++) {
         if (l <= close) {
             if (m < close) {
                 break;
             }
-            int excess = i - 2 * close;
+            int64_t excess = i - 2 * close;
             if (minval > excess) {
                 minval = excess;
                 minclose = close;
@@ -49,26 +49,26 @@ uint32_t legacy_lca_on_microtree(uint64_t bp, uint32_t l, uint32_t m) {
     return minclose - 1;
 };
 
-std::set<int32_t> legacy_microtree_roots_inorder(
-    int32_t B, const BinaryTree &binary_tree) {
-    std::set<int32_t> roots = {binary_tree.root};
+std::set<int64_t> legacy_microtree_roots_inorder(
+    int64_t B, const BinaryTree &binary_tree) {
+    std::set<int64_t> roots = {binary_tree.root};
 
     // returns (component size, subtree size)
-    auto dfs = [&](auto self, int32_t v) -> std::pair<int32_t, int32_t> {
-        int32_t l = binary_tree.left[v], r = binary_tree.right[v];
+    auto dfs = [&](auto self, int64_t v) -> std::pair<int64_t, int64_t> {
+        int64_t l = binary_tree.left[v], r = binary_tree.right[v];
 
-        int32_t l_sbt_sz = 0, l_cmp_sz = 0;
+        int64_t l_sbt_sz = 0, l_cmp_sz = 0;
         if (l != binary_tree.None) {
             std::tie(l_cmp_sz, l_sbt_sz) = self(self, l);
         }
 
-        int32_t r_sbt_sz = 0, r_cmp_sz = 0;
+        int64_t r_sbt_sz = 0, r_cmp_sz = 0;
         if (r != binary_tree.None) {
             std::tie(r_cmp_sz, r_sbt_sz) = self(self, r);
         }
 
-        int32_t cmp_sz = l_cmp_sz + r_cmp_sz + 1;
-        int32_t sbt_sz = l_sbt_sz + r_sbt_sz + 1;
+        int64_t cmp_sz = l_cmp_sz + r_cmp_sz + 1;
+        int64_t sbt_sz = l_sbt_sz + r_sbt_sz + 1;
         if (l_sbt_sz >= B && r_sbt_sz >= B) {
             roots.insert(l);
             roots.insert(r);
@@ -94,7 +94,7 @@ BitArray microtree_roots_preorder(int64_t B, const TreeBP &tree) {
     int64_t pre = 0;
     int64_t index = 0;
 
-    auto match = [&](int v) -> void {
+    auto match = [&](int64_t v) -> void {
         assert(tree.bp.get(index) == v);
         index++;
     };
@@ -103,19 +103,19 @@ BitArray microtree_roots_preorder(int64_t B, const TreeBP &tree) {
     };
     // returns (component size, subtree size)
     auto dfs = [&](auto self) -> std::pair<int64_t, int64_t> {
-        int v = pre;
+        int64_t v = pre;
         pre++;
 
         match(0);
         bool has_l = has_child();
-        int l = pre;
+        int64_t l = pre;
         int64_t l_sbt_sz = 0, l_cmp_sz = 0;
         if (has_l) {
             std::tie(l_cmp_sz, l_sbt_sz) = self(self);
         }
 
         match(1);
-        int r = pre;
+        int64_t r = pre;
         int64_t r_sbt_sz = 0, r_cmp_sz = 0;
         if (index < 2 * tree.n && tree.bp.get(index) == 0) {
             std::tie(r_cmp_sz, r_sbt_sz) = self(self);
@@ -341,7 +341,7 @@ MicrotreeSplitRankArray enumerate_microtrees(const int64_t B,
                                              const TreeBP &tree) {
     EditableMicrotreeArray microtrees(B, microtree_count);
     BitArray split_rank_count_locked(microtree_count);
-    std::vector<uint32_t> split_ranks(microtree_count),
+    std::vector<uint64_t> split_ranks(microtree_count),
         write_pos(microtree_count);
 
     uint64_t pre = 0, index = 0;
@@ -354,7 +354,7 @@ MicrotreeSplitRankArray enumerate_microtrees(const int64_t B,
     };
 
     uint64_t up_pre = 0;
-    auto dfs = [&](auto self, int cur_up_pre = -1) -> void {
+    auto dfs = [&](auto self, int64_t cur_up_pre = -1) -> void {
         bool is_microtree_root = microtree_roots.get(pre);
         pre++;
 
@@ -396,7 +396,7 @@ std::pair<TreeBP, MicrotreeSplitRankArray> recover_upsilon_and_microtrees(
     EditableMicrotreeArray microtrees(B, microtree_count);
     BitArray upsilon_bp(2 * microtree_count);
     BitArray split_rank_count_locked(microtree_count);
-    std::vector<uint32_t> split_ranks(microtree_count),
+    std::vector<uint64_t> split_ranks(microtree_count),
         write_pos(microtree_count);
 
     uint64_t pre = 0;

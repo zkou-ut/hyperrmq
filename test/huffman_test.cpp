@@ -29,11 +29,11 @@ TEST(HuffmanTreeTest, ThreeLeaves) {
 }
 
 TEST(HuffmanTreeTest, CodeLengthSumStressTest) {
-    const int n = 100;
+    const int64_t n = 100;
     std::mt19937 engine(0);
-    for (int test_case = 0; test_case < 10; test_case++) {
+    for (int64_t test_case = 0; test_case < 10; test_case++) {
         std::map<uint64_t, uint64_t> value_counts;
-        for (int i = 0; i < n; i++) {
+        for (int64_t i = 0; i < n; i++) {
             value_counts[i] = engine() % 100 + 1;
         }
 
@@ -148,11 +148,11 @@ void length_stress_test_helper(std::map<T, uint64_t> value_counts) {
 }
 
 TEST(CanonicalHuffmanCodeTest, LengthStressTest) {
-    const int n = 100;
+    const int64_t n = 100;
     std::mt19937 engine(0);
-    for (int test_case = 0; test_case < 10; test_case++) {
+    for (int64_t test_case = 0; test_case < 10; test_case++) {
         std::map<uint64_t, uint64_t> value_counts;
-        for (int i = 0; i < n; i++) {
+        for (int64_t i = 0; i < n; i++) {
             value_counts[i] = engine() % 100 + 1;
         }
         length_stress_test_helper(value_counts);
@@ -160,11 +160,11 @@ TEST(CanonicalHuffmanCodeTest, LengthStressTest) {
 }
 
 TEST(CanonicalHuffmanCodeTest, BiasedLengthStressTest) {
-    const int n = 100;
+    const int64_t n = 100;
     std::mt19937 engine(0);
-    for (int test_case = 0; test_case < 10; test_case++) {
+    for (int64_t test_case = 0; test_case < 10; test_case++) {
         std::map<uint64_t, uint64_t> value_counts;
-        for (int i = 0; i < n; i++) {
+        for (int64_t i = 0; i < n; i++) {
             if (engine() % 2) {
                 value_counts[i] = engine() % 10000000 + 1;
             } else {

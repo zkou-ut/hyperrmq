@@ -11,7 +11,7 @@ namespace hyperrmq {
 struct EditableMicrotreeArray : FixedLengthCodeArrayBase<TreeBP> {
    public:
     EditableMicrotreeArray();
-    EditableMicrotreeArray(uint32_t B, uint32_t microtree_count);
+    EditableMicrotreeArray(uint64_t B, uint64_t microtree_count);
     EditableMicrotreeArray(const std::vector<TreeBP>& tree_vec);
 
     BitArray encode(const TreeBP& object) const;
@@ -25,44 +25,44 @@ struct EditableMicrotreeArray : FixedLengthCodeArrayBase<TreeBP> {
 };
 
 struct MicrotreeSplitRankArray
-    : FixedLengthCodeArrayBase<std::pair<TreeBP, uint32_t>> {
+    : FixedLengthCodeArrayBase<std::pair<TreeBP, uint64_t>> {
    public:
     MicrotreeSplitRankArray();
     MicrotreeSplitRankArray(
-        const std::vector<std::pair<TreeBP, uint32_t>>& vec);
+        const std::vector<std::pair<TreeBP, uint64_t>>& vec);
     MicrotreeSplitRankArray(const EditableMicrotreeArray& microtrees,
-                            const std::vector<uint32_t>& split_ranks);
+                            const std::vector<uint64_t>& split_ranks);
 
-    BitArray encode(const std::pair<TreeBP, uint32_t>& object) const;
-    std::pair<TreeBP, uint32_t> decode(const BitArray& code) const;
+    BitArray encode(const std::pair<TreeBP, uint64_t>& object) const;
+    std::pair<TreeBP, uint64_t> decode(const BitArray& code) const;
 
    private:
-    uint32_t tree_width, split_rank_width;
+    uint64_t tree_width, split_rank_width;
 };
 
 struct CompressedMicrotreeSplitRankArrayInterface {
     virtual size_t size() const = 0;
-    virtual std::pair<TreeBP, uint32_t> operator[](uint64_t index) const = 0;
+    virtual std::pair<TreeBP, uint64_t> operator[](uint64_t index) const = 0;
     virtual uint64_t evaluate_memory_consumption() const = 0;
     virtual std::vector<std::pair<std::string, uint64_t>> memory_table()
         const = 0;
 
-    uint32_t get_node_count(uint64_t index) const;
+    uint64_t get_node_count(uint64_t index) const;
 
     BitArray get_left_chunk(uint64_t index) const;
     BitArray get_right_chunk(uint64_t index) const;
 
-    uint32_t get_left_chunk_popcount(uint64_t index) const;
-    uint32_t get_right_chunk_popcount(uint64_t index) const;
+    uint64_t get_left_chunk_popcount(uint64_t index) const;
+    uint64_t get_right_chunk_popcount(uint64_t index) const;
 
-    std::pair<uint32_t, uint32_t> get_node_count_left_popcount(
+    std::pair<uint64_t, uint64_t> get_node_count_left_popcount(
         uint64_t index) const;
 
-    uint32_t get_lca(uint64_t index, uint32_t u_inorder,
-                     uint32_t v_inorder) const;
+    uint64_t get_lca(uint64_t index, uint64_t u_inorder,
+                     uint64_t v_inorder) const;
 };
 
-template <uint32_t W = 64>
+template <uint64_t W = 64>
 struct CompressedMicrotreeSplitRankArrayHuffmanNaive
     : CompressedMicrotreeSplitRankArrayInterface {
    public:
@@ -71,7 +71,7 @@ struct CompressedMicrotreeSplitRankArrayHuffmanNaive
         const MicrotreeSplitRankArray& microtree_split_rank_array);
 
     size_t size() const override;
-    std::pair<TreeBP, uint32_t> operator[](uint64_t index) const override;
+    std::pair<TreeBP, uint64_t> operator[](uint64_t index) const override;
     uint64_t evaluate_memory_consumption() const override;
     std::vector<std::pair<std::string, uint64_t>> memory_table() const override;
 
@@ -79,10 +79,10 @@ struct CompressedMicrotreeSplitRankArrayHuffmanNaive
     CanonicalHuffmanCode<TreeBP, EditableMicrotreeArray> chc;
     BitArray code_seq;
     ThreeLevelPrefixSum<> code_idx_sample;
-    MinimalCellArray<uint32_t> split_ranks;
+    MinimalCellArray<uint64_t> split_ranks;
 };
 
-template <uint32_t W = 64>
+template <uint64_t W = 64>
 struct CompressedMicrotreeSplitRankArrayHuffman
     : CompressedMicrotreeSplitRankArrayInterface {
    public:
@@ -91,12 +91,12 @@ struct CompressedMicrotreeSplitRankArrayHuffman
         const MicrotreeSplitRankArray& microtree_split_rank_array);
 
     size_t size() const override;
-    std::pair<TreeBP, uint32_t> operator[](uint64_t index) const override;
+    std::pair<TreeBP, uint64_t> operator[](uint64_t index) const override;
     uint64_t evaluate_memory_consumption() const override;
     std::vector<std::pair<std::string, uint64_t>> memory_table() const override;
 
     uint64_t length;
-    CanonicalHuffmanCode<std::pair<TreeBP, uint32_t>, MicrotreeSplitRankArray>
+    CanonicalHuffmanCode<std::pair<TreeBP, uint64_t>, MicrotreeSplitRankArray>
         chc;
     BitArray code_seq;
     ThreeLevelPrefixSum<> code_idx_sample;
@@ -111,25 +111,25 @@ struct CompressedMicrotreeSplitRankArrayArithmetic
         const MicrotreeSplitRankArray& microtree_split_rank_array);
 
     size_t size() const override;
-    std::pair<TreeBP, uint32_t> operator[](uint64_t index) const override;
+    std::pair<TreeBP, uint64_t> operator[](uint64_t index) const override;
     uint64_t evaluate_memory_consumption() const override;
     std::vector<std::pair<std::string, uint64_t>> memory_table() const override;
 
-    uint32_t get_node_count(uint64_t index) const;
+    uint64_t get_node_count(uint64_t index) const;
 
-    uint32_t get_left_chunk_popcount(uint64_t index) const;
-    uint32_t get_right_chunk_popcount(uint64_t index) const;
+    uint64_t get_left_chunk_popcount(uint64_t index) const;
+    uint64_t get_right_chunk_popcount(uint64_t index) const;
 
-    std::pair<uint32_t, uint32_t> get_node_count_left_popcount(
+    std::pair<uint64_t, uint64_t> get_node_count_left_popcount(
         uint64_t index) const;
 
-    uint32_t get_lca(uint64_t index, uint32_t u_inorder,
-                     uint32_t v_inorder) const;
+    uint64_t get_lca(uint64_t index, uint64_t u_inorder,
+                     uint64_t v_inorder) const;
 
     uint64_t length;
     BitArray code_seq;
-    MinimalCellArray<uint32_t> node_counts, split_ranks;
-    ThreeLevelPrefixSum<uint32_t> code_len;
+    MinimalCellArray<uint64_t> node_counts, split_ranks;
+    ThreeLevelPrefixSum<uint64_t> code_len;
 };
 
 // node_count, split_rank, left_seq
@@ -141,22 +141,22 @@ struct CompressedMicrotreeSplitRankArrayAllArithmetic
         const MicrotreeSplitRankArray& microtree_split_rank_array);
 
     size_t size() const override;
-    std::pair<TreeBP, uint32_t> operator[](uint64_t index) const override;
+    std::pair<TreeBP, uint64_t> operator[](uint64_t index) const override;
     uint64_t evaluate_memory_consumption() const override;
     std::vector<std::pair<std::string, uint64_t>> memory_table() const override;
 
-    uint32_t get_node_count(uint64_t index) const;
+    uint64_t get_node_count(uint64_t index) const;
 
-    uint32_t get_left_chunk_popcount(uint64_t index) const;
-    uint32_t get_right_chunk_popcount(uint64_t index) const;
+    uint64_t get_left_chunk_popcount(uint64_t index) const;
+    uint64_t get_right_chunk_popcount(uint64_t index) const;
 
-    std::pair<uint32_t, uint32_t> get_node_count_left_popcount(
+    std::pair<uint64_t, uint64_t> get_node_count_left_popcount(
         uint64_t index) const;
 
     uint64_t length;
-    uint32_t max_tree_n;
+    uint64_t max_tree_n;
     BitArray code_seq;
-    ThreeLevelPrefixSum<uint32_t> code_len;
+    ThreeLevelPrefixSum<uint64_t> code_len;
 };
 
 }  // namespace hyperrmq

@@ -11,12 +11,12 @@
 
 namespace hyperrmq {
 
-template <uint32_t W>
+template <uint64_t W>
 LegacyRMQHuffman<W>::LegacyRMQHuffman() {}
 
-template <uint32_t W>
-LegacyRMQHuffman<W>::LegacyRMQHuffman(const std::vector<int32_t>& values,
-                                      const int B) {
+template <uint64_t W>
+LegacyRMQHuffman<W>::LegacyRMQHuffman(const std::vector<int64_t>& values,
+                                      const int64_t B) {
     num_of_nodes = values.size();
 
     auto [upsilon, microtrees] =
@@ -34,16 +34,16 @@ LegacyRMQHuffman<W>::LegacyRMQHuffman(const std::vector<int32_t>& values,
     chc = CanonicalHuffmanCode<>(counter);
 
     auto encode = chc.enumerate_alphabet_code_pair();
-    uint32_t code_length_sum = 0;
+    uint64_t code_length_sum = 0;
     for (auto&& [mt, cnt] : counter) {
         code_length_sum += encode[mt].first * cnt;
     }
 
-    std::vector<uint32_t> seq_idx_sample_vec;
+    std::vector<uint64_t> seq_idx_sample_vec;
     seq_idx_sample_vec.reserve((num_of_microtrees + W - 1) / W);
     code_seq = BitArray(code_length_sum);
-    uint32_t idx = 0;
-    for (int i = 0; i < num_of_microtrees; i++) {
+    uint64_t idx = 0;
+    for (int64_t i = 0; i < num_of_microtrees; i++) {
         if (i % W == 0) {
             seq_idx_sample_vec.push_back(idx);
         }
@@ -54,11 +54,11 @@ LegacyRMQHuffman<W>::LegacyRMQHuffman(const std::vector<int32_t>& values,
     assert(idx == code_length_sum);
     seq_idx_sample = seq_idx_sample_vec;
 
-    std::vector<uint32_t> close_sample_vec;
+    std::vector<uint64_t> close_sample_vec;
     close_sample_vec.reserve((num_of_chunks + W - 1) / W);
-    uint32_t close = 0;
+    uint64_t close = 0;
     // reverse the order and then use stack technique to speed up the process
-    for (int i = 0; i < num_of_chunks; i++) {
+    for (int64_t i = 0; i < num_of_chunks; i++) {
         if (i % W == 0) {
             close_sample_vec.push_back(close);
         }
@@ -75,34 +75,34 @@ LegacyRMQHuffman<W>::LegacyRMQHuffman(const std::vector<int32_t>& values,
     close_sample = close_sample_vec;
 }
 
-template <uint32_t W>
-uint32_t LegacyRMQHuffman<W>::to_inorder(uint32_t i) {
-    uint32_t c = (rmm_tree.get_bit(i) == 0) ? rmm_tree.close(i) : i;
-    uint32_t r = rmm_tree.rank1(c);
+template <uint64_t W>
+uint64_t LegacyRMQHuffman<W>::to_inorder(uint64_t i) {
+    uint64_t c = (rmm_tree.get_bit(i) == 0) ? rmm_tree.close(i) : i;
+    uint64_t r = rmm_tree.rank1(c);
     return r;
 }
 
-template <uint32_t W>
-uint32_t LegacyRMQHuffman<W>::find_seq_idx(uint32_t i) {
+template <uint64_t W>
+uint64_t LegacyRMQHuffman<W>::find_seq_idx(uint64_t i) {
     assert(0 <= i && i < num_of_microtrees);
-    uint32_t idx = seq_idx_sample[i / W];
-    for (int j = 0; j < i % W; j++) {
+    uint64_t idx = seq_idx_sample[i / W];
+    for (int64_t j = 0; j < i % W; j++) {
         idx += chc.get_next_length(code_seq, idx);
     }
     return idx;
 }
 
-template <uint32_t W>
-uint64_t LegacyRMQHuffman<W>::get_microtree_inorder(uint32_t i) {
+template <uint64_t W>
+uint64_t LegacyRMQHuffman<W>::get_microtree_inorder(uint64_t i) {
     assert(0 <= i && i < num_of_microtrees);
-    uint32_t idx = find_seq_idx(i);
+    uint64_t idx = find_seq_idx(i);
     uint64_t len = chc.get_next_length(code_seq, idx);
     auto microtree = chc.decode(len, code_seq.read_bits(idx, len));
     return microtree;
 }
 
-template <uint32_t W>
-std::pair<uint32_t, uint32_t> LegacyRMQHuffman<W>::get_chunk(uint32_t i) {
+template <uint64_t W>
+std::pair<uint64_t, uint64_t> LegacyRMQHuffman<W>::get_chunk(uint64_t i) {
     assert(0 <= i && i < num_of_chunks);
     auto [bp, cutpos] =
         legacy_decode_microtree(get_microtree_inorder(to_inorder(i)));
@@ -113,11 +113,11 @@ std::pair<uint32_t, uint32_t> LegacyRMQHuffman<W>::get_chunk(uint32_t i) {
     }
 }
 
-template <uint32_t W>
-std::pair<uint32_t, uint32_t> LegacyRMQHuffman<W>::select1(uint32_t c) {
+template <uint64_t W>
+std::pair<uint64_t, uint64_t> LegacyRMQHuffman<W>::select1(uint64_t c) {
     assert(0 <= c && c < num_of_nodes);
-    uint32_t low = 0, high = close_sample.size();
-    uint32_t mid;
+    uint64_t low = 0, high = close_sample.size();
+    uint64_t mid;
     while (high - low > 1) {
         mid = (low + high) / 2;
         if (close_sample[mid] <= c) {
@@ -127,13 +127,13 @@ std::pair<uint32_t, uint32_t> LegacyRMQHuffman<W>::select1(uint32_t c) {
         }
     }
 
-    int32_t remain = c - close_sample[low];
-    uint32_t cidx = low * W;
+    int64_t remain = c - close_sample[low];
+    uint64_t cidx = low * W;
     while (true) {
         auto [clen, cbp] = get_chunk(cidx);
-        int32_t p = popcount(cbp);
+        int64_t p = popcount(cbp);
         if (remain - p < 0) {
-            int idx = 0;
+            int64_t idx = 0;
             while (remain >= 0) {
                 remain -= (cbp >> idx) & 1;
                 idx++;
@@ -145,30 +145,30 @@ std::pair<uint32_t, uint32_t> LegacyRMQHuffman<W>::select1(uint32_t c) {
     }
 }
 
-template <uint32_t W>
-uint32_t LegacyRMQHuffman<W>::rank1(uint32_t c, uint32_t k) {
+template <uint64_t W>
+uint64_t LegacyRMQHuffman<W>::rank1(uint64_t c, uint64_t k) {
     assert(0 <= c && c < num_of_chunks);
 
     auto [clen, cbp] = get_chunk(c);
     assert(0 <= k && k <= clen);
 
-    uint32_t res = close_sample[c / W];
-    for (int i = c / W * W; i < c; i++) {
+    uint64_t res = close_sample[c / W];
+    for (int64_t i = c / W * W; i < c; i++) {
         res += popcount(get_chunk(i).second);
     }
     res += popcount(cbp & ((1ull << k) - 1));
     return res;
 }
 
-template <uint32_t W>
-uint32_t LegacyRMQHuffman<W>::query(uint32_t i, uint32_t j) {
+template <uint64_t W>
+uint64_t LegacyRMQHuffman<W>::query(uint64_t i, uint64_t j) {
     assert(0 <= i && i <= j && j < num_of_nodes);
 
     auto [ic, ik] = select1(i);
     auto [jc, jk] = select1(j);
 
-    uint32_t ii = to_inorder(ic);
-    uint32_t ji = to_inorder(jc);
+    uint64_t ii = to_inorder(ic);
+    uint64_t ji = to_inorder(jc);
 
     if (rmm_tree.get_bit(ic) == 1) {
         ik += legacy_decode_microtree(get_microtree_inorder(ii)).second;
@@ -178,11 +178,11 @@ uint32_t LegacyRMQHuffman<W>::query(uint32_t i, uint32_t j) {
         jk += legacy_decode_microtree(get_microtree_inorder(ji)).second;
     }
 
-    auto rmq_on_bp = [&](uint64_t bp, uint32_t l, uint32_t m) -> uint32_t {
+    auto rmq_on_bp = [&](uint64_t bp, uint64_t l, uint64_t m) -> uint64_t {
         assert(l <= m);
-        int32_t minval = 1e9, minidx = 0;
-        int32_t excess = 0;
-        for (int i = l; i <= m; i++) {
+        int64_t minval = 1e9, minidx = 0;
+        int64_t excess = 0;
+        for (int64_t i = l; i <= m; i++) {
             excess += 1 - 2 * ((bp >> i) & 1);
             if (minval > excess) {
                 minval = excess;
@@ -192,8 +192,8 @@ uint32_t LegacyRMQHuffman<W>::query(uint32_t i, uint32_t j) {
         return minidx;
     };
 
-    auto to_chunk_pair = [&](uint32_t lk, uint32_t cutpos, uint32_t ic,
-                             uint32_t jc) -> uint32_t {
+    auto to_chunk_pair = [&](uint64_t lk, uint64_t cutpos, uint64_t ic,
+                             uint64_t jc) -> uint64_t {
         if (lk < cutpos) {
             return rank1(ic, lk);
         } else {
@@ -207,8 +207,8 @@ uint32_t LegacyRMQHuffman<W>::query(uint32_t i, uint32_t j) {
         return to_chunk_pair(lk, cutpos, ic, jc);
     }
 
-    uint32_t lc = rmm_tree.rmq(ic, jc + 1);
-    uint32_t li = to_inorder(lc);
+    uint64_t lc = rmm_tree.rmq(ic, jc + 1);
+    uint64_t li = to_inorder(lc);
 
     if (li == ii) {
         auto [bp, cutpos] = legacy_decode_microtree(get_microtree_inorder(li));
@@ -233,7 +233,7 @@ uint32_t LegacyRMQHuffman<W>::query(uint32_t i, uint32_t j) {
     }
 }
 
-template <uint32_t W>
+template <uint64_t W>
 uint64_t LegacyRMQHuffman<W>::evaluate_memory_consumption() const {
     return rmm_tree.evaluate_memory_consumption() +
            chc.evaluate_memory_consumption() +

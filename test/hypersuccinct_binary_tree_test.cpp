@@ -16,7 +16,7 @@ TEST(HypersuccinctBinaryTreeTest, ScanBPByIncSmall) {
     HypersuccinctBinaryTree<> hs(tree, 2);
 
     auto node = HypersuccinctBinaryTree<>::Node(&hs, 0, 0, false);
-    for (int i = 0; i < tree.bp.size(); i++) {
+    for (int64_t i = 0; i < tree.bp.size(); i++) {
         ASSERT_TRUE(node.is_valid());
         ASSERT_EQ(node.access(), tree.bp.get(i));
         node.inc();
@@ -25,9 +25,9 @@ TEST(HypersuccinctBinaryTreeTest, ScanBPByIncSmall) {
 }
 
 TEST(HypersuccinctBinaryTreeTest, ScanBPByIncLarge) {
-    const int n = 1e3;
+    const int64_t n = 1e3;
     std::mt19937 engine(0);
-    std::vector<int32_t> perm(n);
+    std::vector<int64_t> perm(n);
     std::iota(perm.begin(), perm.end(), 0);
     std::shuffle(perm.begin(), perm.end(), engine);
 
@@ -35,7 +35,7 @@ TEST(HypersuccinctBinaryTreeTest, ScanBPByIncLarge) {
     HypersuccinctBinaryTree<> hs(tree, 5);
 
     auto node = HypersuccinctBinaryTree<>::Node(&hs, 0, 0, false);
-    for (int i = 0; i < tree.bp.size(); i++) {
+    for (int64_t i = 0; i < tree.bp.size(); i++) {
         ASSERT_TRUE(node.is_valid());
         ASSERT_EQ(node.access(), tree.bp.get(i));
         node.inc();
@@ -48,7 +48,7 @@ TEST(HypersuccinctBinaryTreeTest, ScanBPByDecSmall) {
     HypersuccinctBinaryTree<> hs(tree, 2);
 
     auto node = hs.inorder_to_node(hs.num_of_nodes - 1);
-    for (int i = tree.bp.size() - 1; i >= 0; i--) {
+    for (int64_t i = tree.bp.size() - 1; i >= 0; i--) {
         ASSERT_TRUE(node.is_valid());
         ASSERT_EQ(node.access(), tree.bp.get(i));
         node.dec();
@@ -57,9 +57,9 @@ TEST(HypersuccinctBinaryTreeTest, ScanBPByDecSmall) {
 }
 
 TEST(HypersuccinctBinaryTreeTest, ScanBPByDecLarge) {
-    const int n = 1e3;
+    const int64_t n = 1e3;
     std::mt19937 engine(0);
-    std::vector<int32_t> perm(n);
+    std::vector<int64_t> perm(n);
     std::iota(perm.begin(), perm.end(), 0);
     std::shuffle(perm.begin(), perm.end(), engine);
 
@@ -67,7 +67,7 @@ TEST(HypersuccinctBinaryTreeTest, ScanBPByDecLarge) {
     HypersuccinctBinaryTree<> hs(tree, 5);
 
     auto node = hs.inorder_to_node(hs.num_of_nodes - 1);
-    for (int i = tree.bp.size() - 1; i >= 0; i--) {
+    for (int64_t i = tree.bp.size() - 1; i >= 0; i--) {
         ASSERT_TRUE(node.is_valid());
         ASSERT_EQ(node.access(), tree.bp.get(i));
         node.dec();
@@ -79,7 +79,7 @@ void tree_queries_stress_test(const BinaryTree &expected,
                               const HypersuccinctBinaryTree<> &actual) {
     ASSERT_EQ(expected.root, actual.node_to_inorder(actual.root()));
 
-    for (int i = 0; i < expected.n; i++) {
+    for (int64_t i = 0; i < expected.n; i++) {
         ASSERT_EQ(
             expected.parent[i],
             actual.node_to_inorder(actual.parent(actual.inorder_to_node(i))));
@@ -91,14 +91,14 @@ void tree_queries_stress_test(const BinaryTree &expected,
         ASSERT_EQ(expected.left[i] == -1 && expected.right[i] == -1,
                   actual.is_leaf(actual.inorder_to_node(i)));
 
-        int expected_child_label =
+        int64_t expected_child_label =
             (i == expected.root                       ? -1
              : i == expected.left[expected.parent[i]] ? 0
                                                       : 1);
         ASSERT_EQ(expected_child_label,
                   actual.child_label(actual.inorder_to_node(i)));
 
-        int expected_leftmost_desc = i;
+        int64_t expected_leftmost_desc = i;
         while (expected.left[expected_leftmost_desc] != -1) {
             expected_leftmost_desc = expected.left[expected_leftmost_desc];
         }
@@ -106,7 +106,7 @@ void tree_queries_stress_test(const BinaryTree &expected,
                   actual.node_to_inorder(
                       actual.leftmost_desc(actual.inorder_to_node(i))));
 
-        int expected_rightmost_desc = i;
+        int64_t expected_rightmost_desc = i;
         while (expected.right[expected_rightmost_desc] != -1) {
             expected_rightmost_desc = expected.right[expected_rightmost_desc];
         }
@@ -114,7 +114,7 @@ void tree_queries_stress_test(const BinaryTree &expected,
                   actual.node_to_inorder(
                       actual.rightmost_desc(actual.inorder_to_node(i))));
 
-        int expected_subtree_size =
+        int64_t expected_subtree_size =
             expected_rightmost_desc - expected_leftmost_desc + 1;
         ASSERT_EQ(expected_subtree_size,
                   actual.subtree_size(actual.inorder_to_node(i)));
@@ -132,13 +132,13 @@ void tree_queries_stress_test(const BinaryTree &expected,
 
 void is_ancestor_lca_stress_test(const RMQBP<> &rmq,
                                  const HypersuccinctBinaryTree<> &actual,
-                                 int q = 1000, int seed = 0) {
+                                 int64_t q = 1000, int64_t seed = 0) {
     std::mt19937 engine(seed);
 
-    auto lca = [&](int u, int v) {
+    auto lca = [&](int64_t u, int64_t v) {
         return rmq.query(std::min(u, v), std::max(u, v));
     };
-    for (int i = 0; i < q; i++) {
+    for (int64_t i = 0; i < q; i++) {
         auto u = engine() % actual.num_of_nodes;
         auto v = engine() % actual.num_of_nodes;
         auto node_u = actual.inorder_to_node(u);
@@ -179,8 +179,8 @@ TEST(HypersuccinctBinaryTreeTest, FiveNodes) {
 
 TEST(HypersuccinctBinaryTreeTest, CartesianStressTest) {
     std::mt19937 engine(0);
-    for (int n = 100; n <= 300; n += 100) {
-        std::vector<int32_t> perm(n);
+    for (int64_t n = 100; n <= 300; n += 100) {
+        std::vector<int64_t> perm(n);
         std::iota(perm.begin(), perm.end(), 0);
         std::shuffle(perm.begin(), perm.end(), engine);
 
@@ -195,10 +195,10 @@ TEST(HypersuccinctBinaryTreeTest, CartesianStressTest) {
 }
 
 TEST(HypersuccinctBinaryTreeTest, IncreasingRuns) {
-    const int n = 200;
-    std::vector<int32_t> perm(n);
+    const int64_t n = 200;
+    std::vector<int64_t> perm(n);
     std::iota(perm.begin(), perm.end(), 0);
-    for (int s = 0; s < 5; s++) {
+    for (int64_t s = 0; s < 5; s++) {
         random_roughly_fixed_incresing_runs(perm, 1 << s, 0);
 
         CartesianTree ct(perm);

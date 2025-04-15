@@ -14,9 +14,9 @@ using HyperRMQHuffman =
 using HyperRMQBreadthFirstArithmetic =
     HyperRMQ<16, CompressedMicrotreeSplitRankArrayArithmetic<false>>;
 
-void test_exhaustive(const vector<int>& values, int B_huffman = 4,
-                     int B_arithmetic = 64) {
-    const int N = values.size();
+void test_exhaustive(const vector<int64_t>& values, int64_t B_huffman = 4,
+                     int64_t B_arithmetic = 64) {
+    const int64_t N = values.size();
 
     HyperRMQHuffman hyper_rmq_huffman(values, B_huffman);
     HyperRMQBreadthFirstArithmetic hyper_rmq_arith(values, B_arithmetic);
@@ -25,30 +25,30 @@ void test_exhaustive(const vector<int>& values, int B_huffman = 4,
     // reverse input array and queries to find the leftmost minimum.
     copy(values.rbegin(), values.rend(), values_array);
     RMQRMM64 rmq_rmm(values_array, N);
-    auto rmq_rmm_query = [&](int l, int r) -> int {
+    auto rmq_rmm_query = [&](int64_t l, int64_t r) -> int64_t {
         return N - 1 - rmq_rmm.queryRMQ(N - 1 - r, N - 1 - l);
     };
 
     rmq_succinct_rec_new<true, 2048, 1024, 128, 0> rmq_new(&values);
 
-    auto check_query = [&](int l, int r) {
-        vector<int> answers = {hyper_rmq_huffman.query(l, r),
-                               hyper_rmq_arith.query(l, r), rmq_rmm_query(l, r),
-                               rmq_new(l, r)};
+    auto check_query = [&](int64_t l, int64_t r) {
+        vector<int64_t> answers = {hyper_rmq_huffman.query(l, r),
+                                   hyper_rmq_arith.query(l, r),
+                                   rmq_rmm_query(l, r), rmq_new(l, r)};
 
-        for (int k = 0; k < answers.size(); k++) {
+        for (int64_t k = 0; k < answers.size(); k++) {
             if (answers[k] != answers[0]) {
                 cout << "Test for rmq failed." << endl;
                 if (N <= 20) {
                     cout << "Input array:\n[";
-                    for (int i = 0; i < N; i++) {
+                    for (int64_t i = 0; i < N; i++) {
                         cout << values[i] << (i == N - 1 ? "]" : ", ");
                     }
                     cout << endl;
                 }
                 cout << "query: " << l << ", " << r << endl;
                 cout << "answers:\n[";
-                for (int i = 0; i < answers.size(); i++) {
+                for (int64_t i = 0; i < answers.size(); i++) {
                     cout << answers[i]
                          << (i == answers.size() - 1 ? "]" : ", ");
                 }
@@ -58,8 +58,8 @@ void test_exhaustive(const vector<int>& values, int B_huffman = 4,
         }
     };
 
-    for (int i = 0; i < N; i++) {
-        for (int j = i; j < N; j++) {
+    for (int64_t i = 0; i < N; i++) {
+        for (int64_t j = i; j < N; j++) {
             check_query(i, j);
         }
     }
@@ -73,8 +73,8 @@ int main() {
     mt19937 engine(0);
 
     {
-        const int N = 1000;
-        vector<int32_t> perm(N);
+        const int64_t N = 1000;
+        vector<int64_t> perm(N);
         iota(perm.begin(), perm.end(), 0);
         shuffle(perm.begin(), perm.end(), engine);
 
@@ -82,9 +82,9 @@ int main() {
     }
 
     {
-        const int N = 1000;
-        vector<int32_t> values(N);
-        for (int i = 0; i < N; i++) {
+        const int64_t N = 1000;
+        vector<int64_t> values(N);
+        for (int64_t i = 0; i < N; i++) {
             values[i] = engine() % 100;
         }
 

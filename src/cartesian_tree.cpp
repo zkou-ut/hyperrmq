@@ -4,13 +4,13 @@
 
 namespace hyperrmq {
 
-CartesianTree::CartesianTree(const std::vector<int32_t> &values) {
+CartesianTree::CartesianTree(const std::vector<int64_t > &values) {
     n = values.size();
-    std::stack<int32_t> st;
-    std::vector<int32_t> parent(n);
-    int c;
+    std::stack<int64_t > st;
+    std::vector<int64_t > parent(n);
+    int64_t c;
 
-    for (int i = 0; i < n; i++) {
+    for (int64_t i = 0; i < n; i++) {
         c = i;
         while (!st.empty() && values[st.top()] > values[i]) {
             c = st.top();

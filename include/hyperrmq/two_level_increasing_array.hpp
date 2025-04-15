@@ -4,7 +4,7 @@
 
 namespace hyperrmq {
 
-template <typename T = uint32_t, uint32_t K = 32>
+template <typename T = uint64_t, uint64_t K = 32>
 struct TwoLevelIncreasingArray {
    public:
     TwoLevelIncreasingArray();

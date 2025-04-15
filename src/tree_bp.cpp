@@ -41,18 +41,18 @@ uint64_t TreeBP::evaluate_memory_consumption() const {
     return bp.evaluate_memory_consumption();
 }
 
-uint32_t TreeBP::naive_fwdsearch(uint32_t j, int32_t d) const {
-    constexpr int c = 16;
-    constexpr int mask = (1 << c) - 1;
-    constexpr int part_count = 64 / c;
+uint64_t TreeBP::naive_fwdsearch(uint64_t j, int64_t d) const {
+    constexpr int64_t c = 16;
+    constexpr int64_t mask = (1 << c) - 1;
+    constexpr int64_t part_count = 64 / c;
 
-    int32_t d_prime = 0;
+    int64_t d_prime = 0;
 
-    int s = j / c + 1;
-    int t = (bp.size() + c - 1) / c;
+    int64_t s = j / c + 1;
+    int64_t t = (bp.size() + c - 1) / c;
 
     if (s * c > bp.size()) {
-        for (int i = j; i < bp.size(); i++) {
+        for (int64_t i = j; i < bp.size(); i++) {
             d_prime += 1 - 2 * bp.get(i);
             if (d_prime == d) {
                 return i + 1;
@@ -61,18 +61,18 @@ uint32_t TreeBP::naive_fwdsearch(uint32_t j, int32_t d) const {
         return bp.size() + 1;
     }
 
-    for (int i = j; i < s * c; i++) {
+    for (int64_t i = j; i < s * c; i++) {
         d_prime += 1 - 2 * bp.get(i);
         if (d_prime == d) {
             return i + 1;
         }
     }
 
-    for (int i = s; i < t; i++) {
+    for (int64_t i = s; i < t; i++) {
         uint64_t cell = bp.get_raw_cell(i / part_count);
         uint64_t cell_part = (cell >> (64 - c * (i % part_count + 1))) & mask;
         if (d_prime + min_table<c>[cell_part] <= d) {
-            for (int k = c - 1; k >= 0; k--) {
+            for (int64_t k = c - 1; k >= 0; k--) {
                 d_prime += 1 - 2 * ((cell_part >> k) & 1);
                 if (d_prime == d) {
                     return i * c + (c - k);
@@ -85,28 +85,28 @@ uint32_t TreeBP::naive_fwdsearch(uint32_t j, int32_t d) const {
     return bp.size() + 1;
 }
 
-int32_t TreeBP::naive_bwdsearch(uint32_t j, int32_t d) const {
-    constexpr int c = 16;
-    constexpr int mask = (1 << c) - 1;
-    constexpr int part_count = 64 / c;
+int64_t TreeBP::naive_bwdsearch(uint64_t j, int64_t d) const {
+    constexpr int64_t c = 16;
+    constexpr int64_t mask = (1 << c) - 1;
+    constexpr int64_t part_count = 64 / c;
 
-    int32_t d_prime = 0;
+    int64_t d_prime = 0;
 
-    int s = (j - 1) / c;
+    int64_t s = (j - 1) / c;
 
-    for (int i = j - 1; i >= s * c; i--) {
+    for (int64_t i = j - 1; i >= s * c; i--) {
         d_prime -= 1 - 2 * bp.get(i);
         if (d_prime == d) {
             return i;
         }
     }
 
-    for (int i = s - 1; i >= 0; i--) {
+    for (int64_t i = s - 1; i >= 0; i--) {
         uint64_t cell = bp.get_raw_cell(i / part_count);
         uint64_t cell_part = (cell >> (64 - c * (i % part_count + 1))) & mask;
         if (d_prime - excess_table<c>[cell_part] + min_table<c>[cell_part] <=
             d) {
-            for (int k = 0; k < c; k++) {
+            for (int64_t k = 0; k < c; k++) {
                 d_prime -= 1 - 2 * ((cell_part >> k) & 1);
                 if (d_prime == d) {
                     return i * c + (c - k) - 1;
@@ -119,37 +119,37 @@ int32_t TreeBP::naive_bwdsearch(uint32_t j, int32_t d) const {
     return -1;
 }
 
-int32_t TreeBP::naive_minexcess(uint32_t j, int32_t k) const {
-    constexpr int c = 16;
-    constexpr int mask = (1 << c) - 1;
-    constexpr int part_count = 64 / c;
+int64_t TreeBP::naive_minexcess(uint64_t j, int64_t k) const {
+    constexpr int64_t c = 16;
+    constexpr int64_t mask = (1 << c) - 1;
+    constexpr int64_t part_count = 64 / c;
 
-    int32_t d = 0, m = 0;
+    int64_t d = 0, m = 0;
 
-    int s = j / c + 1;
-    int t = k / c;
+    int64_t s = j / c + 1;
+    int64_t t = k / c;
 
     if (s > t) {
-        for (int i = j; i < k; i++) {
+        for (int64_t i = j; i < k; i++) {
             d += 1 - 2 * bp.get(i);
             m = std::min(m, d);
         }
         return m;
     }
 
-    for (int i = j; i < s * c; i++) {
+    for (int64_t i = j; i < s * c; i++) {
         d += 1 - 2 * bp.get(i);
         m = std::min(m, d);
     }
 
-    for (int i = s; i < t; i++) {
+    for (int64_t i = s; i < t; i++) {
         uint64_t cell = bp.get_raw_cell(i / part_count);
         uint64_t cell_part = (cell >> (64 - c * (i % part_count + 1))) & mask;
         m = std::min(m, d + min_table<c>[cell_part]);
         d += excess_table<c>[cell_part];
     }
 
-    for (int i = t * c; i < k; i++) {
+    for (int64_t i = t * c; i < k; i++) {
         d += 1 - 2 * bp.get(i);
         m = std::min(m, d);
     }
@@ -157,19 +157,19 @@ int32_t TreeBP::naive_minexcess(uint32_t j, int32_t k) const {
     return m;
 }
 
-uint32_t TreeBP::naive_open(uint32_t index) const {
+uint64_t TreeBP::naive_open(uint64_t index) const {
     assert(0 <= index && index < bp.size());
     assert(bp.get(index) == 1);
     return naive_bwdsearch(index, -1);
 }
 
-uint32_t TreeBP::naive_close(uint32_t index) const {
+uint64_t TreeBP::naive_close(uint64_t index) const {
     assert(0 <= index && index < bp.size());
     assert(bp.get(index) == 0);
     return naive_fwdsearch(index + 1, -1) - 1;
 }
 
-uint32_t TreeBP::naive_lca(uint32_t u_inorder, uint32_t v_inorder) const {
+uint64_t TreeBP::naive_lca(uint64_t u_inorder, uint64_t v_inorder) const {
     assert(0 <= u_inorder && u_inorder < n);
     assert(0 <= v_inorder && v_inorder < n);
     if (u_inorder > v_inorder) {
@@ -177,14 +177,15 @@ uint32_t TreeBP::naive_lca(uint32_t u_inorder, uint32_t v_inorder) const {
     }
     auto i = bp.linear_select1(u_inorder);
     auto j = bp.linear_select1(v_inorder);
-    int32_t m = naive_minexcess(i, j + 1);
+    int64_t m = naive_minexcess(i, j + 1);
     if (m == 0) {
         return u_inorder;
     }
     return bp.linear_popcount(0, naive_fwdsearch(i, m) - 1);
 }
 
-TreeBP cartesian_tree_bp(const std::vector<int32_t> &values) {
+template <typename T>
+TreeBP cartesian_tree_bp(const std::vector<T> &values) {
     uint64_t n = values.size();
     BitArray bp(2 * n);
 
@@ -206,5 +207,14 @@ TreeBP cartesian_tree_bp(const std::vector<int32_t> &values) {
 
     return TreeBP(n, std::move(bp));
 }
+
+template TreeBP cartesian_tree_bp<int8_t>(const std::vector<int8_t> &);
+template TreeBP cartesian_tree_bp<int16_t>(const std::vector<int16_t> &);
+template TreeBP cartesian_tree_bp<int32_t>(const std::vector<int32_t> &);
+template TreeBP cartesian_tree_bp<int64_t>(const std::vector<int64_t> &);
+template TreeBP cartesian_tree_bp<uint8_t>(const std::vector<uint8_t> &);
+template TreeBP cartesian_tree_bp<uint16_t>(const std::vector<uint16_t> &);
+template TreeBP cartesian_tree_bp<uint32_t>(const std::vector<uint32_t> &);
+template TreeBP cartesian_tree_bp<uint64_t>(const std::vector<uint64_t> &);
 
 }  // namespace hyperrmq

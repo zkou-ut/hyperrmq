@@ -15,8 +15,9 @@ using HyperRMQBreadthFirstArithmetic =
     HyperRMQ<16, CompressedMicrotreeSplitRankArrayArithmetic<false>>;
 
 template <typename HyperRMQ>
-void benchmarkHyperRMQ(const vector<int>& perm, int B,
-                       const vector<pair<int, int>>& queries, string RMQname) {
+void benchmarkHyperRMQ(const vector<int64_t>& perm, int64_t B,
+                       const vector<pair<int64_t, int64_t>>& queries,
+                       string RMQname) {
     cout << RMQname << endl;
 
     vector<pair<string, double>> benchmark_result;
@@ -54,11 +55,11 @@ void benchmarkHyperRMQ(const vector<int>& perm, int B,
     }
 }
 
-void benchmarkFerrada(const vector<int>& perm,
-                      const vector<pair<int, int>>& queries) {
+void benchmarkFerrada(const vector<int64_t>& perm,
+                      const vector<pair<int64_t, int64_t>>& queries) {
     cout << "FerradaRMQ" << endl;
 
-    const int N = perm.size();
+    const int64_t N = perm.size();
 
     vector<pair<string, double>> benchmark_result;
     auto start = chrono::system_clock::now();
@@ -99,8 +100,8 @@ void benchmarkFerrada(const vector<int>& perm,
     delete[] perm_reverse;
 }
 
-void benchmarkSDSLNEW(const vector<int>& perm,
-                      const vector<pair<int, int>>& queries) {
+void benchmarkSDSLNEW(const vector<int64_t>& perm,
+                      const vector<pair<int64_t, int64_t>>& queries) {
     cout << "SDSLNEWRMQ" << endl;
 
     vector<pair<string, double>> benchmark_result;
@@ -140,25 +141,25 @@ void benchmarkSDSLNEW(const vector<int>& perm,
 
 int main() {
     cout << fixed << setprecision(6);
-    int Q = 1e6;
+    int64_t Q = 1e6;
 
     auto timeinfo =
         chrono::system_clock::to_time_t(chrono::system_clock::now());
     cout << std::ctime(&timeinfo) << endl;
     cout << "Q = " << Q << endl;
 
-    int B_huf = 3;
+    int64_t B_huf = 3;
     for (int64_t N = 1e4; N <= int64_t(1e9); N *= 10) {
         cout << "N = " << N << endl;
         B_huf++;
 
         mt19937 engine(0);
-        vector<int32_t> perm(N);
+        vector<int64_t> perm(N);
         iota(perm.begin(), perm.end(), 0);
         shuffle(perm.begin(), perm.end(), engine);
 
-        vector<pair<int, int>> queries(Q);
-        for (int i = 0; i < Q; i++) {
+        vector<pair<int64_t, int64_t>> queries(Q);
+        for (int64_t i = 0; i < Q; i++) {
             queries[i] = {engine() % N, engine() % N};
             if (queries[i].first > queries[i].second) {
                 swap(queries[i].first, queries[i].second);
@@ -172,7 +173,7 @@ int main() {
         benchmarkHyperRMQ<HyperRMQHuffman>(
             perm, B_huf, queries, "HyperRMQHuffman B = " + to_string(B_huf));
 
-        for (int B = 64; B <= 1024; B <<= 1) {
+        for (int64_t B = 64; B <= 1024; B <<= 1) {
             benchmarkHyperRMQ<HyperRMQBreadthFirstArithmetic>(
                 perm, B, queries, "HyperRMQHuffman B = " + to_string(B));
         }

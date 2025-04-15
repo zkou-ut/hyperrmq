@@ -18,12 +18,12 @@ namespace hyperrmq {
 // It saves the last `1` and following zeros.
 // The decoder knows it as well.
 struct ArithmeticEncoder {
-    static constexpr uint32_t m = 32;
+    static constexpr uint64_t m = 32;
     static constexpr uint64_t mask = (1ull << m) - 1;
 
     ArithmeticEncoder() {}
 
-    void encode_symbol(uint32_t symbol, uint32_t symbol_count) {
+    void encode_symbol(uint64_t symbol, uint64_t symbol_count) {
         assert(0 <= symbol && symbol < symbol_count);
 
         uint64_t interval_width = u - l + 1;
@@ -61,7 +61,7 @@ struct ArithmeticEncoder {
 
     uint64_t l = 0;
     uint64_t u = mask;
-    int scale3 = 0;
+    int64_t scale3 = 0;
 
     BitStack bs;
 };
@@ -70,7 +70,7 @@ struct ArithmeticEncoder {
 // `symbol_count`. It knows that the last `1` and following zeros are
 // omitted in the tag.
 struct ArithmeticDecoder {
-    static constexpr uint32_t m = 32;
+    static constexpr uint64_t m = 32;
     static constexpr uint64_t mask = (1ull << m) - 1;
 
     ArithmeticDecoder(const BitArray& tag)
@@ -86,8 +86,8 @@ struct ArithmeticDecoder {
         }
     }
 
-    uint32_t decode_symbol(uint32_t symbol_count) {
-        uint32_t symbol = ((t - l + 1) * symbol_count - 1) / (u - l + 1);
+    uint64_t decode_symbol(uint64_t symbol_count) {
+        uint64_t symbol = ((t - l + 1) * symbol_count - 1) / (u - l + 1);
 
         uint64_t interval_width = u - l + 1;
         u = l + interval_width * (symbol + 1) / symbol_count - 1;
@@ -126,7 +126,7 @@ struct ArithmeticDecoder {
 
     uint64_t l = 0;
     uint64_t u = mask;
-    int scale3 = 0;
+    int64_t scale3 = 0;
 
     uint64_t t;
     const BitArray& code_seq;
@@ -134,13 +134,13 @@ struct ArithmeticDecoder {
 };
 
 template <bool depth_first>
-std::vector<uint32_t> bp_to_left_seq(const TreeBP& tree) {
-    std::vector<uint32_t> depth_first_left_seq(tree.n);
+std::vector<uint64_t> bp_to_left_seq(const TreeBP& tree) {
+    std::vector<uint64_t> depth_first_left_seq(tree.n);
 
     int64_t pre = 0;
     int64_t index = 0;
 
-    auto match = [&](int v) -> void {
+    auto match = [&](int64_t v) -> void {
         assert(tree.bp.get(index) == v);
         index++;
     };
@@ -148,11 +148,11 @@ std::vector<uint32_t> bp_to_left_seq(const TreeBP& tree) {
         return index < 2 * tree.n && tree.bp.get(index) == 0;
     };
 
-    auto dfs = [&](auto self) -> uint32_t {
-        int v = pre;
+    auto dfs = [&](auto self) -> uint64_t {
+        int64_t v = pre;
         pre++;
 
-        uint32_t sz = 1;
+        uint64_t sz = 1;
 
         match(0);
         if (has_child()) {
@@ -173,19 +173,19 @@ std::vector<uint32_t> bp_to_left_seq(const TreeBP& tree) {
     if constexpr (depth_first) {
         return depth_first_left_seq;
     } else {
-        std::vector<uint32_t> breadth_first_left_seq;
+        std::vector<uint64_t> breadth_first_left_seq;
         breadth_first_left_seq.reserve(tree.n);
-        std::queue<uint32_t> sz_q, idx_q;
+        std::queue<uint64_t> sz_q, idx_q;
         sz_q.push(tree.n);
         idx_q.push(0);
-        for (int i = 0; i < tree.n; i++) {
-            uint32_t sz = sz_q.front();
+        for (int64_t i = 0; i < tree.n; i++) {
+            uint64_t sz = sz_q.front();
             sz_q.pop();
-            uint32_t idx = idx_q.front();
+            uint64_t idx = idx_q.front();
             idx_q.pop();
 
-            uint32_t lsz = depth_first_left_seq[idx];
-            uint32_t rsz = sz - lsz - 1;
+            uint64_t lsz = depth_first_left_seq[idx];
+            uint64_t rsz = sz - lsz - 1;
             breadth_first_left_seq.push_back(lsz);
 
             if (lsz) {
@@ -203,19 +203,19 @@ std::vector<uint32_t> bp_to_left_seq(const TreeBP& tree) {
 }
 
 template <bool depth_first>
-TreeBP left_seq_to_bp(const std::vector<uint32_t>& left_seq);
+TreeBP left_seq_to_bp(const std::vector<uint64_t>& left_seq);
 
 template <>
-inline TreeBP left_seq_to_bp<true>(const std::vector<uint32_t>& left_seq) {
-    uint32_t n = left_seq.size();
+inline TreeBP left_seq_to_bp<true>(const std::vector<uint64_t>& left_seq) {
+    uint64_t n = left_seq.size();
     BitArray bp(2 * n);
-    uint32_t pos = 0;
+    uint64_t pos = 0;
 
-    int v = -1;
-    auto dfs = [&](auto self, uint32_t sz) -> void {
+    int64_t v = -1;
+    auto dfs = [&](auto self, uint64_t sz) -> void {
         v++;
-        uint32_t lsz = left_seq[v];
-        uint32_t rsz = sz - lsz - 1;
+        uint64_t lsz = left_seq[v];
+        uint64_t rsz = sz - lsz - 1;
 
         pos++;
         if (lsz) {
@@ -234,24 +234,24 @@ inline TreeBP left_seq_to_bp<true>(const std::vector<uint32_t>& left_seq) {
 }
 
 template <>
-inline TreeBP left_seq_to_bp<false>(const std::vector<uint32_t>& left_seq) {
-    uint32_t n = left_seq.size();
+inline TreeBP left_seq_to_bp<false>(const std::vector<uint64_t>& left_seq) {
+    uint64_t n = left_seq.size();
     BitArray bp(2 * n);
 
-    std::queue<int> pre_q, sz_q, write_q;
+    std::queue<int64_t> pre_q, sz_q, write_q;
     pre_q.push(0);
     sz_q.push(n);
     write_q.push(0);
-    for (int i = 0; i < n; i++) {
-        uint32_t pre = pre_q.front();
+    for (int64_t i = 0; i < n; i++) {
+        uint64_t pre = pre_q.front();
         pre_q.pop();
-        uint32_t sz = sz_q.front();
+        uint64_t sz = sz_q.front();
         sz_q.pop();
-        uint32_t write = write_q.front();
+        uint64_t write = write_q.front();
         write_q.pop();
 
-        uint32_t lsz = left_seq[i];
-        uint32_t rsz = sz - lsz - 1;
+        uint64_t lsz = left_seq[i];
+        uint64_t rsz = sz - lsz - 1;
 
         bp.on(write + lsz * 2 + 1);
         if (lsz) {
@@ -270,24 +270,24 @@ inline TreeBP left_seq_to_bp<false>(const std::vector<uint32_t>& left_seq) {
 }
 
 template <bool depth_first>
-void encode_left_seq(const std::vector<uint32_t>& left_seq,
+void encode_left_seq(const std::vector<uint64_t>& left_seq,
                      ArithmeticEncoder& encoder);
 
 template <>
-inline void encode_left_seq<true>(const std::vector<uint32_t>& left_seq,
+inline void encode_left_seq<true>(const std::vector<uint64_t>& left_seq,
                                   ArithmeticEncoder& encoder) {
-    uint32_t node_count = left_seq.size();
+    uint64_t node_count = left_seq.size();
 
-    std::stack<uint32_t> sz_q;
+    std::stack<uint64_t> sz_q;
     sz_q.push(node_count);
 
-    int v = 0;
+    int64_t v = 0;
     while (!sz_q.empty()) {
-        uint32_t sz = sz_q.top();
+        uint64_t sz = sz_q.top();
         sz_q.pop();
 
-        uint32_t lsz = left_seq[v];
-        uint32_t rsz = sz - lsz - 1;
+        uint64_t lsz = left_seq[v];
+        uint64_t rsz = sz - lsz - 1;
         v++;
 
         if (rsz) {
@@ -302,20 +302,20 @@ inline void encode_left_seq<true>(const std::vector<uint32_t>& left_seq,
 }
 
 template <>
-inline void encode_left_seq<false>(const std::vector<uint32_t>& left_seq,
+inline void encode_left_seq<false>(const std::vector<uint64_t>& left_seq,
                                    ArithmeticEncoder& encoder) {
-    uint32_t node_count = left_seq.size();
+    uint64_t node_count = left_seq.size();
 
-    std::queue<uint32_t> sz_q;
+    std::queue<uint64_t> sz_q;
     sz_q.push(node_count);
 
-    int v = 0;
+    int64_t v = 0;
     while (!sz_q.empty()) {
-        uint32_t sz = sz_q.front();
+        uint64_t sz = sz_q.front();
         sz_q.pop();
 
-        uint32_t lsz = left_seq[v];
-        uint32_t rsz = sz - lsz - 1;
+        uint64_t lsz = left_seq[v];
+        uint64_t rsz = sz - lsz - 1;
         v++;
 
         if (lsz) {
@@ -330,7 +330,7 @@ inline void encode_left_seq<false>(const std::vector<uint32_t>& left_seq,
 }
 
 template <bool depth_first>
-BitArray left_seq_to_arithmetic(const std::vector<uint32_t>& left_seq) {
+BitArray left_seq_to_arithmetic(const std::vector<uint64_t>& left_seq) {
     ArithmeticEncoder encoder;
 
     encode_left_seq<depth_first>(left_seq, encoder);
@@ -339,24 +339,24 @@ BitArray left_seq_to_arithmetic(const std::vector<uint32_t>& left_seq) {
 }
 
 template <bool depth_first>
-std::vector<uint32_t> decode_left_seq(const uint32_t node_count,
+std::vector<uint64_t> decode_left_seq(const uint64_t node_count,
                                       ArithmeticDecoder& decoder);
 
 template <>
-inline std::vector<uint32_t> decode_left_seq<true>(const uint32_t node_count,
+inline std::vector<uint64_t> decode_left_seq<true>(const uint64_t node_count,
                                                    ArithmeticDecoder& decoder) {
-    std::vector<uint32_t> left_seq;
+    std::vector<uint64_t> left_seq;
     left_seq.reserve(node_count);
 
-    std::stack<uint32_t> sz_q;
+    std::stack<uint64_t> sz_q;
     sz_q.push(node_count);
 
     while (!sz_q.empty()) {
-        uint32_t sz = sz_q.top();
+        uint64_t sz = sz_q.top();
         sz_q.pop();
 
-        uint32_t lsz = decoder.decode_symbol(sz);
-        uint32_t rsz = sz - lsz - 1;
+        uint64_t lsz = decoder.decode_symbol(sz);
+        uint64_t rsz = sz - lsz - 1;
         left_seq.push_back(lsz);
 
         if (rsz) {
@@ -371,20 +371,20 @@ inline std::vector<uint32_t> decode_left_seq<true>(const uint32_t node_count,
 }
 
 template <>
-inline std::vector<uint32_t> decode_left_seq<false>(
-    const uint32_t node_count, ArithmeticDecoder& decoder) {
-    std::vector<uint32_t> left_seq;
+inline std::vector<uint64_t> decode_left_seq<false>(
+    const uint64_t node_count, ArithmeticDecoder& decoder) {
+    std::vector<uint64_t> left_seq;
     left_seq.reserve(node_count);
 
-    std::queue<uint32_t> sz_q;
+    std::queue<uint64_t> sz_q;
     sz_q.push(node_count);
 
     while (!sz_q.empty()) {
-        uint32_t sz = sz_q.front();
+        uint64_t sz = sz_q.front();
         sz_q.pop();
 
-        uint32_t lsz = decoder.decode_symbol(sz);
-        uint32_t rsz = sz - lsz - 1;
+        uint64_t lsz = decoder.decode_symbol(sz);
+        uint64_t rsz = sz - lsz - 1;
         left_seq.push_back(lsz);
 
         if (lsz) {
@@ -399,7 +399,7 @@ inline std::vector<uint32_t> decode_left_seq<false>(
 }
 
 template <bool depth_first>
-std::vector<uint32_t> arithmetic_to_left_seq(const uint32_t node_count,
+std::vector<uint64_t> arithmetic_to_left_seq(const uint64_t node_count,
                                              const BitArray& code) {
     ArithmeticDecoder decoder(code);
 

@@ -11,32 +11,32 @@ namespace hyperrmq {
 namespace {
 
 TEST(RunsTest, CountIncreasingRuns) {
-    ASSERT_EQ(count_increasing_runs<int>({}), 0);
+    ASSERT_EQ(count_increasing_runs<int64_t>({}), 0);
 
-    ASSERT_EQ(count_increasing_runs<int>({1}), 1);
+    ASSERT_EQ(count_increasing_runs<int64_t>({1}), 1);
 
-    ASSERT_EQ(count_increasing_runs<int>({1, 2}), 1);
-    ASSERT_EQ(count_increasing_runs<int>({2, 1}), 2);
+    ASSERT_EQ(count_increasing_runs<int64_t>({1, 2}), 1);
+    ASSERT_EQ(count_increasing_runs<int64_t>({2, 1}), 2);
 
-    ASSERT_EQ(count_increasing_runs<int>({1, 2, 3}), 1);
-    ASSERT_EQ(count_increasing_runs<int>({3, 2, 1}), 3);
-    ASSERT_EQ(count_increasing_runs<int>({1, 3, 2}), 2);
-    ASSERT_EQ(count_increasing_runs<int>({2, 3, 1}), 2);
-    ASSERT_EQ(count_increasing_runs<int>({2, 1, 3}), 2);
-    ASSERT_EQ(count_increasing_runs<int>({3, 1, 2}), 2);
+    ASSERT_EQ(count_increasing_runs<int64_t>({1, 2, 3}), 1);
+    ASSERT_EQ(count_increasing_runs<int64_t>({3, 2, 1}), 3);
+    ASSERT_EQ(count_increasing_runs<int64_t>({1, 3, 2}), 2);
+    ASSERT_EQ(count_increasing_runs<int64_t>({2, 3, 1}), 2);
+    ASSERT_EQ(count_increasing_runs<int64_t>({2, 1, 3}), 2);
+    ASSERT_EQ(count_increasing_runs<int64_t>({3, 1, 2}), 2);
 
-    ASSERT_EQ(count_increasing_runs<int>({9, 2, 5, 3, 4, 8, 7, 1, 6}), 5);
+    ASSERT_EQ(count_increasing_runs<int64_t>({9, 2, 5, 3, 4, 8, 7, 1, 6}), 5);
 }
 
 TEST(RunsTest, RandomExactFixedIncreasingRuns) {
-    const int n = 100, sqrtn = 10;
-    std::vector<int> perm(n);
+    const int64_t n = 100, sqrtn = 10;
+    std::vector<int64_t> perm(n);
 
     std::iota(perm.begin(), perm.end(), 0);
 
     std::mt19937 engine(0);
 
-    for (int r = 1; r <= sqrtn; r++) {
+    for (int64_t r = 1; r <= sqrtn; r++) {
         random_exact_fixed_incresing_runs(perm, r, false);
         ASSERT_EQ(count_increasing_runs(perm), r);
     }

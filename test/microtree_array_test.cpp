@@ -11,19 +11,19 @@ TEST(MicrotreeArrayTest, EditableSmall) {
     EditableMicrotreeArray mts(3, 4);
     std::vector<std::string> bps = {"()", "()()", "(())", "(())(())"};
 
-    for (int i = 0; i < bps.size(); i++) {
-        for (int j = 0; j < bps[i].size(); j++) {
+    for (int64_t i = 0; i < bps.size(); i++) {
+        for (int64_t j = 0; j < bps[i].size(); j++) {
             mts.set(i, j, bps[i][j] == ')');
         }
     }
 
-    for (int i = 0; i < bps.size(); i++) {
-        for (int j = 0; j < bps[i].size(); j++) {
+    for (int64_t i = 0; i < bps.size(); i++) {
+        for (int64_t j = 0; j < bps[i].size(); j++) {
             ASSERT_EQ(mts.get(i, j), bps[i][j] == ')');
         }
     }
 
-    for (int i = 0; i < bps.size(); i++) {
+    for (int64_t i = 0; i < bps.size(); i++) {
         ASSERT_EQ(mts[i], TreeBP(bps[i]));
     }
 
@@ -33,7 +33,7 @@ TEST(MicrotreeArrayTest, EditableSmall) {
     }
     EditableMicrotreeArray mts2 = trees;
     EditableMicrotreeArray mts3(4, trees.size());
-    for (int i = 0; i < trees.size(); i++) {
+    for (int64_t i = 0; i < trees.size(); i++) {
         mts3.set(i, trees[i]);
     }
 
@@ -56,9 +56,9 @@ TEST(MicrotreeArrayTest, EditableSmall) {
     ASSERT_FALSE(mts != mts2);
 }
 
-std::string random_tree_bp(int node_count, std::mt19937 engine) {
+std::string random_tree_bp(int64_t node_count, std::mt19937 engine) {
     std::string bp;
-    int open = 0, close = 0;
+    int64_t open = 0, close = 0;
     while (open + close < 2 * node_count) {
         bool use_open;
         if (open == close) {
@@ -76,46 +76,46 @@ std::string random_tree_bp(int node_count, std::mt19937 engine) {
 };
 
 TEST(MicrotreeArrayTest, EditableStressTestBitWise) {
-    int tree_count = 100, block_size = 100;
+    int64_t tree_count = 100, block_size = 100;
     std::vector<std::string> bps(tree_count);
 
     std::mt19937 engine(0);
 
-    for (int i = 0; i < tree_count; i++) {
+    for (int64_t i = 0; i < tree_count; i++) {
         bps[i] = random_tree_bp(2 * block_size - 1, engine);
     }
 
     EditableMicrotreeArray mts(block_size, tree_count);
 
-    for (int i = 0; i < bps.size(); i++) {
-        for (int j = 0; j < bps[i].size(); j++) {
+    for (int64_t i = 0; i < bps.size(); i++) {
+        for (int64_t j = 0; j < bps[i].size(); j++) {
             mts.set(i, j, bps[i][j] == ')');
         }
     }
 
-    for (int i = 0; i < bps.size(); i++) {
-        for (int j = 0; j < bps[i].size(); j++) {
+    for (int64_t i = 0; i < bps.size(); i++) {
+        for (int64_t j = 0; j < bps[i].size(); j++) {
             ASSERT_EQ(mts.get(i, j), bps[i][j] == ')');
         }
     }
 
-    for (int i = 0; i < bps.size(); i++) {
+    for (int64_t i = 0; i < bps.size(); i++) {
         ASSERT_EQ(mts[i], TreeBP(bps[i]));
     }
 }
 
 TEST(MicrotreeArrayTest, EditableStressTest) {
-    int tree_count = 10, block_size = 10;
-    int query_count = 100;
+    int64_t tree_count = 10, block_size = 10;
+    int64_t query_count = 100;
 
     std::mt19937 engine(0);
 
     std::vector<TreeBP> expected(tree_count);
     EditableMicrotreeArray actual(block_size, tree_count);
     ASSERT_EQ(EditableMicrotreeArray(expected), actual);
-    for (int q = 0; q < query_count; q++) {
+    for (int64_t q = 0; q < query_count; q++) {
         TreeBP tree(random_tree_bp(engine() % (2 * block_size), engine));
-        int i = engine() % tree_count;
+        int64_t i = engine() % tree_count;
         expected[i] = tree;
         actual.set(i, tree);
         ASSERT_EQ(EditableMicrotreeArray(expected), actual);
@@ -128,11 +128,11 @@ void test_microtree_split_rank_array_helper() {
                                     CompressedMicrotreeSplitRankArray>);
     std::mt19937 engine(0);
 
-    for (int t = 0; t < 100; t++) {
-        int n = engine() % 100 + 1;
-        int B = engine() % 10 + 1;
-        std::vector<std::pair<TreeBP, uint32_t>> vec(n);
-        for (int i = 0; i < n; i++) {
+    for (int64_t t = 0; t < 100; t++) {
+        int64_t n = engine() % 100 + 1;
+        int64_t B = engine() % 10 + 1;
+        std::vector<std::pair<TreeBP, uint64_t>> vec(n);
+        for (int64_t i = 0; i < n; i++) {
             vec[i].first =
                 TreeBP(random_tree_bp(engine() % (2 * B - 1) + 1, engine));
             vec[i].second = engine() % (vec[i].first.n + 1);
@@ -141,7 +141,7 @@ void test_microtree_split_rank_array_helper() {
         CompressedMicrotreeSplitRankArray compressed(array);
         ASSERT_EQ(vec.size(), array.size());
         ASSERT_EQ(array.size(), compressed.size());
-        for (int i = 0; i < n; i++) {
+        for (int64_t i = 0; i < n; i++) {
             ASSERT_EQ(vec[i], array[i]);
             ASSERT_EQ(array[i], compressed[i]);
         }

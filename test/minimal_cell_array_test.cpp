@@ -14,12 +14,12 @@ TEST(MinimalCellArrayTest, SmallUnsigned) {
     ASSERT_FALSE(a != b);
 
     ASSERT_EQ(vec_a.size(), a.size());
-    for (int i = 0; i < vec_a.size(); i++) {
+    for (int64_t i = 0; i < vec_a.size(); i++) {
         ASSERT_EQ(vec_a[i], a.get(i));
     }
 
     ASSERT_EQ(a.size(), b.size());
-    for (int i = 0; i < a.size(); i++) {
+    for (int64_t i = 0; i < a.size(); i++) {
         ASSERT_EQ(a[i], b[i]);
     }
 
@@ -41,12 +41,12 @@ TEST(MinimalCellArrayTest, SmallSigned) {
     ASSERT_FALSE(a != b);
 
     ASSERT_EQ(vec_a.size(), a.size());
-    for (int i = 0; i < vec_a.size(); i++) {
+    for (int64_t i = 0; i < vec_a.size(); i++) {
         ASSERT_EQ(vec_a[i], a.get(i));
     }
 
     ASSERT_EQ(a.size(), b.size());
-    for (int i = 0; i < a.size(); i++) {
+    for (int64_t i = 0; i < a.size(); i++) {
         ASSERT_EQ(a[i], b[i]);
     }
 

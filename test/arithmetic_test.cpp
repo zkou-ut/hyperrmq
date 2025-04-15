@@ -11,7 +11,7 @@ namespace {
 
 template <bool depth_first>
 void arithmetic_test_helper(const TreeBP &bp,
-                            const std::vector<uint32_t> &left_seq) {
+                            const std::vector<uint64_t> &left_seq) {
     ASSERT_EQ(bp_to_left_seq<depth_first>(bp), left_seq);
     ASSERT_EQ(left_seq_to_bp<depth_first>(left_seq).to_string(),
               bp.to_string());
@@ -22,7 +22,7 @@ void arithmetic_test_helper(const TreeBP &bp,
 
 TEST(ArithmeticTest, OneNode) {
     TreeBP bp("()");
-    std::vector<uint32_t> left_seq = {0};
+    std::vector<uint64_t> left_seq = {0};
     // BitArray arithmetic(0);
 
     arithmetic_test_helper<true>(bp, left_seq);
@@ -31,7 +31,7 @@ TEST(ArithmeticTest, OneNode) {
 
 TEST(ArithmeticTest, TwoNodesLeft) {
     TreeBP bp("(())");
-    std::vector<uint32_t> left_seq = {1, 0};
+    std::vector<uint64_t> left_seq = {1, 0};
     // BitArray arithmetic(1);
     // arithmetic.on(0);
 
@@ -41,7 +41,7 @@ TEST(ArithmeticTest, TwoNodesLeft) {
 
 TEST(ArithmeticTest, TwoNodesRight) {
     TreeBP bp("()()");
-    std::vector<uint32_t> left_seq = {0, 0};
+    std::vector<uint64_t> left_seq = {0, 0};
     // BitArray arithmetic(1);
 
     arithmetic_test_helper<true>(bp, left_seq);
@@ -50,7 +50,7 @@ TEST(ArithmeticTest, TwoNodesRight) {
 
 TEST(ArithmeticTest, FiveNodes) {
     TreeBP bp("((())())()");
-    std::vector<uint32_t> left_seq = {3, 1, 0, 0, 0};
+    std::vector<uint64_t> left_seq = {3, 1, 0, 0, 0};
 
     arithmetic_test_helper<true>(bp, left_seq);
     arithmetic_test_helper<false>(bp, left_seq);
@@ -59,17 +59,17 @@ TEST(ArithmeticTest, FiveNodes) {
 TEST(ArithmeticTest, DepthStressTest) {
     std::mt19937 engine(0);
 
-    for (int test_case = 0; test_case < 10000; test_case++) {
-        int n = engine() % 1000 + 1;
-        std::vector<uint32_t> left_seq;
+    for (int64_t test_case = 0; test_case < 10000; test_case++) {
+        int64_t n = engine() % 1000 + 1;
+        std::vector<uint64_t> left_seq;
         left_seq.reserve(n);
-        std::stack<uint32_t> subtree_size_st;
+        std::stack<uint64_t> subtree_size_st;
         subtree_size_st.push(n);
-        for (int i = 0; i < n; i++) {
-            uint32_t cur_size = subtree_size_st.top();
+        for (int64_t i = 0; i < n; i++) {
+            uint64_t cur_size = subtree_size_st.top();
             subtree_size_st.pop();
-            uint32_t left_size = engine() % cur_size;
-            uint32_t right_size = cur_size - left_size - 1;
+            uint64_t left_size = engine() % cur_size;
+            uint64_t right_size = cur_size - left_size - 1;
             left_seq.push_back(left_size);
             if (right_size) {
                 subtree_size_st.push(right_size);
@@ -91,17 +91,17 @@ TEST(ArithmeticTest, DepthStressTest) {
 TEST(ArithmeticTest, BreadthStressTest) {
     std::mt19937 engine(0);
 
-    for (int test_case = 0; test_case < 10000; test_case++) {
-        int n = engine() % 1000 + 1;
-        std::vector<uint32_t> left_seq;
+    for (int64_t test_case = 0; test_case < 10000; test_case++) {
+        int64_t n = engine() % 1000 + 1;
+        std::vector<uint64_t> left_seq;
         left_seq.reserve(n);
-        std::queue<uint32_t> subtree_size_st;
+        std::queue<uint64_t> subtree_size_st;
         subtree_size_st.push(n);
-        for (int i = 0; i < n; i++) {
-            uint32_t cur_size = subtree_size_st.front();
+        for (int64_t i = 0; i < n; i++) {
+            uint64_t cur_size = subtree_size_st.front();
             subtree_size_st.pop();
-            uint32_t left_size = engine() % cur_size;
-            uint32_t right_size = cur_size - left_size - 1;
+            uint64_t left_size = engine() % cur_size;
+            uint64_t right_size = cur_size - left_size - 1;
             left_seq.push_back(left_size);
             if (left_size) {
                 subtree_size_st.push(left_size);

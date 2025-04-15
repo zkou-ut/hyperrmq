@@ -31,36 +31,36 @@ TEST(TwoLevelIncreasingArrayTest, Small) {
 }
 
 TEST(TwoLevelIncreasingArrayTest, StressTest) {
-    for (int n = 0; n < 100; n++) {
+    for (int64_t n = 0; n < 100; n++) {
         std::mt19937 engine(0);
-        std::vector<uint32_t> values(n);
-        for (int i = 0; i < n; i++) {
+        std::vector<uint64_t> values(n);
+        for (int64_t i = 0; i < n; i++) {
             values[i] = engine() % 1000;
         }
-        for (int i = 0; i < n - 1; i++) {
+        for (int64_t i = 0; i < n - 1; i++) {
             values[i + 1] += values[i];
         }
 
         TwoLevelIncreasingArray<> pf(values);
-        for (int i = 0; i < n; i++) {
+        for (int64_t i = 0; i < n; i++) {
             ASSERT_EQ(pf[i], values[i]);
         }
     }
 }
 
 TEST(TwoLevelIncreasingArrayTest, StressTestLarge) {
-    const int n = 100000;
+    const int64_t n = 100000;
     std::mt19937 engine(0);
-    std::vector<uint32_t> values(n);
-    for (int i = 0; i < n; i++) {
+    std::vector<uint64_t> values(n);
+    for (int64_t i = 0; i < n; i++) {
         values[i] = engine() % 1000;
     }
-    for (int i = 0; i < n - 1; i++) {
+    for (int64_t i = 0; i < n - 1; i++) {
         values[i + 1] += values[i];
     }
 
     TwoLevelIncreasingArray<> pf(values);
-    for (int i = 0; i < n; i++) {
+    for (int64_t i = 0; i < n; i++) {
         ASSERT_EQ(pf[i], values[i]);
     }
 }

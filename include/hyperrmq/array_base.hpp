@@ -9,8 +9,8 @@ template <typename T>
 struct FixedLengthCodeArrayBase {
    public:
     FixedLengthCodeArrayBase();
-    FixedLengthCodeArrayBase(uint32_t width, uint64_t length);
-    FixedLengthCodeArrayBase(uint32_t width, std::vector<T> vec);
+    FixedLengthCodeArrayBase(uint64_t width, uint64_t length);
+    FixedLengthCodeArrayBase(uint64_t width, std::vector<T> vec);
 
     // It returns a BitArray of width W.
     virtual BitArray encode(const T& object) const = 0;
@@ -30,7 +30,7 @@ struct FixedLengthCodeArrayBase {
 
     uint64_t evaluate_memory_consumption() const;
 
-    uint32_t width;
+    uint64_t width;
     uint64_t length;
     BitArray codes;
 };

@@ -51,7 +51,7 @@ BitArray::BitArray(const std::string& bp)
     : num_of_bits(bp.size()),
       cell_count((num_of_bits + 63) >> 6),
       cells(cell_count) {
-    for (int i = 0; i < num_of_bits; i++) {
+    for (int64_t i = 0; i < num_of_bits; i++) {
         assert(bp[i] == '(' || bp[i] == ')');
         set(i, (bp[i] == ')'));
     }
@@ -183,7 +183,7 @@ BitArray BitArray::read_interval(uint64_t first, uint64_t width) const {
 
 uint64_t BitArray::linear_popcount() const {
     uint64_t res = 0;
-    for (int i = 0; i < cell_count; i++) {
+    for (int64_t i = 0; i < cell_count; i++) {
         res += popcount(cells[i]);
     }
     return res;
@@ -205,7 +205,7 @@ uint64_t BitArray::linear_popcount(uint64_t first, uint64_t width) const {
     } else {
         uint64_t res =
             popcount(cells[fb] & top_mask) + popcount(cells[lb] & bottom_mask);
-        for (int b = fb + 1; b < lb; b++) {
+        for (int64_t b = fb + 1; b < lb; b++) {
             res += popcount(cells[b]);
         }
         return res;
@@ -238,7 +238,7 @@ uint64_t BitArray::linear_select1(uint64_t j) const {
 
 std::string BitArray::to_string(std::string zero, std::string one) const {
     std::string res;
-    for (int i = 0; i < num_of_bits; i++) {
+    for (int64_t i = 0; i < num_of_bits; i++) {
         res += get(i) ? one : zero;
     }
     return res;

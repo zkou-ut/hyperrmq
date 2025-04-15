@@ -8,7 +8,7 @@ template <typename T>
 struct MinimalCellArray {
    public:
     MinimalCellArray();
-    MinimalCellArray(const std::vector<T>& arr, uint32_t cell_width = 0,
+    MinimalCellArray(const std::vector<T>& arr, uint64_t cell_width = 0,
                      T cell_offset = 0);
 
     size_t size() const;
@@ -22,7 +22,7 @@ struct MinimalCellArray {
     uint64_t evaluate_memory_consumption() const;
 
    private:
-    uint32_t width;
+    uint64_t width;
     uint64_t length;
     T offset;
     BitArray bit_array;

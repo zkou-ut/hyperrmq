@@ -15,10 +15,10 @@ using HyperRMQBreadthFirstArithmetic =
     HyperRMQ<16, CompressedMicrotreeSplitRankArrayArithmetic<false>>;
 
 template <typename HyperRMQ>
-vector<double> benchmarkHyperRMQ(const vector<int>& perm, int B,
-                                 const vector<vector<pair<int, int>>>& queries,
-                                 string RMQname) {
-    const int N = perm.size();
+vector<double> benchmarkHyperRMQ(
+    const vector<int64_t>& perm, int64_t B,
+    const vector<vector<pair<int64_t, int64_t>>>& queries, string RMQname) {
+    const int64_t N = perm.size();
 
     cout << RMQname << endl;
 
@@ -47,10 +47,11 @@ vector<double> benchmarkHyperRMQ(const vector<int>& perm, int B,
     return time_result;
 }
 
-vector<double> benchmarkFerrada(const vector<int>& perm,
-                                const vector<vector<pair<int, int>>>& queries) {
+vector<double> benchmarkFerrada(
+    const vector<int64_t>& perm,
+    const vector<vector<pair<int64_t, int64_t>>>& queries) {
     cout << "FerradaRMQ" << endl;
-    const int N = perm.size();
+    const int64_t N = perm.size();
 
     mt19937 engine(0);
 
@@ -81,11 +82,12 @@ vector<double> benchmarkFerrada(const vector<int>& perm,
     return time_result;
 }
 
-vector<double> benchmarkSDSLNEW(const vector<int>& perm,
-                                const vector<vector<pair<int, int>>>& queries) {
+vector<double> benchmarkSDSLNEW(
+    const vector<int64_t>& perm,
+    const vector<vector<pair<int64_t, int64_t>>>& queries) {
     cout << "SDSLNEWRMQ" << endl;
 
-    const int N = perm.size();
+    const int64_t N = perm.size();
 
     mt19937 engine(0);
 
@@ -115,8 +117,8 @@ vector<double> benchmarkSDSLNEW(const vector<int>& perm,
 int main() {
     cout << fixed << setprecision(6);
 
-    constexpr int N = 1e9;
-    constexpr int Q = 1e5;
+    constexpr int64_t N = 1e9;
+    constexpr int64_t Q = 1e5;
 
     auto timeinfo =
         chrono::system_clock::to_time_t(chrono::system_clock::now());
@@ -125,25 +127,25 @@ int main() {
     cout << "Q = " << Q << endl;
 
     mt19937 engine(0);
-    vector<int32_t> perm(N);
+    vector<int64_t> perm(N);
     iota(perm.begin(), perm.end(), 0);
     shuffle(perm.begin(), perm.end(), engine);
 
-    vector<vector<pair<int, int>>> queries;
-    vector<int> ws;
-    for (int w = 2; w <= N; w <<= 1) {
+    vector<vector<pair<int64_t, int64_t>>> queries;
+    vector<int64_t> ws;
+    for (int64_t w = 2; w <= N; w <<= 1) {
         ws.push_back(w);
-        queries.push_back(vector<pair<int, int>>(Q));
-        for (int i = 0; i < Q; i++) {
-            uint32_t l = engine() % (N - w + 1);
-            uint32_t r = l + w - 1;
+        queries.push_back(vector<pair<int64_t, int64_t>>(Q));
+        for (int64_t i = 0; i < Q; i++) {
+            uint64_t l = engine() % (N - w + 1);
+            uint64_t r = l + w - 1;
             queries.back()[i] = {l, r};
         }
     }
 
     auto output = [&](const vector<double>& time_result) -> void {
         assert(time_result.size() == ws.size());
-        for (int i = 0; i < ws.size(); i++) {
+        for (int64_t i = 0; i < ws.size(); i++) {
             cout << ws[i] << " " << time_result[i] << endl;
         }
     };
@@ -152,18 +154,18 @@ int main() {
 
     output(benchmarkSDSLNEW(perm, queries));
 
-    int B_huf = 8;
+    int64_t B_huf = 8;
     output(benchmarkHyperRMQ<
            HyperRMQ<16, CompressedMicrotreeSplitRankArrayHuffman<16>>>(
         perm, B_huf, queries, "HyperRMQHuffman " + to_string(B_huf)));
 
-    for (int B = 64; B <= 1024; B <<= 1) {
+    for (int64_t B = 64; B <= 1024; B <<= 1) {
         output(benchmarkHyperRMQ<HyperRMQ<
                    16, CompressedMicrotreeSplitRankArrayArithmetic<false>>>(
             perm, B, queries, "HyperRMQBreadth " + to_string(B)));
     }
 
-    int B = 512;
+    int64_t B = 512;
 
     output(benchmarkHyperRMQ<
            HyperRMQ<16, CompressedMicrotreeSplitRankArrayArithmetic<true>>>(

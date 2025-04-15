@@ -13,9 +13,9 @@ namespace hyperrmq {
 namespace {
 
 TEST(HyperRMQTest, RestoreBPFromChunk) {
-    const int n = 1000, B = 7;
+    const int64_t n = 1000, B = 7;
     std::mt19937 engine(0);
-    std::vector<int> perm(n);
+    std::vector<int64_t> perm(n);
     iota(perm.begin(), perm.end(), 0);
     shuffle(perm.begin(), perm.end(), engine);
 
@@ -25,8 +25,8 @@ TEST(HyperRMQTest, RestoreBPFromChunk) {
 
     auto [upsilon, tree_and_split_rank] = tree_covering(B, tree);
     BitArray chunk_concat(2 * n);
-    int idx = 0;
-    for (int i = 0; i < upsilon.bp.size(); i++) {
+    int64_t idx = 0;
+    for (int64_t i = 0; i < upsilon.bp.size(); i++) {
         auto chunk = hyper_rmq.get_chunk(i);
         chunk_concat.write_interval(idx, chunk);
         idx += chunk.size();
@@ -37,9 +37,9 @@ TEST(HyperRMQTest, RestoreBPFromChunk) {
 }
 
 TEST(HyperRMQTest, InorderTauConversionTest) {
-    const int n = 1000, B = 7;
+    const int64_t n = 1000, B = 7;
     std::mt19937 engine(0);
-    std::vector<int> perm(n);
+    std::vector<int64_t> perm(n);
     iota(perm.begin(), perm.end(), 0);
     shuffle(perm.begin(), perm.end(), engine);
 
@@ -50,18 +50,18 @@ TEST(HyperRMQTest, InorderTauConversionTest) {
     auto [upsilon, microtrees] = legacy_tree_covering(B, tree);
     std::vector<BitArray> chunks;
     chunks.reserve(upsilon.bp.size());
-    for (int i = 0; i < upsilon.bp.size(); i++) {
+    for (int64_t i = 0; i < upsilon.bp.size(); i++) {
         chunks.push_back(hyper_rmq.get_chunk(i));
     }
-    int count = 0;
-    for (int chunk_idx = 0; chunk_idx < chunks.size(); chunk_idx++) {
+    int64_t count = 0;
+    for (int64_t chunk_idx = 0; chunk_idx < chunks.size(); chunk_idx++) {
         auto chunk = chunks[chunk_idx];
-        int close = 0;
-        for (int bit_idx = 0; bit_idx < chunk.size(); bit_idx++) {
+        int64_t close = 0;
+        for (int64_t bit_idx = 0; bit_idx < chunk.size(); bit_idx++) {
             auto bit = chunk.get(bit_idx);
             if (bit) {
-                std::pair<uint32_t, uint32_t> tau_expected = {chunk_idx, close};
-                std::pair<uint32_t, uint32_t> tau_actual =
+                std::pair<uint64_t, uint64_t> tau_expected = {chunk_idx, close};
+                std::pair<uint64_t, uint64_t> tau_actual =
                     hyper_rmq.inorderselect(count);
                 ASSERT_EQ(tau_expected, tau_actual);
             }
@@ -77,9 +77,9 @@ TEST(HyperRMQTest, InorderTauConversionTest) {
 
 TEST(HyperRMQTest, FewNodes) {
     std::mt19937 engine(0);
-    const int B = 3;
-    for (int n = 1; n < 20; n++) {
-        std::vector<int> perm(n);
+    const int64_t B = 3;
+    for (int64_t n = 1; n < 20; n++) {
+        std::vector<int64_t> perm(n);
         std::generate(perm.begin(), perm.end(), engine);
 
         RMQBP<> rmq_bp(perm);
@@ -93,8 +93,8 @@ TEST(HyperRMQTest, FewNodes) {
         HyperRMQ<32, CompressedMicrotreeSplitRankArrayAllArithmetic>
             rmq_all_arith(perm, B);
 
-        for (int l = 0; l < n; l++) {
-            for (int r = l; r < n; r++) {
+        for (int64_t l = 0; l < n; l++) {
+            for (int64_t r = l; r < n; r++) {
                 auto expected = rmq_bp.query(l, r);
                 ASSERT_EQ(expected, rmq_huffman_naive.query(l, r));
                 ASSERT_EQ(expected, rmq_huffman.query(l, r));
@@ -107,8 +107,8 @@ TEST(HyperRMQTest, FewNodes) {
 }
 
 TEST(HyperRMQTest, QuerySeventyTest) {
-    const int n = 70, B = 6;
-    std::vector<int32_t> perm = {
+    const int64_t n = 70, B = 6;
+    std::vector<int64_t> perm = {
         6,  7,  5,  9,  8,  4,  12, 11, 13, 14, 15, 10, 3,  18, 17, 16, 21, 22,
         20, 24, 25, 23, 19, 27, 26, 30, 29, 28, 33, 32, 31, 2,  35, 34, 36, 1,
         39, 42, 41, 40, 43, 38, 46, 45, 44, 49, 48, 51, 50, 52, 47, 55, 54, 56,
@@ -125,8 +125,8 @@ TEST(HyperRMQTest, QuerySeventyTest) {
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayAllArithmetic> rmq_all_arith(
         perm, B);
 
-    for (int l = 0; l < n; l++) {
-        for (int r = l; r < n; r++) {
+    for (int64_t l = 0; l < n; l++) {
+        for (int64_t r = l; r < n; r++) {
             auto expected = rmq_bp.query(l, r);
             ASSERT_EQ(expected, rmq_huffman_naive.query(l, r));
             ASSERT_EQ(expected, rmq_huffman.query(l, r));
@@ -138,9 +138,9 @@ TEST(HyperRMQTest, QuerySeventyTest) {
 }
 
 TEST(HyperRMQTest, QueryStressTestSmall) {
-    const int n = 100, B = 6;
+    const int64_t n = 100, B = 6;
     std::mt19937 engine(0);
-    std::vector<int> perm(n);
+    std::vector<int64_t> perm(n);
     iota(perm.begin(), perm.end(), 0);
     shuffle(perm.begin(), perm.end(), engine);
 
@@ -155,8 +155,8 @@ TEST(HyperRMQTest, QueryStressTestSmall) {
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayAllArithmetic> rmq_all_arith(
         perm, B);
 
-    for (int l = 0; l < n; l++) {
-        for (int r = l; r < n; r++) {
+    for (int64_t l = 0; l < n; l++) {
+        for (int64_t r = l; r < n; r++) {
             auto expected = rmq_bp.query(l, r);
             ASSERT_EQ(expected, rmq_huffman_naive.query(l, r));
             ASSERT_EQ(expected, rmq_huffman.query(l, r));
@@ -168,9 +168,9 @@ TEST(HyperRMQTest, QueryStressTestSmall) {
 }
 
 TEST(HyperRMQTest, QueryStressTestMedium) {
-    const int n = 10000, B = 20, query_count = 3000;
+    const int64_t n = 10000, B = 20, query_count = 3000;
     std::mt19937 engine(0);
-    std::vector<int> perm(n);
+    std::vector<int64_t> perm(n);
     iota(perm.begin(), perm.end(), 0);
     shuffle(perm.begin(), perm.end(), engine);
 
@@ -185,9 +185,9 @@ TEST(HyperRMQTest, QueryStressTestMedium) {
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayAllArithmetic> rmq_all_arith(
         perm, B);
 
-    for (int q = 0; q < query_count; q++) {
-        int l = engine() % n;
-        int r = engine() % n;
+    for (int64_t q = 0; q < query_count; q++) {
+        int64_t l = engine() % n;
+        int64_t r = engine() % n;
         if (l > r) {
             std::swap(l, r);
         }
@@ -202,9 +202,9 @@ TEST(HyperRMQTest, QueryStressTestMedium) {
 }
 
 TEST(HyperRMQTest, QueryStressTestVariousWidth) {
-    const int n = 10000, B_huffman = 5, B_arith = 50, query_count = 300;
+    const int64_t n = 10000, B_huffman = 5, B_arith = 50, query_count = 300;
     std::mt19937 engine(0);
-    std::vector<int> perm(n);
+    std::vector<int64_t> perm(n);
     iota(perm.begin(), perm.end(), 0);
     shuffle(perm.begin(), perm.end(), engine);
 
@@ -219,10 +219,10 @@ TEST(HyperRMQTest, QueryStressTestVariousWidth) {
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayAllArithmetic> rmq_all_arith(
         perm, B_arith);
 
-    for (int w = 1; w <= n; w <<= 1) {
-        for (int q = 0; q < query_count; q++) {
-            int l = engine() % (n - w + 1);
-            int r = l + w - 1;
+    for (int64_t w = 1; w <= n; w <<= 1) {
+        for (int64_t q = 0; q < query_count; q++) {
+            int64_t l = engine() % (n - w + 1);
+            int64_t r = l + w - 1;
             if (l > r) {
                 std::swap(l, r);
             }
@@ -238,9 +238,9 @@ TEST(HyperRMQTest, QueryStressTestVariousWidth) {
 }
 
 TEST(HyperRMQTest, QueryStressTestLargeB) {
-    const int n = 1000000, B = 100000, query_count = 10;
+    const int64_t n = 1000000, B = 100000, query_count = 10;
     std::mt19937 engine(0);
-    std::vector<int> perm(n);
+    std::vector<int64_t> perm(n);
     iota(perm.begin(), perm.end(), 0);
     shuffle(perm.begin(), perm.end(), engine);
 
@@ -255,9 +255,9 @@ TEST(HyperRMQTest, QueryStressTestLargeB) {
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayAllArithmetic> rmq_all_arith(
         perm, B);
 
-    for (int q = 0; q < query_count; q++) {
-        int l = engine() % n;
-        int r = engine() % n;
+    for (int64_t q = 0; q < query_count; q++) {
+        int64_t l = engine() % n;
+        int64_t r = engine() % n;
         if (l > r) {
             std::swap(l, r);
         }
@@ -272,9 +272,9 @@ TEST(HyperRMQTest, QueryStressTestLargeB) {
 }
 
 TEST(HyperRMQTest, QueryStressTestMediumIncreasingRuns) {
-    const int n = 10000, B = 20, query_count = 3000;
+    const int64_t n = 10000, B = 20, query_count = 3000;
     std::mt19937 engine(0);
-    std::vector<int> perm(n);
+    std::vector<int64_t> perm(n);
     iota(perm.begin(), perm.end(), 0);
     random_roughly_fixed_incresing_runs(perm, perm.size() / 20);
 
@@ -289,9 +289,9 @@ TEST(HyperRMQTest, QueryStressTestMediumIncreasingRuns) {
     HyperRMQ<32, CompressedMicrotreeSplitRankArrayAllArithmetic> rmq_all_arith(
         perm, B);
 
-    for (int q = 0; q < query_count; q++) {
-        int l = engine() % n;
-        int r = engine() % n;
+    for (int64_t q = 0; q < query_count; q++) {
+        int64_t l = engine() % n;
+        int64_t r = engine() % n;
         if (l > r) {
             std::swap(l, r);
         }
