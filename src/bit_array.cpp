@@ -32,7 +32,9 @@ BitArray::BitArray(uint64_t num_of_bits, const std::vector<uint64_t>& cells)
       cell_count((num_of_bits + 63) >> 6),
       cells(cells) {
     assert(cells.size() == cell_count);
-    assert(cells.back() << (num_of_bits & 0x3f) == 0);
+    if (num_of_bits & 0x3f) {
+        assert(cells.back() << (num_of_bits & 0x3f) == 0);
+    }
 }
 
 BitArray::BitArray(uint64_t num_of_bits, std::vector<uint64_t>&& cells)
@@ -40,7 +42,9 @@ BitArray::BitArray(uint64_t num_of_bits, std::vector<uint64_t>&& cells)
       cell_count((num_of_bits + 63) >> 6),
       cells(cells) {
     assert(cells.size() == cell_count);
-    assert(cells.back() << (num_of_bits & 0x3f) == 0);
+    if (num_of_bits & 0x3f) {
+        assert(cells.back() << (num_of_bits & 0x3f) == 0);
+    }
 }
 
 BitArray::BitArray(const std::string& bp)
