@@ -70,8 +70,8 @@ int main(int argc, char const* argv[]) {
         return 0;
     }
 
-    int64_t N = atoi(argv[1]);
-    int64_t r = atoi(argv[2]);
+    int64_t N = atol(argv[1]);
+    int64_t r = atol(argv[2]);
 
     auto timeinfo =
         chrono::system_clock::to_time_t(chrono::system_clock::now());
