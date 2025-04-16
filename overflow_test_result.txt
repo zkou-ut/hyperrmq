@@ -1,0 +1,22 @@
+hamada@gpu1:~/fixed/hyperrmq_experiments/hyperrmq$ ./build/overflow-test 2200000000
+Overflow test for rmq data structures...
+[Permutation start]
+ - Start DFS Test
+ - Finished constructing Huffman
+ - Finished constructing Arithmetic
+ - Finished constructing RMM
+ - Finished constructing REC
+ - Query info:
+           0: [0, 2199999999]
+           1: [1684340669, 2199999999]
+           2: [2099049438, 2199999999]
+           4: [2183349485, 2199999999]
+           8: [2199489135, 2199999999]
+Test for rmq failed.
+query: 2199955564, 2199999999
+answers: [
+    index:   2199981165, value:        44048
+    index:   2199981165, value:        44048
+    index:   2199972334, value:       175722
+    index:   2199981165, value:        44048
+]
