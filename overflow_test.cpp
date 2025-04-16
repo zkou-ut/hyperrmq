@@ -55,13 +55,14 @@ void test_dfs(const vector<int64_t>& values, int64_t Q = 1'000'000,
                     }
                     cout << endl;
                 }
-                cout << "query: " << l << ", " << r << endl;
-                cout << "answers:\n[";
+                cout << "query: [" << l << ", " << r << "]" << endl;
+                cout << "answers: [\n";
                 for (int64_t i = 0; i < answers.size(); i++) {
-                    cout << answers[i]
-                         << (i == answers.size() - 1 ? "]" : ", ");
+                    auto index = answers[i];
+                    cout << "    index: " << setw(12) << index
+                         << ", value: " << setw(12) << values[index] << "\n";
                 }
-                cout << endl;
+                cout << "]" << endl;
                 exit(-1);
             }
         }
