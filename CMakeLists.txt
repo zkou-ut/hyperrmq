@@ -27,3 +27,6 @@ add_subdirectory(test)
 
 add_executable(simple-test simple_test.cpp)
 target_link_libraries(simple-test hyperrmq ferradarmq sdsl)
+
+add_executable(overflow-test overflow_test.cpp)
+target_link_libraries(overflow-test hyperrmq ferradarmq sdsl)
